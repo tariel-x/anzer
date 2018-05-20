@@ -3,7 +3,7 @@ package main
 import (
 	"fmt"
 	"github.com/antlr/antlr4/runtime/Go/antlr"
-	"github.com/tariel-x/izhm/parser"
+	"github.com/tariel-x/anzer/parser"
 	"os"
 )
 
