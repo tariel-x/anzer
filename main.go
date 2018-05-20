@@ -1,17 +1,31 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"github.com/antlr/antlr4/runtime/Go/antlr"
+	"github.com/tariel-x/izhm/parser"
+	"os"
+)
 
-//go:generate ragel -Z -G2 -o lex.go lex.rl
-//go:generate goyacc thermostat.y
+type TreeShapeListener struct {
+	*parser.BaseJSONListener
+}
+
+func NewTreeShapeListener() *TreeShapeListener {
+	return new(TreeShapeListener)
+}
+
+func (this *TreeShapeListener) EnterEveryRule(ctx antlr.ParserRuleContext) {
+	fmt.Println(ctx.GetText())
+}
 
 func main() {
-	lex := newLexer([]byte(`
-		target temperature 5
-		heat on
-		target temperature 10
-		heat off
-	`))
-	e := yyParse(lex)
-	fmt.Println(e)
+	input, _ := antlr.NewFileStream(os.Args[1])
+	lexer := parser.NewJSONLexer(input)
+	stream := antlr.NewCommonTokenStream(lexer, 0)
+	p := parser.NewJSONParser(stream)
+	p.AddErrorListener(antlr.NewDiagnosticErrorListener(true))
+	p.BuildParseTrees = true
+	tree := p.Json()
+	antlr.ParseTreeWalkerDefault.Walk(NewTreeShapeListener(), tree)
 }
