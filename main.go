@@ -8,7 +8,7 @@ import (
 )
 
 type TreeShapeListener struct {
-	*parser.BaseJSONListener
+	*parser.BaseAnzerListener
 }
 
 func NewTreeShapeListener() *TreeShapeListener {
@@ -21,11 +21,15 @@ func (this *TreeShapeListener) EnterEveryRule(ctx antlr.ParserRuleContext) {
 
 func main() {
 	input, _ := antlr.NewFileStream(os.Args[1])
-	lexer := parser.NewJSONLexer(input)
+	lexer := parser.NewAnzerLexer(input)
 	stream := antlr.NewCommonTokenStream(lexer, 0)
-	p := parser.NewJSONParser(stream)
+	p := parser.NewAnzerParser(stream)
 	p.AddErrorListener(antlr.NewDiagnosticErrorListener(true))
 	p.BuildParseTrees = true
-	tree := p.Json()
-	antlr.ParseTreeWalkerDefault.Walk(NewTreeShapeListener(), tree)
+	p.GetRuleNames()
+	dd := p.DataDef()
+	txt := dd.GetText()
+	fmt.Printf("%s\n", txt)
+	/*tree := p
+	antlr.ParseTreeWalkerDefault.Walk(NewTreeShapeListener(), tree)*/
 }

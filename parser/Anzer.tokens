@@ -1,0 +1,15 @@
+T__0=1
+T__1=2
+T__2=3
+T__3=4
+T__4=5
+FUNC_NAME=6
+DATA_NAME=7
+DATA_CONTENT=8
+JSON_STRING=9
+WS=10
+'data'=1
+'='=2
+'::'=3
+'->'=4
+'_'=5

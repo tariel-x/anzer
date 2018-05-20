@@ -1,0 +1,7 @@
+data X1 = "{aaa}"
+
+data X2 = "{bbb}"
+
+func1 :: _ -> X1
+
+func2 :: X1 -> X2
