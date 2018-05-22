@@ -33,20 +33,32 @@ func (s *BaseAnzerListener) EnterStatement(ctx *StatementContext) {}
 // ExitStatement is called when production statement is exited.
 func (s *BaseAnzerListener) ExitStatement(ctx *StatementContext) {}
 
-// EnterDataDef is called when production dataDef is entered.
-func (s *BaseAnzerListener) EnterDataDef(ctx *DataDefContext) {}
+// EnterFuncName is called when production funcName is entered.
+func (s *BaseAnzerListener) EnterFuncName(ctx *FuncNameContext) {}
 
-// ExitDataDef is called when production dataDef is exited.
-func (s *BaseAnzerListener) ExitDataDef(ctx *DataDefContext) {}
-
-// EnterFuncDef is called when production funcDef is entered.
-func (s *BaseAnzerListener) EnterFuncDef(ctx *FuncDefContext) {}
-
-// ExitFuncDef is called when production funcDef is exited.
-func (s *BaseAnzerListener) ExitFuncDef(ctx *FuncDefContext) {}
+// ExitFuncName is called when production funcName is exited.
+func (s *BaseAnzerListener) ExitFuncName(ctx *FuncNameContext) {}
 
 // EnterDataName is called when production dataName is entered.
 func (s *BaseAnzerListener) EnterDataName(ctx *DataNameContext) {}
 
 // ExitDataName is called when production dataName is exited.
 func (s *BaseAnzerListener) ExitDataName(ctx *DataNameContext) {}
+
+// EnterDataNameId is called when production dataNameId is entered.
+func (s *BaseAnzerListener) EnterDataNameId(ctx *DataNameIdContext) {}
+
+// ExitDataNameId is called when production dataNameId is exited.
+func (s *BaseAnzerListener) ExitDataNameId(ctx *DataNameIdContext) {}
+
+// EnterDataContent is called when production dataContent is entered.
+func (s *BaseAnzerListener) EnterDataContent(ctx *DataContentContext) {}
+
+// ExitDataContent is called when production dataContent is exited.
+func (s *BaseAnzerListener) ExitDataContent(ctx *DataContentContext) {}
+
+// EnterJsonContent is called when production jsonContent is entered.
+func (s *BaseAnzerListener) EnterJsonContent(ctx *JsonContentContext) {}
+
+// ExitJsonContent is called when production jsonContent is exited.
+func (s *BaseAnzerListener) ExitJsonContent(ctx *JsonContentContext) {}

@@ -14,14 +14,20 @@ type AnzerListener interface {
 	// EnterStatement is called when entering the statement production.
 	EnterStatement(c *StatementContext)
 
-	// EnterDataDef is called when entering the dataDef production.
-	EnterDataDef(c *DataDefContext)
-
-	// EnterFuncDef is called when entering the funcDef production.
-	EnterFuncDef(c *FuncDefContext)
+	// EnterFuncName is called when entering the funcName production.
+	EnterFuncName(c *FuncNameContext)
 
 	// EnterDataName is called when entering the dataName production.
 	EnterDataName(c *DataNameContext)
+
+	// EnterDataNameId is called when entering the dataNameId production.
+	EnterDataNameId(c *DataNameIdContext)
+
+	// EnterDataContent is called when entering the dataContent production.
+	EnterDataContent(c *DataContentContext)
+
+	// EnterJsonContent is called when entering the jsonContent production.
+	EnterJsonContent(c *JsonContentContext)
 
 	// ExitSystem is called when exiting the system production.
 	ExitSystem(c *SystemContext)
@@ -29,12 +35,18 @@ type AnzerListener interface {
 	// ExitStatement is called when exiting the statement production.
 	ExitStatement(c *StatementContext)
 
-	// ExitDataDef is called when exiting the dataDef production.
-	ExitDataDef(c *DataDefContext)
-
-	// ExitFuncDef is called when exiting the funcDef production.
-	ExitFuncDef(c *FuncDefContext)
+	// ExitFuncName is called when exiting the funcName production.
+	ExitFuncName(c *FuncNameContext)
 
 	// ExitDataName is called when exiting the dataName production.
 	ExitDataName(c *DataNameContext)
+
+	// ExitDataNameId is called when exiting the dataNameId production.
+	ExitDataNameId(c *DataNameIdContext)
+
+	// ExitDataContent is called when exiting the dataContent production.
+	ExitDataContent(c *DataContentContext)
+
+	// ExitJsonContent is called when exiting the jsonContent production.
+	ExitJsonContent(c *JsonContentContext)
 }
