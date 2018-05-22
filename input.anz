@@ -1,2 +1,5 @@
-data X={"a":true}
+data X={
+    "a":true,
+    "b":false
+}
 data X2={"b":false}
