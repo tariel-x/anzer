@@ -4,46 +4,28 @@ antlr4 -Dlanguage=Go Anzer.g4
  
 grammar Anzer;
 
-system
-    : statement+
+system: statement+;
+
+statement: data
+	| func
     ;
 
-statement
-    : 'data' dataNameId '=' dataContent
-	| funcName '::' dataName '->' dataName
-    ;
+data: 'data' DATA_NAME_ID '=' dataContent;
 
-funcName
-    : FUNC_NAME
-    ;
+func: FUNC_NAME '::' dataName '->' dataName;
 
-FUNC_NAME
-    : [a-zA-Z0-9] +
-    ;
+FUNC_NAME: [a-zA-Z0-9] +;
 
-dataName
-    : dataNameId
+dataName: DATA_NAME_ID
     | '_'
     ;
 
-dataNameId
-    : DATA_NAME_ID
-    ;
+DATA_NAME_ID: [A-Z0-9] +;
 
-DATA_NAME_ID
-    : [A-Z0-9] +
-    ;
+dataContent: '"' jsonContent '"';
 
-dataContent
-    : '"' jsonContent '"'
-    ;
+jsonContent: JSON_CONTENT;
 
-jsonContent
-    : JSON_CONTENT
-    ;
+JSON_CONTENT: '{' [.]+ '}';
 
-JSON_CONTENT
-    : '{' [.]+ '}'
-    ;
-
-WS: [ \t\r\n]+ -> skip;
+WS: [ \t\n\r]+ -> skip;
