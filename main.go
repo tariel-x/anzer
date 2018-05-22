@@ -26,10 +26,6 @@ func main() {
 	p := parser.NewAnzerParser(stream)
 	p.AddErrorListener(antlr.NewDiagnosticErrorListener(true))
 	p.BuildParseTrees = true
-	p.GetRuleNames()
-	dd := p.DataDef()
-	txt := dd.GetText()
-	fmt.Printf("%s\n", txt)
-	/*tree := p
-	antlr.ParseTreeWalkerDefault.Walk(NewTreeShapeListener(), tree)*/
+	tree := p.System()
+	antlr.ParseTreeWalkerDefault.Walk(NewTreeShapeListener(), tree)
 }
