@@ -33,11 +33,11 @@ func (s *BaseAnzerListener) EnterStatement(ctx *StatementContext) {}
 // ExitStatement is called when production statement is exited.
 func (s *BaseAnzerListener) ExitStatement(ctx *StatementContext) {}
 
-// EnterFuncName is called when production funcName is entered.
-func (s *BaseAnzerListener) EnterFuncName(ctx *FuncNameContext) {}
+// EnterDataDef is called when production dataDef is entered.
+func (s *BaseAnzerListener) EnterDataDef(ctx *DataDefContext) {}
 
-// ExitFuncName is called when production funcName is exited.
-func (s *BaseAnzerListener) ExitFuncName(ctx *FuncNameContext) {}
+// ExitDataDef is called when production dataDef is exited.
+func (s *BaseAnzerListener) ExitDataDef(ctx *DataDefContext) {}
 
 // EnterDataName is called when production dataName is entered.
 func (s *BaseAnzerListener) EnterDataName(ctx *DataNameContext) {}
@@ -45,20 +45,26 @@ func (s *BaseAnzerListener) EnterDataName(ctx *DataNameContext) {}
 // ExitDataName is called when production dataName is exited.
 func (s *BaseAnzerListener) ExitDataName(ctx *DataNameContext) {}
 
-// EnterDataNameId is called when production dataNameId is entered.
-func (s *BaseAnzerListener) EnterDataNameId(ctx *DataNameIdContext) {}
+// EnterJson is called when production json is entered.
+func (s *BaseAnzerListener) EnterJson(ctx *JsonContext) {}
 
-// ExitDataNameId is called when production dataNameId is exited.
-func (s *BaseAnzerListener) ExitDataNameId(ctx *DataNameIdContext) {}
+// ExitJson is called when production json is exited.
+func (s *BaseAnzerListener) ExitJson(ctx *JsonContext) {}
 
-// EnterDataContent is called when production dataContent is entered.
-func (s *BaseAnzerListener) EnterDataContent(ctx *DataContentContext) {}
+// EnterObj is called when production obj is entered.
+func (s *BaseAnzerListener) EnterObj(ctx *ObjContext) {}
 
-// ExitDataContent is called when production dataContent is exited.
-func (s *BaseAnzerListener) ExitDataContent(ctx *DataContentContext) {}
+// ExitObj is called when production obj is exited.
+func (s *BaseAnzerListener) ExitObj(ctx *ObjContext) {}
 
-// EnterJsonContent is called when production jsonContent is entered.
-func (s *BaseAnzerListener) EnterJsonContent(ctx *JsonContentContext) {}
+// EnterPair is called when production pair is entered.
+func (s *BaseAnzerListener) EnterPair(ctx *PairContext) {}
 
-// ExitJsonContent is called when production jsonContent is exited.
-func (s *BaseAnzerListener) ExitJsonContent(ctx *JsonContentContext) {}
+// ExitPair is called when production pair is exited.
+func (s *BaseAnzerListener) ExitPair(ctx *PairContext) {}
+
+// EnterArray is called when production array is entered.
+func (s *BaseAnzerListener) EnterArray(ctx *ArrayContext) {}
+
+// ExitArray is called when production array is exited.
+func (s *BaseAnzerListener) ExitArray(ctx *ArrayContext) {}

@@ -16,39 +16,52 @@ var _ = reflect.Copy
 var _ = strconv.Itoa
 
 var parserATN = []uint16{
-	3, 24715, 42794, 33075, 47597, 16764, 15335, 30598, 22884, 3, 12, 49, 4,
+	3, 24715, 42794, 33075, 47597, 16764, 15335, 30598, 22884, 3, 18, 76, 4,
 	2, 9, 2, 4, 3, 9, 3, 4, 4, 9, 4, 4, 5, 9, 5, 4, 6, 9, 6, 4, 7, 9, 7, 4,
-	8, 9, 8, 3, 2, 6, 2, 18, 10, 2, 13, 2, 14, 2, 19, 3, 3, 3, 3, 3, 3, 3,
-	3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 5, 3, 33, 10, 3, 3, 4, 3,
-	4, 3, 5, 3, 5, 5, 5, 39, 10, 5, 3, 6, 3, 6, 3, 7, 3, 7, 3, 7, 3, 7, 3,
-	8, 3, 8, 3, 8, 2, 2, 9, 2, 4, 6, 8, 10, 12, 14, 2, 2, 2, 44, 2, 17, 3,
-	2, 2, 2, 4, 32, 3, 2, 2, 2, 6, 34, 3, 2, 2, 2, 8, 38, 3, 2, 2, 2, 10, 40,
-	3, 2, 2, 2, 12, 42, 3, 2, 2, 2, 14, 46, 3, 2, 2, 2, 16, 18, 5, 4, 3, 2,
-	17, 16, 3, 2, 2, 2, 18, 19, 3, 2, 2, 2, 19, 17, 3, 2, 2, 2, 19, 20, 3,
-	2, 2, 2, 20, 3, 3, 2, 2, 2, 21, 22, 7, 3, 2, 2, 22, 23, 5, 10, 6, 2, 23,
-	24, 7, 4, 2, 2, 24, 25, 5, 12, 7, 2, 25, 33, 3, 2, 2, 2, 26, 27, 5, 6,
-	4, 2, 27, 28, 7, 5, 2, 2, 28, 29, 5, 8, 5, 2, 29, 30, 7, 6, 2, 2, 30, 31,
-	5, 8, 5, 2, 31, 33, 3, 2, 2, 2, 32, 21, 3, 2, 2, 2, 32, 26, 3, 2, 2, 2,
-	33, 5, 3, 2, 2, 2, 34, 35, 7, 9, 2, 2, 35, 7, 3, 2, 2, 2, 36, 39, 5, 10,
-	6, 2, 37, 39, 7, 7, 2, 2, 38, 36, 3, 2, 2, 2, 38, 37, 3, 2, 2, 2, 39, 9,
-	3, 2, 2, 2, 40, 41, 7, 10, 2, 2, 41, 11, 3, 2, 2, 2, 42, 43, 7, 8, 2, 2,
-	43, 44, 5, 14, 8, 2, 44, 45, 7, 8, 2, 2, 45, 13, 3, 2, 2, 2, 46, 47, 7,
-	11, 2, 2, 47, 15, 3, 2, 2, 2, 5, 19, 32, 38,
+	8, 9, 8, 4, 9, 9, 9, 3, 2, 6, 2, 20, 10, 2, 13, 2, 14, 2, 21, 3, 3, 3,
+	3, 3, 4, 3, 4, 3, 4, 3, 4, 3, 4, 3, 5, 3, 5, 3, 6, 3, 6, 3, 6, 3, 6, 3,
+	6, 3, 6, 3, 6, 5, 6, 40, 10, 6, 3, 7, 3, 7, 3, 7, 3, 7, 7, 7, 46, 10, 7,
+	12, 7, 14, 7, 49, 11, 7, 3, 7, 3, 7, 3, 7, 3, 7, 5, 7, 55, 10, 7, 3, 8,
+	3, 8, 3, 8, 3, 8, 3, 9, 3, 9, 3, 9, 3, 9, 7, 9, 65, 10, 9, 12, 9, 14, 9,
+	68, 11, 9, 3, 9, 3, 9, 3, 9, 3, 9, 5, 9, 74, 10, 9, 3, 9, 2, 2, 10, 2,
+	4, 6, 8, 10, 12, 14, 16, 2, 3, 4, 2, 5, 5, 15, 15, 2, 78, 2, 19, 3, 2,
+	2, 2, 4, 23, 3, 2, 2, 2, 6, 25, 3, 2, 2, 2, 8, 30, 3, 2, 2, 2, 10, 39,
+	3, 2, 2, 2, 12, 54, 3, 2, 2, 2, 14, 56, 3, 2, 2, 2, 16, 73, 3, 2, 2, 2,
+	18, 20, 5, 4, 3, 2, 19, 18, 3, 2, 2, 2, 20, 21, 3, 2, 2, 2, 21, 19, 3,
+	2, 2, 2, 21, 22, 3, 2, 2, 2, 22, 3, 3, 2, 2, 2, 23, 24, 5, 6, 4, 2, 24,
+	5, 3, 2, 2, 2, 25, 26, 7, 3, 2, 2, 26, 27, 7, 15, 2, 2, 27, 28, 7, 4, 2,
+	2, 28, 29, 5, 10, 6, 2, 29, 7, 3, 2, 2, 2, 30, 31, 9, 2, 2, 2, 31, 9, 3,
+	2, 2, 2, 32, 40, 7, 16, 2, 2, 33, 40, 7, 17, 2, 2, 34, 40, 5, 12, 7, 2,
+	35, 40, 5, 16, 9, 2, 36, 40, 7, 6, 2, 2, 37, 40, 7, 7, 2, 2, 38, 40, 7,
+	8, 2, 2, 39, 32, 3, 2, 2, 2, 39, 33, 3, 2, 2, 2, 39, 34, 3, 2, 2, 2, 39,
+	35, 3, 2, 2, 2, 39, 36, 3, 2, 2, 2, 39, 37, 3, 2, 2, 2, 39, 38, 3, 2, 2,
+	2, 40, 11, 3, 2, 2, 2, 41, 42, 7, 9, 2, 2, 42, 47, 5, 14, 8, 2, 43, 44,
+	7, 10, 2, 2, 44, 46, 5, 14, 8, 2, 45, 43, 3, 2, 2, 2, 46, 49, 3, 2, 2,
+	2, 47, 45, 3, 2, 2, 2, 47, 48, 3, 2, 2, 2, 48, 50, 3, 2, 2, 2, 49, 47,
+	3, 2, 2, 2, 50, 51, 7, 11, 2, 2, 51, 55, 3, 2, 2, 2, 52, 53, 7, 9, 2, 2,
+	53, 55, 7, 11, 2, 2, 54, 41, 3, 2, 2, 2, 54, 52, 3, 2, 2, 2, 55, 13, 3,
+	2, 2, 2, 56, 57, 7, 16, 2, 2, 57, 58, 7, 12, 2, 2, 58, 59, 5, 10, 6, 2,
+	59, 15, 3, 2, 2, 2, 60, 61, 7, 13, 2, 2, 61, 66, 5, 10, 6, 2, 62, 63, 7,
+	10, 2, 2, 63, 65, 5, 10, 6, 2, 64, 62, 3, 2, 2, 2, 65, 68, 3, 2, 2, 2,
+	66, 64, 3, 2, 2, 2, 66, 67, 3, 2, 2, 2, 67, 69, 3, 2, 2, 2, 68, 66, 3,
+	2, 2, 2, 69, 70, 7, 14, 2, 2, 70, 74, 3, 2, 2, 2, 71, 72, 7, 13, 2, 2,
+	72, 74, 7, 14, 2, 2, 73, 60, 3, 2, 2, 2, 73, 71, 3, 2, 2, 2, 74, 17, 3,
+	2, 2, 2, 8, 21, 39, 47, 54, 66, 73,
 }
 var deserializer = antlr.NewATNDeserializer(nil)
 var deserializedATN = deserializer.DeserializeFromUInt16(parserATN)
 
 var literalNames = []string{
-	"", "'data'", "'='", "'::'", "'->'", "'_'", "'\"'",
+	"", "'data'", "'='", "'_'", "'true'", "'false'", "'null'", "'{'", "','",
+	"'}'", "':'", "'['", "']'",
 }
 var symbolicNames = []string{
-	"", "", "", "", "", "", "", "FUNC_NAME", "DATA_NAME_ID", "JSON_CONTENT",
-	"WS",
+	"", "", "", "", "", "", "", "", "", "", "", "", "", "DATA_NAME_ID", "STRING",
+	"NUMBER", "WS",
 }
 
 var ruleNames = []string{
-	"system", "statement", "funcName", "dataName", "dataNameId", "dataContent",
-	"jsonContent",
+	"system", "statement", "dataDef", "dataName", "json", "obj", "pair", "array",
 }
 var decisionToDFA = make([]*antlr.DFA, len(deserializedATN.DecisionToState))
 
@@ -85,21 +98,28 @@ const (
 	AnzerParserT__3         = 4
 	AnzerParserT__4         = 5
 	AnzerParserT__5         = 6
-	AnzerParserFUNC_NAME    = 7
-	AnzerParserDATA_NAME_ID = 8
-	AnzerParserJSON_CONTENT = 9
-	AnzerParserWS           = 10
+	AnzerParserT__6         = 7
+	AnzerParserT__7         = 8
+	AnzerParserT__8         = 9
+	AnzerParserT__9         = 10
+	AnzerParserT__10        = 11
+	AnzerParserT__11        = 12
+	AnzerParserDATA_NAME_ID = 13
+	AnzerParserSTRING       = 14
+	AnzerParserNUMBER       = 15
+	AnzerParserWS           = 16
 )
 
 // AnzerParser rules.
 const (
-	AnzerParserRULE_system      = 0
-	AnzerParserRULE_statement   = 1
-	AnzerParserRULE_funcName    = 2
-	AnzerParserRULE_dataName    = 3
-	AnzerParserRULE_dataNameId  = 4
-	AnzerParserRULE_dataContent = 5
-	AnzerParserRULE_jsonContent = 6
+	AnzerParserRULE_system    = 0
+	AnzerParserRULE_statement = 1
+	AnzerParserRULE_dataDef   = 2
+	AnzerParserRULE_dataName  = 3
+	AnzerParserRULE_json      = 4
+	AnzerParserRULE_obj       = 5
+	AnzerParserRULE_pair      = 6
+	AnzerParserRULE_array     = 7
 )
 
 // ISystemContext is an interface to support dynamic dispatch.
@@ -205,17 +225,17 @@ func (p *AnzerParser) System() (localctx ISystemContext) {
 	}()
 
 	p.EnterOuterAlt(localctx, 1)
-	p.SetState(15)
+	p.SetState(17)
 	p.GetErrorHandler().Sync(p)
 	_la = p.GetTokenStream().LA(1)
 
-	for ok := true; ok; ok = _la == AnzerParserT__0 || _la == AnzerParserFUNC_NAME {
+	for ok := true; ok; ok = _la == AnzerParserT__0 {
 		{
-			p.SetState(14)
+			p.SetState(16)
 			p.Statement()
 		}
 
-		p.SetState(17)
+		p.SetState(19)
 		p.GetErrorHandler().Sync(p)
 		_la = p.GetTokenStream().LA(1)
 	}
@@ -261,57 +281,14 @@ func NewStatementContext(parser antlr.Parser, parent antlr.ParserRuleContext, in
 
 func (s *StatementContext) GetParser() antlr.Parser { return s.parser }
 
-func (s *StatementContext) DataNameId() IDataNameIdContext {
-	var t = s.GetTypedRuleContext(reflect.TypeOf((*IDataNameIdContext)(nil)).Elem(), 0)
+func (s *StatementContext) DataDef() IDataDefContext {
+	var t = s.GetTypedRuleContext(reflect.TypeOf((*IDataDefContext)(nil)).Elem(), 0)
 
 	if t == nil {
 		return nil
 	}
 
-	return t.(IDataNameIdContext)
-}
-
-func (s *StatementContext) DataContent() IDataContentContext {
-	var t = s.GetTypedRuleContext(reflect.TypeOf((*IDataContentContext)(nil)).Elem(), 0)
-
-	if t == nil {
-		return nil
-	}
-
-	return t.(IDataContentContext)
-}
-
-func (s *StatementContext) FuncName() IFuncNameContext {
-	var t = s.GetTypedRuleContext(reflect.TypeOf((*IFuncNameContext)(nil)).Elem(), 0)
-
-	if t == nil {
-		return nil
-	}
-
-	return t.(IFuncNameContext)
-}
-
-func (s *StatementContext) AllDataName() []IDataNameContext {
-	var ts = s.GetTypedRuleContexts(reflect.TypeOf((*IDataNameContext)(nil)).Elem())
-	var tst = make([]IDataNameContext, len(ts))
-
-	for i, t := range ts {
-		if t != nil {
-			tst[i] = t.(IDataNameContext)
-		}
-	}
-
-	return tst
-}
-
-func (s *StatementContext) DataName(i int) IDataNameContext {
-	var t = s.GetTypedRuleContext(reflect.TypeOf((*IDataNameContext)(nil)).Elem(), i)
-
-	if t == nil {
-		return nil
-	}
-
-	return t.(IDataNameContext)
+	return t.(IDataDefContext)
 }
 
 func (s *StatementContext) GetRuleContext() antlr.RuleContext {
@@ -354,124 +331,90 @@ func (p *AnzerParser) Statement() (localctx IStatementContext) {
 		}
 	}()
 
-	p.SetState(30)
-	p.GetErrorHandler().Sync(p)
-
-	switch p.GetTokenStream().LA(1) {
-	case AnzerParserT__0:
-		p.EnterOuterAlt(localctx, 1)
-		{
-			p.SetState(19)
-			p.Match(AnzerParserT__0)
-		}
-		{
-			p.SetState(20)
-			p.DataNameId()
-		}
-		{
-			p.SetState(21)
-			p.Match(AnzerParserT__1)
-		}
-		{
-			p.SetState(22)
-			p.DataContent()
-		}
-
-	case AnzerParserFUNC_NAME:
-		p.EnterOuterAlt(localctx, 2)
-		{
-			p.SetState(24)
-			p.FuncName()
-		}
-		{
-			p.SetState(25)
-			p.Match(AnzerParserT__2)
-		}
-		{
-			p.SetState(26)
-			p.DataName()
-		}
-		{
-			p.SetState(27)
-			p.Match(AnzerParserT__3)
-		}
-		{
-			p.SetState(28)
-			p.DataName()
-		}
-
-	default:
-		panic(antlr.NewNoViableAltException(p, nil, nil, nil, nil, nil))
+	p.EnterOuterAlt(localctx, 1)
+	{
+		p.SetState(21)
+		p.DataDef()
 	}
 
 	return localctx
 }
 
-// IFuncNameContext is an interface to support dynamic dispatch.
-type IFuncNameContext interface {
+// IDataDefContext is an interface to support dynamic dispatch.
+type IDataDefContext interface {
 	antlr.ParserRuleContext
 
 	// GetParser returns the parser.
 	GetParser() antlr.Parser
 
-	// IsFuncNameContext differentiates from other interfaces.
-	IsFuncNameContext()
+	// IsDataDefContext differentiates from other interfaces.
+	IsDataDefContext()
 }
 
-type FuncNameContext struct {
+type DataDefContext struct {
 	*antlr.BaseParserRuleContext
 	parser antlr.Parser
 }
 
-func NewEmptyFuncNameContext() *FuncNameContext {
-	var p = new(FuncNameContext)
+func NewEmptyDataDefContext() *DataDefContext {
+	var p = new(DataDefContext)
 	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(nil, -1)
-	p.RuleIndex = AnzerParserRULE_funcName
+	p.RuleIndex = AnzerParserRULE_dataDef
 	return p
 }
 
-func (*FuncNameContext) IsFuncNameContext() {}
+func (*DataDefContext) IsDataDefContext() {}
 
-func NewFuncNameContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *FuncNameContext {
-	var p = new(FuncNameContext)
+func NewDataDefContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *DataDefContext {
+	var p = new(DataDefContext)
 
 	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(parent, invokingState)
 
 	p.parser = parser
-	p.RuleIndex = AnzerParserRULE_funcName
+	p.RuleIndex = AnzerParserRULE_dataDef
 
 	return p
 }
 
-func (s *FuncNameContext) GetParser() antlr.Parser { return s.parser }
+func (s *DataDefContext) GetParser() antlr.Parser { return s.parser }
 
-func (s *FuncNameContext) FUNC_NAME() antlr.TerminalNode {
-	return s.GetToken(AnzerParserFUNC_NAME, 0)
+func (s *DataDefContext) DATA_NAME_ID() antlr.TerminalNode {
+	return s.GetToken(AnzerParserDATA_NAME_ID, 0)
 }
 
-func (s *FuncNameContext) GetRuleContext() antlr.RuleContext {
+func (s *DataDefContext) Json() IJsonContext {
+	var t = s.GetTypedRuleContext(reflect.TypeOf((*IJsonContext)(nil)).Elem(), 0)
+
+	if t == nil {
+		return nil
+	}
+
+	return t.(IJsonContext)
+}
+
+func (s *DataDefContext) GetRuleContext() antlr.RuleContext {
 	return s
 }
 
-func (s *FuncNameContext) ToStringTree(ruleNames []string, recog antlr.Recognizer) string {
+func (s *DataDefContext) ToStringTree(ruleNames []string, recog antlr.Recognizer) string {
 	return antlr.TreesStringTree(s, ruleNames, recog)
 }
 
-func (s *FuncNameContext) EnterRule(listener antlr.ParseTreeListener) {
+func (s *DataDefContext) EnterRule(listener antlr.ParseTreeListener) {
 	if listenerT, ok := listener.(AnzerListener); ok {
-		listenerT.EnterFuncName(s)
+		listenerT.EnterDataDef(s)
 	}
 }
 
-func (s *FuncNameContext) ExitRule(listener antlr.ParseTreeListener) {
+func (s *DataDefContext) ExitRule(listener antlr.ParseTreeListener) {
 	if listenerT, ok := listener.(AnzerListener); ok {
-		listenerT.ExitFuncName(s)
+		listenerT.ExitDataDef(s)
 	}
 }
 
-func (p *AnzerParser) FuncName() (localctx IFuncNameContext) {
-	localctx = NewFuncNameContext(p, p.GetParserRuleContext(), p.GetState())
-	p.EnterRule(localctx, 4, AnzerParserRULE_funcName)
+func (p *AnzerParser) DataDef() (localctx IDataDefContext) {
+	localctx = NewDataDefContext(p, p.GetParserRuleContext(), p.GetState())
+	p.EnterRule(localctx, 4, AnzerParserRULE_dataDef)
 
 	defer func() {
 		p.ExitRule()
@@ -491,8 +434,20 @@ func (p *AnzerParser) FuncName() (localctx IFuncNameContext) {
 
 	p.EnterOuterAlt(localctx, 1)
 	{
-		p.SetState(32)
-		p.Match(AnzerParserFUNC_NAME)
+		p.SetState(23)
+		p.Match(AnzerParserT__0)
+	}
+	{
+		p.SetState(24)
+		p.Match(AnzerParserDATA_NAME_ID)
+	}
+	{
+		p.SetState(25)
+		p.Match(AnzerParserT__1)
+	}
+	{
+		p.SetState(26)
+		p.Json()
 	}
 
 	return localctx
@@ -536,14 +491,8 @@ func NewDataNameContext(parser antlr.Parser, parent antlr.ParserRuleContext, inv
 
 func (s *DataNameContext) GetParser() antlr.Parser { return s.parser }
 
-func (s *DataNameContext) DataNameId() IDataNameIdContext {
-	var t = s.GetTypedRuleContext(reflect.TypeOf((*IDataNameIdContext)(nil)).Elem(), 0)
-
-	if t == nil {
-		return nil
-	}
-
-	return t.(IDataNameIdContext)
+func (s *DataNameContext) DATA_NAME_ID() antlr.TerminalNode {
+	return s.GetToken(AnzerParserDATA_NAME_ID, 0)
 }
 
 func (s *DataNameContext) GetRuleContext() antlr.RuleContext {
@@ -569,6 +518,7 @@ func (s *DataNameContext) ExitRule(listener antlr.ParseTreeListener) {
 func (p *AnzerParser) DataName() (localctx IDataNameContext) {
 	localctx = NewDataNameContext(p, p.GetParserRuleContext(), p.GetState())
 	p.EnterRule(localctx, 6, AnzerParserRULE_dataName)
+	var _la int
 
 	defer func() {
 		p.ExitRule()
@@ -586,22 +536,179 @@ func (p *AnzerParser) DataName() (localctx IDataNameContext) {
 		}
 	}()
 
-	p.SetState(36)
+	p.EnterOuterAlt(localctx, 1)
+	{
+		p.SetState(28)
+		_la = p.GetTokenStream().LA(1)
+
+		if !(_la == AnzerParserT__2 || _la == AnzerParserDATA_NAME_ID) {
+			p.GetErrorHandler().RecoverInline(p)
+		} else {
+			p.GetErrorHandler().ReportMatch(p)
+			p.Consume()
+		}
+	}
+
+	return localctx
+}
+
+// IJsonContext is an interface to support dynamic dispatch.
+type IJsonContext interface {
+	antlr.ParserRuleContext
+
+	// GetParser returns the parser.
+	GetParser() antlr.Parser
+
+	// IsJsonContext differentiates from other interfaces.
+	IsJsonContext()
+}
+
+type JsonContext struct {
+	*antlr.BaseParserRuleContext
+	parser antlr.Parser
+}
+
+func NewEmptyJsonContext() *JsonContext {
+	var p = new(JsonContext)
+	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(nil, -1)
+	p.RuleIndex = AnzerParserRULE_json
+	return p
+}
+
+func (*JsonContext) IsJsonContext() {}
+
+func NewJsonContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *JsonContext {
+	var p = new(JsonContext)
+
+	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(parent, invokingState)
+
+	p.parser = parser
+	p.RuleIndex = AnzerParserRULE_json
+
+	return p
+}
+
+func (s *JsonContext) GetParser() antlr.Parser { return s.parser }
+
+func (s *JsonContext) STRING() antlr.TerminalNode {
+	return s.GetToken(AnzerParserSTRING, 0)
+}
+
+func (s *JsonContext) NUMBER() antlr.TerminalNode {
+	return s.GetToken(AnzerParserNUMBER, 0)
+}
+
+func (s *JsonContext) Obj() IObjContext {
+	var t = s.GetTypedRuleContext(reflect.TypeOf((*IObjContext)(nil)).Elem(), 0)
+
+	if t == nil {
+		return nil
+	}
+
+	return t.(IObjContext)
+}
+
+func (s *JsonContext) Array() IArrayContext {
+	var t = s.GetTypedRuleContext(reflect.TypeOf((*IArrayContext)(nil)).Elem(), 0)
+
+	if t == nil {
+		return nil
+	}
+
+	return t.(IArrayContext)
+}
+
+func (s *JsonContext) GetRuleContext() antlr.RuleContext {
+	return s
+}
+
+func (s *JsonContext) ToStringTree(ruleNames []string, recog antlr.Recognizer) string {
+	return antlr.TreesStringTree(s, ruleNames, recog)
+}
+
+func (s *JsonContext) EnterRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(AnzerListener); ok {
+		listenerT.EnterJson(s)
+	}
+}
+
+func (s *JsonContext) ExitRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(AnzerListener); ok {
+		listenerT.ExitJson(s)
+	}
+}
+
+func (p *AnzerParser) Json() (localctx IJsonContext) {
+	localctx = NewJsonContext(p, p.GetParserRuleContext(), p.GetState())
+	p.EnterRule(localctx, 8, AnzerParserRULE_json)
+
+	defer func() {
+		p.ExitRule()
+	}()
+
+	defer func() {
+		if err := recover(); err != nil {
+			if v, ok := err.(antlr.RecognitionException); ok {
+				localctx.SetException(v)
+				p.GetErrorHandler().ReportError(p, v)
+				p.GetErrorHandler().Recover(p, v)
+			} else {
+				panic(err)
+			}
+		}
+	}()
+
+	p.SetState(37)
 	p.GetErrorHandler().Sync(p)
 
 	switch p.GetTokenStream().LA(1) {
-	case AnzerParserDATA_NAME_ID:
+	case AnzerParserSTRING:
 		p.EnterOuterAlt(localctx, 1)
 		{
+			p.SetState(30)
+			p.Match(AnzerParserSTRING)
+		}
+
+	case AnzerParserNUMBER:
+		p.EnterOuterAlt(localctx, 2)
+		{
+			p.SetState(31)
+			p.Match(AnzerParserNUMBER)
+		}
+
+	case AnzerParserT__6:
+		p.EnterOuterAlt(localctx, 3)
+		{
+			p.SetState(32)
+			p.Obj()
+		}
+
+	case AnzerParserT__10:
+		p.EnterOuterAlt(localctx, 4)
+		{
+			p.SetState(33)
+			p.Array()
+		}
+
+	case AnzerParserT__3:
+		p.EnterOuterAlt(localctx, 5)
+		{
 			p.SetState(34)
-			p.DataNameId()
+			p.Match(AnzerParserT__3)
 		}
 
 	case AnzerParserT__4:
-		p.EnterOuterAlt(localctx, 2)
+		p.EnterOuterAlt(localctx, 6)
 		{
 			p.SetState(35)
 			p.Match(AnzerParserT__4)
+		}
+
+	case AnzerParserT__5:
+		p.EnterOuterAlt(localctx, 7)
+		{
+			p.SetState(36)
+			p.Match(AnzerParserT__5)
 		}
 
 	default:
@@ -611,168 +718,91 @@ func (p *AnzerParser) DataName() (localctx IDataNameContext) {
 	return localctx
 }
 
-// IDataNameIdContext is an interface to support dynamic dispatch.
-type IDataNameIdContext interface {
+// IObjContext is an interface to support dynamic dispatch.
+type IObjContext interface {
 	antlr.ParserRuleContext
 
 	// GetParser returns the parser.
 	GetParser() antlr.Parser
 
-	// IsDataNameIdContext differentiates from other interfaces.
-	IsDataNameIdContext()
+	// IsObjContext differentiates from other interfaces.
+	IsObjContext()
 }
 
-type DataNameIdContext struct {
+type ObjContext struct {
 	*antlr.BaseParserRuleContext
 	parser antlr.Parser
 }
 
-func NewEmptyDataNameIdContext() *DataNameIdContext {
-	var p = new(DataNameIdContext)
+func NewEmptyObjContext() *ObjContext {
+	var p = new(ObjContext)
 	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(nil, -1)
-	p.RuleIndex = AnzerParserRULE_dataNameId
+	p.RuleIndex = AnzerParserRULE_obj
 	return p
 }
 
-func (*DataNameIdContext) IsDataNameIdContext() {}
+func (*ObjContext) IsObjContext() {}
 
-func NewDataNameIdContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *DataNameIdContext {
-	var p = new(DataNameIdContext)
+func NewObjContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *ObjContext {
+	var p = new(ObjContext)
 
 	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(parent, invokingState)
 
 	p.parser = parser
-	p.RuleIndex = AnzerParserRULE_dataNameId
+	p.RuleIndex = AnzerParserRULE_obj
 
 	return p
 }
 
-func (s *DataNameIdContext) GetParser() antlr.Parser { return s.parser }
+func (s *ObjContext) GetParser() antlr.Parser { return s.parser }
 
-func (s *DataNameIdContext) DATA_NAME_ID() antlr.TerminalNode {
-	return s.GetToken(AnzerParserDATA_NAME_ID, 0)
-}
+func (s *ObjContext) AllPair() []IPairContext {
+	var ts = s.GetTypedRuleContexts(reflect.TypeOf((*IPairContext)(nil)).Elem())
+	var tst = make([]IPairContext, len(ts))
 
-func (s *DataNameIdContext) GetRuleContext() antlr.RuleContext {
-	return s
-}
-
-func (s *DataNameIdContext) ToStringTree(ruleNames []string, recog antlr.Recognizer) string {
-	return antlr.TreesStringTree(s, ruleNames, recog)
-}
-
-func (s *DataNameIdContext) EnterRule(listener antlr.ParseTreeListener) {
-	if listenerT, ok := listener.(AnzerListener); ok {
-		listenerT.EnterDataNameId(s)
-	}
-}
-
-func (s *DataNameIdContext) ExitRule(listener antlr.ParseTreeListener) {
-	if listenerT, ok := listener.(AnzerListener); ok {
-		listenerT.ExitDataNameId(s)
-	}
-}
-
-func (p *AnzerParser) DataNameId() (localctx IDataNameIdContext) {
-	localctx = NewDataNameIdContext(p, p.GetParserRuleContext(), p.GetState())
-	p.EnterRule(localctx, 8, AnzerParserRULE_dataNameId)
-
-	defer func() {
-		p.ExitRule()
-	}()
-
-	defer func() {
-		if err := recover(); err != nil {
-			if v, ok := err.(antlr.RecognitionException); ok {
-				localctx.SetException(v)
-				p.GetErrorHandler().ReportError(p, v)
-				p.GetErrorHandler().Recover(p, v)
-			} else {
-				panic(err)
-			}
+	for i, t := range ts {
+		if t != nil {
+			tst[i] = t.(IPairContext)
 		}
-	}()
-
-	p.EnterOuterAlt(localctx, 1)
-	{
-		p.SetState(38)
-		p.Match(AnzerParserDATA_NAME_ID)
 	}
 
-	return localctx
+	return tst
 }
 
-// IDataContentContext is an interface to support dynamic dispatch.
-type IDataContentContext interface {
-	antlr.ParserRuleContext
-
-	// GetParser returns the parser.
-	GetParser() antlr.Parser
-
-	// IsDataContentContext differentiates from other interfaces.
-	IsDataContentContext()
-}
-
-type DataContentContext struct {
-	*antlr.BaseParserRuleContext
-	parser antlr.Parser
-}
-
-func NewEmptyDataContentContext() *DataContentContext {
-	var p = new(DataContentContext)
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(nil, -1)
-	p.RuleIndex = AnzerParserRULE_dataContent
-	return p
-}
-
-func (*DataContentContext) IsDataContentContext() {}
-
-func NewDataContentContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *DataContentContext {
-	var p = new(DataContentContext)
-
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(parent, invokingState)
-
-	p.parser = parser
-	p.RuleIndex = AnzerParserRULE_dataContent
-
-	return p
-}
-
-func (s *DataContentContext) GetParser() antlr.Parser { return s.parser }
-
-func (s *DataContentContext) JsonContent() IJsonContentContext {
-	var t = s.GetTypedRuleContext(reflect.TypeOf((*IJsonContentContext)(nil)).Elem(), 0)
+func (s *ObjContext) Pair(i int) IPairContext {
+	var t = s.GetTypedRuleContext(reflect.TypeOf((*IPairContext)(nil)).Elem(), i)
 
 	if t == nil {
 		return nil
 	}
 
-	return t.(IJsonContentContext)
+	return t.(IPairContext)
 }
 
-func (s *DataContentContext) GetRuleContext() antlr.RuleContext {
+func (s *ObjContext) GetRuleContext() antlr.RuleContext {
 	return s
 }
 
-func (s *DataContentContext) ToStringTree(ruleNames []string, recog antlr.Recognizer) string {
+func (s *ObjContext) ToStringTree(ruleNames []string, recog antlr.Recognizer) string {
 	return antlr.TreesStringTree(s, ruleNames, recog)
 }
 
-func (s *DataContentContext) EnterRule(listener antlr.ParseTreeListener) {
+func (s *ObjContext) EnterRule(listener antlr.ParseTreeListener) {
 	if listenerT, ok := listener.(AnzerListener); ok {
-		listenerT.EnterDataContent(s)
+		listenerT.EnterObj(s)
 	}
 }
 
-func (s *DataContentContext) ExitRule(listener antlr.ParseTreeListener) {
+func (s *ObjContext) ExitRule(listener antlr.ParseTreeListener) {
 	if listenerT, ok := listener.(AnzerListener); ok {
-		listenerT.ExitDataContent(s)
+		listenerT.ExitObj(s)
 	}
 }
 
-func (p *AnzerParser) DataContent() (localctx IDataContentContext) {
-	localctx = NewDataContentContext(p, p.GetParserRuleContext(), p.GetState())
-	p.EnterRule(localctx, 10, AnzerParserRULE_dataContent)
+func (p *AnzerParser) Obj() (localctx IObjContext) {
+	localctx = NewObjContext(p, p.GetParserRuleContext(), p.GetState())
+	p.EnterRule(localctx, 10, AnzerParserRULE_obj)
+	var _la int
 
 	defer func() {
 		p.ExitRule()
@@ -790,88 +820,133 @@ func (p *AnzerParser) DataContent() (localctx IDataContentContext) {
 		}
 	}()
 
-	p.EnterOuterAlt(localctx, 1)
-	{
-		p.SetState(40)
-		p.Match(AnzerParserT__5)
-	}
-	{
-		p.SetState(41)
-		p.JsonContent()
-	}
-	{
-		p.SetState(42)
-		p.Match(AnzerParserT__5)
+	p.SetState(52)
+	p.GetErrorHandler().Sync(p)
+	switch p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 3, p.GetParserRuleContext()) {
+	case 1:
+		p.EnterOuterAlt(localctx, 1)
+		{
+			p.SetState(39)
+			p.Match(AnzerParserT__6)
+		}
+		{
+			p.SetState(40)
+			p.Pair()
+		}
+		p.SetState(45)
+		p.GetErrorHandler().Sync(p)
+		_la = p.GetTokenStream().LA(1)
+
+		for _la == AnzerParserT__7 {
+			{
+				p.SetState(41)
+				p.Match(AnzerParserT__7)
+			}
+			{
+				p.SetState(42)
+				p.Pair()
+			}
+
+			p.SetState(47)
+			p.GetErrorHandler().Sync(p)
+			_la = p.GetTokenStream().LA(1)
+		}
+		{
+			p.SetState(48)
+			p.Match(AnzerParserT__8)
+		}
+
+	case 2:
+		p.EnterOuterAlt(localctx, 2)
+		{
+			p.SetState(50)
+			p.Match(AnzerParserT__6)
+		}
+		{
+			p.SetState(51)
+			p.Match(AnzerParserT__8)
+		}
+
 	}
 
 	return localctx
 }
 
-// IJsonContentContext is an interface to support dynamic dispatch.
-type IJsonContentContext interface {
+// IPairContext is an interface to support dynamic dispatch.
+type IPairContext interface {
 	antlr.ParserRuleContext
 
 	// GetParser returns the parser.
 	GetParser() antlr.Parser
 
-	// IsJsonContentContext differentiates from other interfaces.
-	IsJsonContentContext()
+	// IsPairContext differentiates from other interfaces.
+	IsPairContext()
 }
 
-type JsonContentContext struct {
+type PairContext struct {
 	*antlr.BaseParserRuleContext
 	parser antlr.Parser
 }
 
-func NewEmptyJsonContentContext() *JsonContentContext {
-	var p = new(JsonContentContext)
+func NewEmptyPairContext() *PairContext {
+	var p = new(PairContext)
 	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(nil, -1)
-	p.RuleIndex = AnzerParserRULE_jsonContent
+	p.RuleIndex = AnzerParserRULE_pair
 	return p
 }
 
-func (*JsonContentContext) IsJsonContentContext() {}
+func (*PairContext) IsPairContext() {}
 
-func NewJsonContentContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *JsonContentContext {
-	var p = new(JsonContentContext)
+func NewPairContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *PairContext {
+	var p = new(PairContext)
 
 	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(parent, invokingState)
 
 	p.parser = parser
-	p.RuleIndex = AnzerParserRULE_jsonContent
+	p.RuleIndex = AnzerParserRULE_pair
 
 	return p
 }
 
-func (s *JsonContentContext) GetParser() antlr.Parser { return s.parser }
+func (s *PairContext) GetParser() antlr.Parser { return s.parser }
 
-func (s *JsonContentContext) JSON_CONTENT() antlr.TerminalNode {
-	return s.GetToken(AnzerParserJSON_CONTENT, 0)
+func (s *PairContext) STRING() antlr.TerminalNode {
+	return s.GetToken(AnzerParserSTRING, 0)
 }
 
-func (s *JsonContentContext) GetRuleContext() antlr.RuleContext {
+func (s *PairContext) Json() IJsonContext {
+	var t = s.GetTypedRuleContext(reflect.TypeOf((*IJsonContext)(nil)).Elem(), 0)
+
+	if t == nil {
+		return nil
+	}
+
+	return t.(IJsonContext)
+}
+
+func (s *PairContext) GetRuleContext() antlr.RuleContext {
 	return s
 }
 
-func (s *JsonContentContext) ToStringTree(ruleNames []string, recog antlr.Recognizer) string {
+func (s *PairContext) ToStringTree(ruleNames []string, recog antlr.Recognizer) string {
 	return antlr.TreesStringTree(s, ruleNames, recog)
 }
 
-func (s *JsonContentContext) EnterRule(listener antlr.ParseTreeListener) {
+func (s *PairContext) EnterRule(listener antlr.ParseTreeListener) {
 	if listenerT, ok := listener.(AnzerListener); ok {
-		listenerT.EnterJsonContent(s)
+		listenerT.EnterPair(s)
 	}
 }
 
-func (s *JsonContentContext) ExitRule(listener antlr.ParseTreeListener) {
+func (s *PairContext) ExitRule(listener antlr.ParseTreeListener) {
 	if listenerT, ok := listener.(AnzerListener); ok {
-		listenerT.ExitJsonContent(s)
+		listenerT.ExitPair(s)
 	}
 }
 
-func (p *AnzerParser) JsonContent() (localctx IJsonContentContext) {
-	localctx = NewJsonContentContext(p, p.GetParserRuleContext(), p.GetState())
-	p.EnterRule(localctx, 12, AnzerParserRULE_jsonContent)
+func (p *AnzerParser) Pair() (localctx IPairContext) {
+	localctx = NewPairContext(p, p.GetParserRuleContext(), p.GetState())
+	p.EnterRule(localctx, 12, AnzerParserRULE_pair)
 
 	defer func() {
 		p.ExitRule()
@@ -891,8 +966,170 @@ func (p *AnzerParser) JsonContent() (localctx IJsonContentContext) {
 
 	p.EnterOuterAlt(localctx, 1)
 	{
-		p.SetState(44)
-		p.Match(AnzerParserJSON_CONTENT)
+		p.SetState(54)
+		p.Match(AnzerParserSTRING)
+	}
+	{
+		p.SetState(55)
+		p.Match(AnzerParserT__9)
+	}
+	{
+		p.SetState(56)
+		p.Json()
+	}
+
+	return localctx
+}
+
+// IArrayContext is an interface to support dynamic dispatch.
+type IArrayContext interface {
+	antlr.ParserRuleContext
+
+	// GetParser returns the parser.
+	GetParser() antlr.Parser
+
+	// IsArrayContext differentiates from other interfaces.
+	IsArrayContext()
+}
+
+type ArrayContext struct {
+	*antlr.BaseParserRuleContext
+	parser antlr.Parser
+}
+
+func NewEmptyArrayContext() *ArrayContext {
+	var p = new(ArrayContext)
+	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(nil, -1)
+	p.RuleIndex = AnzerParserRULE_array
+	return p
+}
+
+func (*ArrayContext) IsArrayContext() {}
+
+func NewArrayContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *ArrayContext {
+	var p = new(ArrayContext)
+
+	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(parent, invokingState)
+
+	p.parser = parser
+	p.RuleIndex = AnzerParserRULE_array
+
+	return p
+}
+
+func (s *ArrayContext) GetParser() antlr.Parser { return s.parser }
+
+func (s *ArrayContext) AllJson() []IJsonContext {
+	var ts = s.GetTypedRuleContexts(reflect.TypeOf((*IJsonContext)(nil)).Elem())
+	var tst = make([]IJsonContext, len(ts))
+
+	for i, t := range ts {
+		if t != nil {
+			tst[i] = t.(IJsonContext)
+		}
+	}
+
+	return tst
+}
+
+func (s *ArrayContext) Json(i int) IJsonContext {
+	var t = s.GetTypedRuleContext(reflect.TypeOf((*IJsonContext)(nil)).Elem(), i)
+
+	if t == nil {
+		return nil
+	}
+
+	return t.(IJsonContext)
+}
+
+func (s *ArrayContext) GetRuleContext() antlr.RuleContext {
+	return s
+}
+
+func (s *ArrayContext) ToStringTree(ruleNames []string, recog antlr.Recognizer) string {
+	return antlr.TreesStringTree(s, ruleNames, recog)
+}
+
+func (s *ArrayContext) EnterRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(AnzerListener); ok {
+		listenerT.EnterArray(s)
+	}
+}
+
+func (s *ArrayContext) ExitRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(AnzerListener); ok {
+		listenerT.ExitArray(s)
+	}
+}
+
+func (p *AnzerParser) Array() (localctx IArrayContext) {
+	localctx = NewArrayContext(p, p.GetParserRuleContext(), p.GetState())
+	p.EnterRule(localctx, 14, AnzerParserRULE_array)
+	var _la int
+
+	defer func() {
+		p.ExitRule()
+	}()
+
+	defer func() {
+		if err := recover(); err != nil {
+			if v, ok := err.(antlr.RecognitionException); ok {
+				localctx.SetException(v)
+				p.GetErrorHandler().ReportError(p, v)
+				p.GetErrorHandler().Recover(p, v)
+			} else {
+				panic(err)
+			}
+		}
+	}()
+
+	p.SetState(71)
+	p.GetErrorHandler().Sync(p)
+	switch p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 5, p.GetParserRuleContext()) {
+	case 1:
+		p.EnterOuterAlt(localctx, 1)
+		{
+			p.SetState(58)
+			p.Match(AnzerParserT__10)
+		}
+		{
+			p.SetState(59)
+			p.Json()
+		}
+		p.SetState(64)
+		p.GetErrorHandler().Sync(p)
+		_la = p.GetTokenStream().LA(1)
+
+		for _la == AnzerParserT__7 {
+			{
+				p.SetState(60)
+				p.Match(AnzerParserT__7)
+			}
+			{
+				p.SetState(61)
+				p.Json()
+			}
+
+			p.SetState(66)
+			p.GetErrorHandler().Sync(p)
+			_la = p.GetTokenStream().LA(1)
+		}
+		{
+			p.SetState(67)
+			p.Match(AnzerParserT__11)
+		}
+
+	case 2:
+		p.EnterOuterAlt(localctx, 2)
+		{
+			p.SetState(69)
+			p.Match(AnzerParserT__10)
+		}
+		{
+			p.SetState(70)
+			p.Match(AnzerParserT__11)
+		}
+
 	}
 
 	return localctx

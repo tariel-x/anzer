@@ -1,4 +1,2 @@
-data X="{aaa}"
-data X2="{bbb}"
-func1::_->X1
-func2::X1->X2
+data X={"a":true}
+data X2={"b":false}
