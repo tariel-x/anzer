@@ -11,30 +11,42 @@ type AnzerListener interface {
 	// EnterSystem is called when entering the system production.
 	EnterSystem(c *SystemContext)
 
-	// EnterObj is called when entering the obj production.
-	EnterObj(c *ObjContext)
+	// EnterStatement is called when entering the statement production.
+	EnterStatement(c *StatementContext)
 
-	// EnterPair is called when entering the pair production.
-	EnterPair(c *PairContext)
+	// EnterFuncName is called when entering the funcName production.
+	EnterFuncName(c *FuncNameContext)
 
-	// EnterArray is called when entering the array production.
-	EnterArray(c *ArrayContext)
+	// EnterDataName is called when entering the dataName production.
+	EnterDataName(c *DataNameContext)
 
-	// EnterValue is called when entering the value production.
-	EnterValue(c *ValueContext)
+	// EnterDataNameId is called when entering the dataNameId production.
+	EnterDataNameId(c *DataNameIdContext)
+
+	// EnterDataContent is called when entering the dataContent production.
+	EnterDataContent(c *DataContentContext)
+
+	// EnterJsonContent is called when entering the jsonContent production.
+	EnterJsonContent(c *JsonContentContext)
 
 	// ExitSystem is called when exiting the system production.
 	ExitSystem(c *SystemContext)
 
-	// ExitObj is called when exiting the obj production.
-	ExitObj(c *ObjContext)
+	// ExitStatement is called when exiting the statement production.
+	ExitStatement(c *StatementContext)
 
-	// ExitPair is called when exiting the pair production.
-	ExitPair(c *PairContext)
+	// ExitFuncName is called when exiting the funcName production.
+	ExitFuncName(c *FuncNameContext)
 
-	// ExitArray is called when exiting the array production.
-	ExitArray(c *ArrayContext)
+	// ExitDataName is called when exiting the dataName production.
+	ExitDataName(c *DataNameContext)
 
-	// ExitValue is called when exiting the value production.
-	ExitValue(c *ValueContext)
+	// ExitDataNameId is called when exiting the dataNameId production.
+	ExitDataNameId(c *DataNameIdContext)
+
+	// ExitDataContent is called when exiting the dataContent production.
+	ExitDataContent(c *DataContentContext)
+
+	// ExitJsonContent is called when exiting the jsonContent production.
+	ExitJsonContent(c *JsonContentContext)
 }

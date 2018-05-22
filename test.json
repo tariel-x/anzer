@@ -18,3 +18,23 @@
     }
   }
 }
+{
+  "method": "advert",
+  "id": 453264756,
+  "params": {
+    "advert": {
+      "region": "201046",
+      "showPlace": null,
+      "price": "520000",
+      "haggle": null,
+      "props": {
+        "parkSensor": null,
+        "driverSeatAdjusting": null,
+        "sunRoof": null,
+        "passengerSeatAdjusting": null
+      },
+      "userid": 2865220,
+      "createdAt": null
+    }
+  }
+}

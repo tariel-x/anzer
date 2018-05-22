@@ -1,80 +1,49 @@
-
-/** Taken from "The Definitive ANTLR 4 Reference" by Terence Parr */
-
-// Derived from http://json.org
+/*
+antlr4 -Dlanguage=Go Anzer.g4
+ */
+ 
 grammar Anzer;
 
 system
-   : value
-   ;
+    : statement+
+    ;
 
-obj
-   : '{' pair (',' pair)* '}'
-   | '{' '}'
-   ;
+statement
+    : 'data' dataNameId '=' dataContent
+	| funcName '::' dataName '->' dataName
+    ;
 
-pair
-   : STRING ':' value
-   ;
+funcName
+    : FUNC_NAME
+    ;
 
-array
-   : '[' value (',' value)* ']'
-   | '[' ']'
-   ;
+FUNC_NAME
+    : [a-zA-Z0-9] +
+    ;
 
-value
-   : STRING
-   | NUMBER
-   | obj
-   | array
-   | 'true'
-   | 'false'
-   | 'null'
-   ;
+dataName
+    : dataNameId
+    | '_'
+    ;
 
+dataNameId
+    : DATA_NAME_ID
+    ;
 
-STRING
-   : '"' (ESC | SAFECODEPOINT)* '"'
-   ;
+DATA_NAME_ID
+    : [A-Z0-9] +
+    ;
 
+dataContent
+    : '"' jsonContent '"'
+    ;
 
-fragment ESC
-   : '\\' (["\\/bfnrt] | UNICODE)
-   ;
+jsonContent
+    : JSON_CONTENT
+    ;
 
+JSON_CONTENT
+    : '{' [.]+ '}'
+    ;
 
-fragment UNICODE
-   : 'u' HEX HEX HEX HEX
-   ;
-
-
-fragment HEX
-   : [0-9a-fA-F]
-   ;
-
-
-fragment SAFECODEPOINT
-   : ~ ["\\\u0000-\u001F]
-   ;
-
-
-NUMBER
-   : '-'? INT ('.' [0-9] +)? EXP?
-   ;
-
-
-fragment INT
-   : '0' | [1-9] [0-9]*
-   ;
-
-// no leading zeros
-
-fragment EXP
-   : [Ee] [+\-]? INT
-   ;
-
-// \- since - means "range" inside [...]
-
-WS
-   : [ \t\n\r] + -> skip
-   ;
+WS: [ \t\r\n]+ -> skip;
