@@ -1,7 +1,6 @@
-// Code generated from Anzer.g4 by ANTLR 4.7.1. DO NOT EDIT.
+// Generated from /home/nikita/go/src/github.com/tariel-x/anzer/parser/Anzer.g4 by ANTLR 4.7.
 
 package parser // Anzer
-
 import (
 	"fmt"
 	"reflect"
@@ -222,6 +221,16 @@ func (s *SystemContext) ExitRule(listener antlr.ParseTreeListener) {
 	}
 }
 
+func (s *SystemContext) Accept(visitor antlr.ParseTreeVisitor) interface{} {
+	switch t := visitor.(type) {
+	case AnzerVisitor:
+		return t.VisitSystem(s)
+
+	default:
+		return t.VisitChildren(s)
+	}
+}
+
 func (p *AnzerParser) System() (localctx ISystemContext) {
 	localctx = NewSystemContext(p, p.GetParserRuleContext(), p.GetState())
 	p.EnterRule(localctx, 0, AnzerParserRULE_system)
@@ -327,6 +336,16 @@ func (s *StatementContext) EnterRule(listener antlr.ParseTreeListener) {
 func (s *StatementContext) ExitRule(listener antlr.ParseTreeListener) {
 	if listenerT, ok := listener.(AnzerListener); ok {
 		listenerT.ExitStatement(s)
+	}
+}
+
+func (s *StatementContext) Accept(visitor antlr.ParseTreeVisitor) interface{} {
+	switch t := visitor.(type) {
+	case AnzerVisitor:
+		return t.VisitStatement(s)
+
+	default:
+		return t.VisitChildren(s)
 	}
 }
 
@@ -480,6 +499,16 @@ func (s *DataDefContext) EnterRule(listener antlr.ParseTreeListener) {
 func (s *DataDefContext) ExitRule(listener antlr.ParseTreeListener) {
 	if listenerT, ok := listener.(AnzerListener); ok {
 		listenerT.ExitDataDef(s)
+	}
+}
+
+func (s *DataDefContext) Accept(visitor antlr.ParseTreeVisitor) interface{} {
+	switch t := visitor.(type) {
+	case AnzerVisitor:
+		return t.VisitDataDef(s)
+
+	default:
+		return t.VisitChildren(s)
 	}
 }
 
@@ -655,6 +684,16 @@ func (s *DataNameContext) ExitRule(listener antlr.ParseTreeListener) {
 	}
 }
 
+func (s *DataNameContext) Accept(visitor antlr.ParseTreeVisitor) interface{} {
+	switch t := visitor.(type) {
+	case AnzerVisitor:
+		return t.VisitDataName(s)
+
+	default:
+		return t.VisitChildren(s)
+	}
+}
+
 func (p *AnzerParser) DataName() (localctx IDataNameContext) {
 	localctx = NewDataNameContext(p, p.GetParserRuleContext(), p.GetState())
 	p.EnterRule(localctx, 6, AnzerParserRULE_dataName)
@@ -762,6 +801,16 @@ func (s *DataNameIdContext) ExitRule(listener antlr.ParseTreeListener) {
 	}
 }
 
+func (s *DataNameIdContext) Accept(visitor antlr.ParseTreeVisitor) interface{} {
+	switch t := visitor.(type) {
+	case AnzerVisitor:
+		return t.VisitDataNameId(s)
+
+	default:
+		return t.VisitChildren(s)
+	}
+}
+
 func (p *AnzerParser) DataNameId() (localctx IDataNameIdContext) {
 	localctx = NewDataNameIdContext(p, p.GetParserRuleContext(), p.GetState())
 	p.EnterRule(localctx, 8, AnzerParserRULE_dataNameId)
@@ -850,6 +899,16 @@ func (s *FuncNameIdContext) EnterRule(listener antlr.ParseTreeListener) {
 func (s *FuncNameIdContext) ExitRule(listener antlr.ParseTreeListener) {
 	if listenerT, ok := listener.(AnzerListener); ok {
 		listenerT.ExitFuncNameId(s)
+	}
+}
+
+func (s *FuncNameIdContext) Accept(visitor antlr.ParseTreeVisitor) interface{} {
+	switch t := visitor.(type) {
+	case AnzerVisitor:
+		return t.VisitFuncNameId(s)
+
+	default:
+		return t.VisitChildren(s)
 	}
 }
 
@@ -965,6 +1024,16 @@ func (s *JsonContext) EnterRule(listener antlr.ParseTreeListener) {
 func (s *JsonContext) ExitRule(listener antlr.ParseTreeListener) {
 	if listenerT, ok := listener.(AnzerListener); ok {
 		listenerT.ExitJson(s)
+	}
+}
+
+func (s *JsonContext) Accept(visitor antlr.ParseTreeVisitor) interface{} {
+	switch t := visitor.(type) {
+	case AnzerVisitor:
+		return t.VisitJson(s)
+
+	default:
+		return t.VisitChildren(s)
 	}
 }
 
@@ -1129,6 +1198,16 @@ func (s *ObjContext) ExitRule(listener antlr.ParseTreeListener) {
 	}
 }
 
+func (s *ObjContext) Accept(visitor antlr.ParseTreeVisitor) interface{} {
+	switch t := visitor.(type) {
+	case AnzerVisitor:
+		return t.VisitObj(s)
+
+	default:
+		return t.VisitChildren(s)
+	}
+}
+
 func (p *AnzerParser) Obj() (localctx IObjContext) {
 	localctx = NewObjContext(p, p.GetParserRuleContext(), p.GetState())
 	p.EnterRule(localctx, 14, AnzerParserRULE_obj)
@@ -1274,6 +1353,16 @@ func (s *PairContext) ExitRule(listener antlr.ParseTreeListener) {
 	}
 }
 
+func (s *PairContext) Accept(visitor antlr.ParseTreeVisitor) interface{} {
+	switch t := visitor.(type) {
+	case AnzerVisitor:
+		return t.VisitPair(s)
+
+	default:
+		return t.VisitChildren(s)
+	}
+}
+
 func (p *AnzerParser) Pair() (localctx IPairContext) {
 	localctx = NewPairContext(p, p.GetParserRuleContext(), p.GetState())
 	p.EnterRule(localctx, 16, AnzerParserRULE_pair)
@@ -1389,6 +1478,16 @@ func (s *ArrayContext) EnterRule(listener antlr.ParseTreeListener) {
 func (s *ArrayContext) ExitRule(listener antlr.ParseTreeListener) {
 	if listenerT, ok := listener.(AnzerListener); ok {
 		listenerT.ExitArray(s)
+	}
+}
+
+func (s *ArrayContext) Accept(visitor antlr.ParseTreeVisitor) interface{} {
+	switch t := visitor.(type) {
+	case AnzerVisitor:
+		return t.VisitArray(s)
+
+	default:
+		return t.VisitChildren(s)
 	}
 }
 

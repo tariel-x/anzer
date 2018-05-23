@@ -1,23 +1,11 @@
 package main
 
 import (
-	"fmt"
 	"github.com/antlr/antlr4/runtime/Go/antlr"
 	"github.com/tariel-x/anzer/parser"
+	"github.com/tariel-x/anzer/interpeter"
 	"os"
 )
-
-type TreeShapeListener struct {
-	*parser.BaseAnzerListener
-}
-
-func NewTreeShapeListener() *TreeShapeListener {
-	return new(TreeShapeListener)
-}
-
-func (this *TreeShapeListener) EnterEveryRule(ctx antlr.ParserRuleContext) {
-	fmt.Println(ctx.GetText())
-}
 
 func main() {
 	input, _ := antlr.NewFileStream(os.Args[1])
@@ -27,5 +15,5 @@ func main() {
 	p.AddErrorListener(antlr.NewDiagnosticErrorListener(true))
 	p.BuildParseTrees = true
 	tree := p.System()
-	antlr.ParseTreeWalkerDefault.Walk(NewTreeShapeListener(), tree)
+	antlr.ParseTreeWalkerDefault.Walk(interpeter.NewListener(), tree)
 }

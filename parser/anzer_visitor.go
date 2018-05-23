@@ -19,6 +19,12 @@ type AnzerVisitor interface {
 	// Visit a parse tree produced by AnzerParser#dataName.
 	VisitDataName(ctx *DataNameContext) interface{}
 
+	// Visit a parse tree produced by AnzerParser#dataNameId.
+	VisitDataNameId(ctx *DataNameIdContext) interface{}
+
+	// Visit a parse tree produced by AnzerParser#funcNameId.
+	VisitFuncNameId(ctx *FuncNameIdContext) interface{}
+
 	// Visit a parse tree produced by AnzerParser#json.
 	VisitJson(ctx *JsonContext) interface{}
 

@@ -1,4 +1,4 @@
-// Code generated from Anzer.g4 by ANTLR 4.7.1. DO NOT EDIT.
+// Generated from /home/nikita/go/src/github.com/tariel-x/anzer/parser/Anzer.g4 by ANTLR 4.7.
 
 package parser
 

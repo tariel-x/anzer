@@ -23,6 +23,14 @@ func (v *BaseAnzerVisitor) VisitDataName(ctx *DataNameContext) interface{} {
 	return v.VisitChildren(ctx)
 }
 
+func (v *BaseAnzerVisitor) VisitDataNameId(ctx *DataNameIdContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
+func (v *BaseAnzerVisitor) VisitFuncNameId(ctx *FuncNameIdContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
 func (v *BaseAnzerVisitor) VisitJson(ctx *JsonContext) interface{} {
 	return v.VisitChildren(ctx)
 }
