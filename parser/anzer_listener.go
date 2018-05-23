@@ -1,6 +1,7 @@
-// Generated from /home/nikita/go/src/github.com/tariel-x/anzer/parser/Anzer.g4 by ANTLR 4.7.
+// Code generated from Anzer.g4 by ANTLR 4.7.1. DO NOT EDIT.
 
 package parser // Anzer
+
 import "github.com/antlr/antlr4/runtime/Go/antlr"
 
 // AnzerListener is a complete listener for a parse tree produced by AnzerParser.
@@ -18,6 +19,12 @@ type AnzerListener interface {
 
 	// EnterDataName is called when entering the dataName production.
 	EnterDataName(c *DataNameContext)
+
+	// EnterDataNameId is called when entering the dataNameId production.
+	EnterDataNameId(c *DataNameIdContext)
+
+	// EnterFuncNameId is called when entering the funcNameId production.
+	EnterFuncNameId(c *FuncNameIdContext)
 
 	// EnterJson is called when entering the json production.
 	EnterJson(c *JsonContext)
@@ -42,6 +49,12 @@ type AnzerListener interface {
 
 	// ExitDataName is called when exiting the dataName production.
 	ExitDataName(c *DataNameContext)
+
+	// ExitDataNameId is called when exiting the dataNameId production.
+	ExitDataNameId(c *DataNameIdContext)
+
+	// ExitFuncNameId is called when exiting the funcNameId production.
+	ExitFuncNameId(c *FuncNameIdContext)
 
 	// ExitJson is called when exiting the json production.
 	ExitJson(c *JsonContext)

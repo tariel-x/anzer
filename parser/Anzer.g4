@@ -9,13 +9,20 @@ system: statement+;
 statement: dataDef
     ;
 
-dataDef: 'data' DATA_NAME_ID '=' json;
+dataDef: 'data' dataNameId '=' json
+    | funcNameId '::' dataName '->' dataName;
 
-dataName: DATA_NAME_ID
+dataName: dataNameId
     | '_'
     ;
 
-DATA_NAME_ID: [A-Z0-9] +;
+dataNameId: DATA_NAME_ID;
+
+DATA_NAME_ID: [A-Z] [A-Z0-9_] +;
+
+funcNameId: FUNC_NAME_ID;
+
+FUNC_NAME_ID: [a-z] [a-zA-Z0-9]*;
 
 /**
  * JSON Definition

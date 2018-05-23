@@ -1,5 +1,7 @@
-data X={
+data ABC_123 = {
     "a":true,
     "b":false
 }
 data X2={"b":false}
+aBC33a :: ABC_123 -> X2
+aBC33b :: _ -> X2
