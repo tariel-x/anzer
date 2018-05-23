@@ -10,7 +10,8 @@ statement: dataDef
     ;
 
 dataDef: 'data' dataNameId '=' json
-    | funcNameId '::' dataName '->' dataName;
+    | funcNameId '::' dataName '->' dataName
+    | funcNameId '=' funcNameId '.' funcNameId;
 
 dataName: dataNameId
     | '_'
