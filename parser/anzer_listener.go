@@ -13,8 +13,14 @@ type AnzerListener interface {
 	// EnterStatement is called when entering the statement production.
 	EnterStatement(c *StatementContext)
 
-	// EnterDataDef is called when entering the dataDef production.
-	EnterDataDef(c *DataDefContext)
+	// EnterDataSig is called when entering the dataSig production.
+	EnterDataSig(c *DataSigContext)
+
+	// EnterFuncSig is called when entering the funcSig production.
+	EnterFuncSig(c *FuncSigContext)
+
+	// EnterFuncDef is called when entering the funcDef production.
+	EnterFuncDef(c *FuncDefContext)
 
 	// EnterDataName is called when entering the dataName production.
 	EnterDataName(c *DataNameContext)
@@ -43,8 +49,14 @@ type AnzerListener interface {
 	// ExitStatement is called when exiting the statement production.
 	ExitStatement(c *StatementContext)
 
-	// ExitDataDef is called when exiting the dataDef production.
-	ExitDataDef(c *DataDefContext)
+	// ExitDataSig is called when exiting the dataSig production.
+	ExitDataSig(c *DataSigContext)
+
+	// ExitFuncSig is called when exiting the funcSig production.
+	ExitFuncSig(c *FuncSigContext)
+
+	// ExitFuncDef is called when exiting the funcDef production.
+	ExitFuncDef(c *FuncDefContext)
 
 	// ExitDataName is called when exiting the dataName production.
 	ExitDataName(c *DataNameContext)

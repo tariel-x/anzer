@@ -15,7 +15,15 @@ func (v *BaseAnzerVisitor) VisitStatement(ctx *StatementContext) interface{} {
 	return v.VisitChildren(ctx)
 }
 
-func (v *BaseAnzerVisitor) VisitDataDef(ctx *DataDefContext) interface{} {
+func (v *BaseAnzerVisitor) VisitDataSig(ctx *DataSigContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
+func (v *BaseAnzerVisitor) VisitFuncSig(ctx *FuncSigContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
+func (v *BaseAnzerVisitor) VisitFuncDef(ctx *FuncDefContext) interface{} {
 	return v.VisitChildren(ctx)
 }
 

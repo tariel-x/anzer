@@ -13,8 +13,14 @@ type AnzerVisitor interface {
 	// Visit a parse tree produced by AnzerParser#statement.
 	VisitStatement(ctx *StatementContext) interface{}
 
-	// Visit a parse tree produced by AnzerParser#dataDef.
-	VisitDataDef(ctx *DataDefContext) interface{}
+	// Visit a parse tree produced by AnzerParser#dataSig.
+	VisitDataSig(ctx *DataSigContext) interface{}
+
+	// Visit a parse tree produced by AnzerParser#funcSig.
+	VisitFuncSig(ctx *FuncSigContext) interface{}
+
+	// Visit a parse tree produced by AnzerParser#funcDef.
+	VisitFuncDef(ctx *FuncDefContext) interface{}
 
 	// Visit a parse tree produced by AnzerParser#dataName.
 	VisitDataName(ctx *DataNameContext) interface{}

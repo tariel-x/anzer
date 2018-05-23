@@ -32,11 +32,23 @@ func (s *BaseAnzerListener) EnterStatement(ctx *StatementContext) {}
 // ExitStatement is called when production statement is exited.
 func (s *BaseAnzerListener) ExitStatement(ctx *StatementContext) {}
 
-// EnterDataDef is called when production dataDef is entered.
-func (s *BaseAnzerListener) EnterDataDef(ctx *DataDefContext) {}
+// EnterDataSig is called when production dataSig is entered.
+func (s *BaseAnzerListener) EnterDataSig(ctx *DataSigContext) {}
 
-// ExitDataDef is called when production dataDef is exited.
-func (s *BaseAnzerListener) ExitDataDef(ctx *DataDefContext) {}
+// ExitDataSig is called when production dataSig is exited.
+func (s *BaseAnzerListener) ExitDataSig(ctx *DataSigContext) {}
+
+// EnterFuncSig is called when production funcSig is entered.
+func (s *BaseAnzerListener) EnterFuncSig(ctx *FuncSigContext) {}
+
+// ExitFuncSig is called when production funcSig is exited.
+func (s *BaseAnzerListener) ExitFuncSig(ctx *FuncSigContext) {}
+
+// EnterFuncDef is called when production funcDef is entered.
+func (s *BaseAnzerListener) EnterFuncDef(ctx *FuncDefContext) {}
+
+// ExitFuncDef is called when production funcDef is exited.
+func (s *BaseAnzerListener) ExitFuncDef(ctx *FuncDefContext) {}
 
 // EnterDataName is called when production dataName is entered.
 func (s *BaseAnzerListener) EnterDataName(ctx *DataNameContext) {}

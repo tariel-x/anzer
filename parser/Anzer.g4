@@ -6,12 +6,15 @@ grammar Anzer;
 
 system: statement+;
 
-statement: dataDef
-    ;
+statement: dataSig
+    | funcSig
+    | funcDef;
 
-dataDef: 'data' dataNameId '=' json
-    | funcNameId '::' dataName '->' dataName
-    | funcNameId '=' funcNameId ('.' funcNameId)*;
+dataSig: 'data' dataNameId '=' json;
+
+funcSig: funcNameId '::' dataName '->' dataName;
+
+funcDef: funcNameId '=' funcNameId ('.' funcNameId)*;
 
 dataName: dataNameId
     | '_'
