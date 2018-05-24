@@ -6,5 +6,8 @@ data X2={"b":false}
 aBC33a :: ABC_123 -> X2
 
 aBC33b :: _ -> X2
+aBC33b.input = "in"
+aBC33b.output = "out"
+aBC33b.env[abc] = "111"
 
 f1 = f2 . f3 . f4
