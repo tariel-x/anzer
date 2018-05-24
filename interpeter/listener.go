@@ -1,7 +1,6 @@
 package interpeter
 
 import (
-	"github.com/antlr/antlr4/runtime/Go/antlr"
 	"github.com/tariel-x/anzer/parser"
 )
 
@@ -25,43 +24,14 @@ func NewListener() *Listener {
 // }
 
 func (l *Listener) EnterDataSig(ctx *parser.DataSigContext) {
-	name := ""
-	val := ""
-	for _, child :=  range ctx.GetChildren() {
-		payload := child.GetPayload()
-		switch t := payload.(type) {
-		case *antlr.CommonToken:
-		case *antlr.BaseParserRuleContext:
-			if t.RuleIndex == parser.AnzerParserRULE_dataNameId {
-				name = t.GetText()
-			}
-			if t.RuleIndex == parser.AnzerParserRULE_json {
-				val = t.GetText()
-			}
-		default:
-			_ = t
-		}
-	}
+	name := ctx.DataNameId().GetText()
+	val := ctx.Json().GetText()
 	l.Types[name] = NewBaseType(name, val)
 }
 
 func (l *Listener) EnterFuncSig(ctx *parser.FuncSigContext) {
-	name := ""
-	val := ""
-	for _, child :=  range ctx.GetChildren() {
-		payload := child.GetPayload()
-		switch t := payload.(type) {
-		case *antlr.CommonToken:
-		case *antlr.BaseParserRuleContext:
-			if t.RuleIndex == parser.AnzerParserRULE_funcNameId {
-				name = t.GetText()
-			}
-			if t.RuleIndex == parser.AnzerParserRULE_dataName {
-				val = t.GetText()
-			}
-		default:
-			_ = t
-		}
-	}
-	l.Funcs[name] = NewBaseFunc(name, val, val)
+	name := ctx.FuncNameId().GetText()
+	arg := ctx.DataName(0).GetText()
+	ret := ctx.DataName(1).GetText()
+	l.Funcs[name] = NewBaseFunc(name, arg, ret)
 }
