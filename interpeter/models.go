@@ -22,11 +22,11 @@ func NewBaseType(name string, val string) BaseType {
 
 type BaseFunc struct {
 	name string
-	arg  BaseType
-	ret  BaseType
+	arg  string
+	ret  string
 }
 
-func NewBaseFunc(name string, arg BaseType, ret BaseType) BaseFunc {
+func NewBaseFunc(name string, arg string, ret string) BaseFunc {
 	return BaseFunc{
 		name: name,
 		arg:  arg,
@@ -38,10 +38,10 @@ func (f *BaseFunc) Name() string {
 	return f.name
 }
 
-func (f *BaseFunc) Arg() BaseType {
+func (f *BaseFunc) Arg() string {
 	return f.arg
 }
 
-func (f *BaseFunc) Ret() BaseType {
+func (f *BaseFunc) Ret() string {
 	return f.ret
 }

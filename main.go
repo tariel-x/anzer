@@ -22,4 +22,8 @@ func main() {
 	for _, t := range listener.Types {
 		fmt.Printf("%s = %s\n", t.Name(), t.Val())
 	}
+	fmt.Println("-----------------")
+	for _, t := range listener.Funcs {
+		fmt.Printf("%s :: %s -> %s\n", t.Name(), t.Arg(), t.Ret())
+	}
 }

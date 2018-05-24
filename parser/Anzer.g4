@@ -14,7 +14,9 @@ dataSig: 'data' dataNameId '=' json;
 
 funcSig: funcNameId '::' dataName '->' dataName;
 
-funcDef: funcNameId '=' funcNameId ('.' funcNameId)*;
+funcDef: definingFuncName '=' funcNameId ('.' funcNameId)*;
+
+definingFuncName: funcNameId;
 
 dataName: dataNameId
     | '_'

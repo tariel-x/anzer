@@ -22,6 +22,9 @@ type AnzerListener interface {
 	// EnterFuncDef is called when entering the funcDef production.
 	EnterFuncDef(c *FuncDefContext)
 
+	// EnterDefiningFuncName is called when entering the definingFuncName production.
+	EnterDefiningFuncName(c *DefiningFuncNameContext)
+
 	// EnterDataName is called when entering the dataName production.
 	EnterDataName(c *DataNameContext)
 
@@ -57,6 +60,9 @@ type AnzerListener interface {
 
 	// ExitFuncDef is called when exiting the funcDef production.
 	ExitFuncDef(c *FuncDefContext)
+
+	// ExitDefiningFuncName is called when exiting the definingFuncName production.
+	ExitDefiningFuncName(c *DefiningFuncNameContext)
 
 	// ExitDataName is called when exiting the dataName production.
 	ExitDataName(c *DataNameContext)

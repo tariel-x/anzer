@@ -50,6 +50,12 @@ func (s *BaseAnzerListener) EnterFuncDef(ctx *FuncDefContext) {}
 // ExitFuncDef is called when production funcDef is exited.
 func (s *BaseAnzerListener) ExitFuncDef(ctx *FuncDefContext) {}
 
+// EnterDefiningFuncName is called when production definingFuncName is entered.
+func (s *BaseAnzerListener) EnterDefiningFuncName(ctx *DefiningFuncNameContext) {}
+
+// ExitDefiningFuncName is called when production definingFuncName is exited.
+func (s *BaseAnzerListener) ExitDefiningFuncName(ctx *DefiningFuncNameContext) {}
+
 // EnterDataName is called when production dataName is entered.
 func (s *BaseAnzerListener) EnterDataName(ctx *DataNameContext) {}
 

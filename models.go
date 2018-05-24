@@ -7,6 +7,6 @@ type Type interface {
 
 type Func interface {
 	Name() string
-	Arg() Type
-	Ret() Type
+	Arg() string
+	Ret() string
 }

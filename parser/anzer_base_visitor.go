@@ -27,6 +27,10 @@ func (v *BaseAnzerVisitor) VisitFuncDef(ctx *FuncDefContext) interface{} {
 	return v.VisitChildren(ctx)
 }
 
+func (v *BaseAnzerVisitor) VisitDefiningFuncName(ctx *DefiningFuncNameContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
 func (v *BaseAnzerVisitor) VisitDataName(ctx *DataNameContext) interface{} {
 	return v.VisitChildren(ctx)
 }

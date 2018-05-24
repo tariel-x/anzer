@@ -22,6 +22,9 @@ type AnzerVisitor interface {
 	// Visit a parse tree produced by AnzerParser#funcDef.
 	VisitFuncDef(ctx *FuncDefContext) interface{}
 
+	// Visit a parse tree produced by AnzerParser#definingFuncName.
+	VisitDefiningFuncName(ctx *DefiningFuncNameContext) interface{}
+
 	// Visit a parse tree produced by AnzerParser#dataName.
 	VisitDataName(ctx *DataNameContext) interface{}
 
