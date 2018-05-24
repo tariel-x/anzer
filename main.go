@@ -4,6 +4,7 @@ import (
 	"github.com/antlr/antlr4/runtime/Go/antlr"
 	"github.com/tariel-x/anzer/parser"
 	"github.com/tariel-x/anzer/interpeter"
+	"fmt"
 	"os"
 )
 
@@ -15,5 +16,10 @@ func main() {
 	p.AddErrorListener(antlr.NewDiagnosticErrorListener(true))
 	p.BuildParseTrees = true
 	tree := p.System()
-	antlr.ParseTreeWalkerDefault.Walk(interpeter.NewListener(), tree)
+	listener := interpeter.NewListener()
+	antlr.ParseTreeWalkerDefault.Walk(listener, tree)
+	fmt.Println("-----------------")
+	for _, t := range listener.Types {
+		fmt.Printf("%s = %s\n", t.Name(), t.Val())
+	}
 }
