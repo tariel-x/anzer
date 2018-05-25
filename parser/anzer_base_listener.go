@@ -45,18 +45,6 @@ func (s *BaseAnzerListener) EnterDataDefinition(ctx *DataDefinitionContext) {}
 // ExitDataDefinition is called when production dataDefinition is exited.
 func (s *BaseAnzerListener) ExitDataDefinition(ctx *DataDefinitionContext) {}
 
-// EnterDataName is called when production dataName is entered.
-func (s *BaseAnzerListener) EnterDataName(ctx *DataNameContext) {}
-
-// ExitDataName is called when production dataName is exited.
-func (s *BaseAnzerListener) ExitDataName(ctx *DataNameContext) {}
-
-// EnterDataNameId is called when production dataNameId is entered.
-func (s *BaseAnzerListener) EnterDataNameId(ctx *DataNameIdContext) {}
-
-// ExitDataNameId is called when production dataNameId is exited.
-func (s *BaseAnzerListener) ExitDataNameId(ctx *DataNameIdContext) {}
-
 // EnterFuncSig is called when production funcSig is entered.
 func (s *BaseAnzerListener) EnterFuncSig(ctx *FuncSigContext) {}
 
@@ -99,23 +87,11 @@ func (s *BaseAnzerListener) EnterProductFunc(ctx *ProductFuncContext) {}
 // ExitProductFunc is called when production productFunc is exited.
 func (s *BaseAnzerListener) ExitProductFunc(ctx *ProductFuncContext) {}
 
-// EnterFuncName is called when production funcName is entered.
-func (s *BaseAnzerListener) EnterFuncName(ctx *FuncNameContext) {}
+// EnterDataName is called when production dataName is entered.
+func (s *BaseAnzerListener) EnterDataName(ctx *DataNameContext) {}
 
-// ExitFuncName is called when production funcName is exited.
-func (s *BaseAnzerListener) ExitFuncName(ctx *FuncNameContext) {}
-
-// EnterFuncNameId is called when production funcNameId is entered.
-func (s *BaseAnzerListener) EnterFuncNameId(ctx *FuncNameIdContext) {}
-
-// ExitFuncNameId is called when production funcNameId is exited.
-func (s *BaseAnzerListener) ExitFuncNameId(ctx *FuncNameIdContext) {}
-
-// EnterFuncParamId is called when production funcParamId is entered.
-func (s *BaseAnzerListener) EnterFuncParamId(ctx *FuncParamIdContext) {}
-
-// ExitFuncParamId is called when production funcParamId is exited.
-func (s *BaseAnzerListener) ExitFuncParamId(ctx *FuncParamIdContext) {}
+// ExitDataName is called when production dataName is exited.
+func (s *BaseAnzerListener) ExitDataName(ctx *DataNameContext) {}
 
 // EnterFuncEnvName is called when production funcEnvName is entered.
 func (s *BaseAnzerListener) EnterFuncEnvName(ctx *FuncEnvNameContext) {}

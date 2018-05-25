@@ -17,13 +17,9 @@ statement
  * Data type
  */
 
-dataSig: 'data' dataNameId '=' dataDefinition;
+dataSig: 'data' DATA_NAME_ID '=' dataDefinition;
 
 dataDefinition: json;
-
-dataName: dataNameId | '_';
-
-dataNameId: DATA_NAME_ID;
 
 DATA_NAME_ID: [A-Z] [A-Z0-9_] +;
 
@@ -32,32 +28,28 @@ DATA_NAME_ID: [A-Z] [A-Z0-9_] +;
  */
 
 //signature
-funcSig: funcNameId '::' dataName '->' dataName;
+funcSig: FUNC_NAME_ID '::' dataName '->' dataName;
 
 //definition
-funcDef: funcName '=' composeFunc ('.' composeFunc)*;
+funcDef: FUNC_NAME_ID '=' composeFunc ('.' composeFunc)*;
 
 //params
 funcParam: funcParamConfig | funcParamEnv;
 
 //env
-funcParamEnv: funcName '.env[' funcEnvName ']' '=' funcParamValue;
+funcParamEnv: FUNC_NAME_ID '.env[' funcEnvName ']' '=' funcParamValue;
 
 //param
-funcParamConfig: funcName '.' funcParamId '=' funcParamValue;
+funcParamConfig: FUNC_NAME_ID '.' FUNC_PARAM_ID '=' funcParamValue;
 
 // composition
-composeFunc: funcName | productFunc;
+composeFunc: FUNC_NAME_ID | productFunc;
 
-productFunc: '<' funcName (',' funcName)* '>';
+productFunc: '<' FUNC_NAME_ID (',' FUNC_NAME_ID)* '>';
 
-funcName: funcNameId;
-
-funcNameId: FUNC_NAME_ID;
+dataName: DATA_NAME_ID | '_';
 
 FUNC_NAME_ID: [a-z] [a-zA-Z0-9]*;
-
-funcParamId: FUNC_PARAM_ID;
 
 FUNC_PARAM_ID: [a-z0-9_]+;
 

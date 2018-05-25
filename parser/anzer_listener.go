@@ -20,12 +20,6 @@ type AnzerListener interface {
 	// EnterDataDefinition is called when entering the dataDefinition production.
 	EnterDataDefinition(c *DataDefinitionContext)
 
-	// EnterDataName is called when entering the dataName production.
-	EnterDataName(c *DataNameContext)
-
-	// EnterDataNameId is called when entering the dataNameId production.
-	EnterDataNameId(c *DataNameIdContext)
-
 	// EnterFuncSig is called when entering the funcSig production.
 	EnterFuncSig(c *FuncSigContext)
 
@@ -47,14 +41,8 @@ type AnzerListener interface {
 	// EnterProductFunc is called when entering the productFunc production.
 	EnterProductFunc(c *ProductFuncContext)
 
-	// EnterFuncName is called when entering the funcName production.
-	EnterFuncName(c *FuncNameContext)
-
-	// EnterFuncNameId is called when entering the funcNameId production.
-	EnterFuncNameId(c *FuncNameIdContext)
-
-	// EnterFuncParamId is called when entering the funcParamId production.
-	EnterFuncParamId(c *FuncParamIdContext)
+	// EnterDataName is called when entering the dataName production.
+	EnterDataName(c *DataNameContext)
 
 	// EnterFuncEnvName is called when entering the funcEnvName production.
 	EnterFuncEnvName(c *FuncEnvNameContext)
@@ -86,12 +74,6 @@ type AnzerListener interface {
 	// ExitDataDefinition is called when exiting the dataDefinition production.
 	ExitDataDefinition(c *DataDefinitionContext)
 
-	// ExitDataName is called when exiting the dataName production.
-	ExitDataName(c *DataNameContext)
-
-	// ExitDataNameId is called when exiting the dataNameId production.
-	ExitDataNameId(c *DataNameIdContext)
-
 	// ExitFuncSig is called when exiting the funcSig production.
 	ExitFuncSig(c *FuncSigContext)
 
@@ -113,14 +95,8 @@ type AnzerListener interface {
 	// ExitProductFunc is called when exiting the productFunc production.
 	ExitProductFunc(c *ProductFuncContext)
 
-	// ExitFuncName is called when exiting the funcName production.
-	ExitFuncName(c *FuncNameContext)
-
-	// ExitFuncNameId is called when exiting the funcNameId production.
-	ExitFuncNameId(c *FuncNameIdContext)
-
-	// ExitFuncParamId is called when exiting the funcParamId production.
-	ExitFuncParamId(c *FuncParamIdContext)
+	// ExitDataName is called when exiting the dataName production.
+	ExitDataName(c *DataNameContext)
 
 	// ExitFuncEnvName is called when exiting the funcEnvName production.
 	ExitFuncEnvName(c *FuncEnvNameContext)
