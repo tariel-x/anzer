@@ -6,10 +6,12 @@ grammar Anzer;
 
 system: statement+;
 
-statement: dataSig
+statement
+    : dataSig
     | funcSig
     | funcDef
-    | funcParam;
+    | funcParam
+    ;
 
 /**
  * Data type
@@ -19,9 +21,7 @@ dataSig: 'data' dataNameId '=' dataDefinition;
 
 dataDefinition: json;
 
-dataName: dataNameId
-    | '_'
-    ;
+dataName: dataNameId | '_';
 
 dataNameId: DATA_NAME_ID;
 
@@ -38,13 +38,13 @@ funcSig: funcNameId '::' dataName '->' dataName;
 funcDef: funcName '=' funcNameId ('.' funcNameId)*;
 
 //params
+funcParam: funcParamConfig | funcParamEnv;
 
-funcParam: funcParamConfig
-    | funcParamEnv;
+//env
+funcParamEnv: funcName '.env[' funcEnvName ']' '=' funcParamValue;
 
+//param
 funcParamConfig: funcName '.' funcParamId '=' funcParamValue;
-
-funcParamEnv: funcName '.env[' funcParamId ']' '=' funcParamValue;
 
 funcName: funcNameId;
 
@@ -52,20 +52,19 @@ funcNameId: FUNC_NAME_ID;
 
 FUNC_NAME_ID: [a-z] [a-zA-Z0-9]*;
 
-funcParamId: FUNC_NAME_ID;
+funcParamId: FUNC_PARAM_ID;
 
-FUNC_PARAM_ID: [a-z0-9]+;
+FUNC_PARAM_ID: [a-z0-9_]+;
 
-funcParamValue: FUNC_PARAM_VALUE;
+funcEnvName: STRING;
 
-FUNC_PARAM_VALUE: '"' [.]+ '"';
+funcParamValue: STRING;
 
 /**
  * JSON Definition
  */
 
-json
-   : STRING
+json: STRING
    | NUMBER
    | obj
    | array
@@ -74,65 +73,49 @@ json
    | 'null'
    ;
 
-obj
-   : '{' pair (',' pair)* '}'
+obj: '{' pair (',' pair)* '}'
    | '{' '}'
    ;
 
-pair
-   : STRING ':' json
-   ;
+pair: STRING ':' json;
 
-array
-   : '[' json (',' json)* ']'
-   | '[' ']'
-   ;
+array: '[' json (',' json)* ']'
+    | '[' ']'
+    ;
 
-STRING
-   : '"' (ESC | SAFECODEPOINT)* '"'
-   ;
+STRING: '"' (ESC | SAFECODEPOINT)* '"';
 
 
-fragment ESC
-   : '\\' (["\\/bfnrt] | UNICODE)
-   ;
+fragment ESC: '\\' (["\\/bfnrt] | UNICODE);
 
 
-fragment UNICODE
-   : 'u' HEX HEX HEX HEX
-   ;
+fragment UNICODE: 'u' HEX HEX HEX HEX;
 
 
-fragment HEX
-   : [0-9a-fA-F]
-   ;
+fragment HEX: [0-9a-fA-F];
 
 
-fragment SAFECODEPOINT
-   : ~ ["\\\u0000-\u001F]
-   ;
+fragment SAFECODEPOINT: ~ ["\\\u0000-\u001F];
 
 
-NUMBER
-   : '-'? INT ('.' [0-9] +)? EXP?
-   ;
+NUMBER: '-'? INT ('.' [0-9] +)? EXP?;
 
 
-fragment INT
-   : '0' | [1-9] [0-9]*
-   ;
+fragment INT: '0' | [1-9] [0-9]*;
 
 // no leading zeros
 
-fragment EXP
-   : [Ee] [+\-]? INT
-   ;
+fragment EXP: [Ee] [+\-]? INT;
 
 
 /**
  * WS
  */
 
-WS
-   : [ \t\n\r] + -> skip
-   ;
+WS: [ \t\n\r] + -> skip;
+
+/**
+ * Comments
+ */
+
+LineComment: '//' ~[\r\n]* -> skip;

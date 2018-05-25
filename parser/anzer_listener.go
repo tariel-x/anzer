@@ -1,6 +1,7 @@
-// Generated from /home/nikita/go/src/github.com/tariel-x/anzer/parser/Anzer.g4 by ANTLR 4.7.
+// Code generated from Anzer.g4 by ANTLR 4.7.1. DO NOT EDIT.
 
 package parser // Anzer
+
 import "github.com/antlr/antlr4/runtime/Go/antlr"
 
 // AnzerListener is a complete listener for a parse tree produced by AnzerParser.
@@ -16,14 +17,8 @@ type AnzerListener interface {
 	// EnterDataSig is called when entering the dataSig production.
 	EnterDataSig(c *DataSigContext)
 
-	// EnterFuncSig is called when entering the funcSig production.
-	EnterFuncSig(c *FuncSigContext)
-
-	// EnterFuncDef is called when entering the funcDef production.
-	EnterFuncDef(c *FuncDefContext)
-
-	// EnterDefiningFuncName is called when entering the definingFuncName production.
-	EnterDefiningFuncName(c *DefiningFuncNameContext)
+	// EnterDataDefinition is called when entering the dataDefinition production.
+	EnterDataDefinition(c *DataDefinitionContext)
 
 	// EnterDataName is called when entering the dataName production.
 	EnterDataName(c *DataNameContext)
@@ -31,8 +26,35 @@ type AnzerListener interface {
 	// EnterDataNameId is called when entering the dataNameId production.
 	EnterDataNameId(c *DataNameIdContext)
 
+	// EnterFuncSig is called when entering the funcSig production.
+	EnterFuncSig(c *FuncSigContext)
+
+	// EnterFuncDef is called when entering the funcDef production.
+	EnterFuncDef(c *FuncDefContext)
+
+	// EnterFuncParam is called when entering the funcParam production.
+	EnterFuncParam(c *FuncParamContext)
+
+	// EnterFuncParamEnv is called when entering the funcParamEnv production.
+	EnterFuncParamEnv(c *FuncParamEnvContext)
+
+	// EnterFuncParamConfig is called when entering the funcParamConfig production.
+	EnterFuncParamConfig(c *FuncParamConfigContext)
+
+	// EnterFuncName is called when entering the funcName production.
+	EnterFuncName(c *FuncNameContext)
+
 	// EnterFuncNameId is called when entering the funcNameId production.
 	EnterFuncNameId(c *FuncNameIdContext)
+
+	// EnterFuncParamId is called when entering the funcParamId production.
+	EnterFuncParamId(c *FuncParamIdContext)
+
+	// EnterFuncEnvName is called when entering the funcEnvName production.
+	EnterFuncEnvName(c *FuncEnvNameContext)
+
+	// EnterFuncParamValue is called when entering the funcParamValue production.
+	EnterFuncParamValue(c *FuncParamValueContext)
 
 	// EnterJson is called when entering the json production.
 	EnterJson(c *JsonContext)
@@ -55,14 +77,8 @@ type AnzerListener interface {
 	// ExitDataSig is called when exiting the dataSig production.
 	ExitDataSig(c *DataSigContext)
 
-	// ExitFuncSig is called when exiting the funcSig production.
-	ExitFuncSig(c *FuncSigContext)
-
-	// ExitFuncDef is called when exiting the funcDef production.
-	ExitFuncDef(c *FuncDefContext)
-
-	// ExitDefiningFuncName is called when exiting the definingFuncName production.
-	ExitDefiningFuncName(c *DefiningFuncNameContext)
+	// ExitDataDefinition is called when exiting the dataDefinition production.
+	ExitDataDefinition(c *DataDefinitionContext)
 
 	// ExitDataName is called when exiting the dataName production.
 	ExitDataName(c *DataNameContext)
@@ -70,8 +86,35 @@ type AnzerListener interface {
 	// ExitDataNameId is called when exiting the dataNameId production.
 	ExitDataNameId(c *DataNameIdContext)
 
+	// ExitFuncSig is called when exiting the funcSig production.
+	ExitFuncSig(c *FuncSigContext)
+
+	// ExitFuncDef is called when exiting the funcDef production.
+	ExitFuncDef(c *FuncDefContext)
+
+	// ExitFuncParam is called when exiting the funcParam production.
+	ExitFuncParam(c *FuncParamContext)
+
+	// ExitFuncParamEnv is called when exiting the funcParamEnv production.
+	ExitFuncParamEnv(c *FuncParamEnvContext)
+
+	// ExitFuncParamConfig is called when exiting the funcParamConfig production.
+	ExitFuncParamConfig(c *FuncParamConfigContext)
+
+	// ExitFuncName is called when exiting the funcName production.
+	ExitFuncName(c *FuncNameContext)
+
 	// ExitFuncNameId is called when exiting the funcNameId production.
 	ExitFuncNameId(c *FuncNameIdContext)
+
+	// ExitFuncParamId is called when exiting the funcParamId production.
+	ExitFuncParamId(c *FuncParamIdContext)
+
+	// ExitFuncEnvName is called when exiting the funcEnvName production.
+	ExitFuncEnvName(c *FuncEnvNameContext)
+
+	// ExitFuncParamValue is called when exiting the funcParamValue production.
+	ExitFuncParamValue(c *FuncParamValueContext)
 
 	// ExitJson is called when exiting the json production.
 	ExitJson(c *JsonContext)

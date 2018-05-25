@@ -1,6 +1,7 @@
-// Generated from /home/nikita/go/src/github.com/tariel-x/anzer/parser/Anzer.g4 by ANTLR 4.7.
+// Code generated from Anzer.g4 by ANTLR 4.7.1. DO NOT EDIT.
 
 package parser // Anzer
+
 import "github.com/antlr/antlr4/runtime/Go/antlr"
 
 // BaseAnzerListener is a complete listener for a parse tree produced by AnzerParser.
@@ -38,23 +39,11 @@ func (s *BaseAnzerListener) EnterDataSig(ctx *DataSigContext) {}
 // ExitDataSig is called when production dataSig is exited.
 func (s *BaseAnzerListener) ExitDataSig(ctx *DataSigContext) {}
 
-// EnterFuncSig is called when production funcSig is entered.
-func (s *BaseAnzerListener) EnterFuncSig(ctx *FuncSigContext) {}
+// EnterDataDefinition is called when production dataDefinition is entered.
+func (s *BaseAnzerListener) EnterDataDefinition(ctx *DataDefinitionContext) {}
 
-// ExitFuncSig is called when production funcSig is exited.
-func (s *BaseAnzerListener) ExitFuncSig(ctx *FuncSigContext) {}
-
-// EnterFuncDef is called when production funcDef is entered.
-func (s *BaseAnzerListener) EnterFuncDef(ctx *FuncDefContext) {}
-
-// ExitFuncDef is called when production funcDef is exited.
-func (s *BaseAnzerListener) ExitFuncDef(ctx *FuncDefContext) {}
-
-// EnterDefiningFuncName is called when production definingFuncName is entered.
-func (s *BaseAnzerListener) EnterDefiningFuncName(ctx *DefiningFuncNameContext) {}
-
-// ExitDefiningFuncName is called when production definingFuncName is exited.
-func (s *BaseAnzerListener) ExitDefiningFuncName(ctx *DefiningFuncNameContext) {}
+// ExitDataDefinition is called when production dataDefinition is exited.
+func (s *BaseAnzerListener) ExitDataDefinition(ctx *DataDefinitionContext) {}
 
 // EnterDataName is called when production dataName is entered.
 func (s *BaseAnzerListener) EnterDataName(ctx *DataNameContext) {}
@@ -68,11 +57,65 @@ func (s *BaseAnzerListener) EnterDataNameId(ctx *DataNameIdContext) {}
 // ExitDataNameId is called when production dataNameId is exited.
 func (s *BaseAnzerListener) ExitDataNameId(ctx *DataNameIdContext) {}
 
+// EnterFuncSig is called when production funcSig is entered.
+func (s *BaseAnzerListener) EnterFuncSig(ctx *FuncSigContext) {}
+
+// ExitFuncSig is called when production funcSig is exited.
+func (s *BaseAnzerListener) ExitFuncSig(ctx *FuncSigContext) {}
+
+// EnterFuncDef is called when production funcDef is entered.
+func (s *BaseAnzerListener) EnterFuncDef(ctx *FuncDefContext) {}
+
+// ExitFuncDef is called when production funcDef is exited.
+func (s *BaseAnzerListener) ExitFuncDef(ctx *FuncDefContext) {}
+
+// EnterFuncParam is called when production funcParam is entered.
+func (s *BaseAnzerListener) EnterFuncParam(ctx *FuncParamContext) {}
+
+// ExitFuncParam is called when production funcParam is exited.
+func (s *BaseAnzerListener) ExitFuncParam(ctx *FuncParamContext) {}
+
+// EnterFuncParamEnv is called when production funcParamEnv is entered.
+func (s *BaseAnzerListener) EnterFuncParamEnv(ctx *FuncParamEnvContext) {}
+
+// ExitFuncParamEnv is called when production funcParamEnv is exited.
+func (s *BaseAnzerListener) ExitFuncParamEnv(ctx *FuncParamEnvContext) {}
+
+// EnterFuncParamConfig is called when production funcParamConfig is entered.
+func (s *BaseAnzerListener) EnterFuncParamConfig(ctx *FuncParamConfigContext) {}
+
+// ExitFuncParamConfig is called when production funcParamConfig is exited.
+func (s *BaseAnzerListener) ExitFuncParamConfig(ctx *FuncParamConfigContext) {}
+
+// EnterFuncName is called when production funcName is entered.
+func (s *BaseAnzerListener) EnterFuncName(ctx *FuncNameContext) {}
+
+// ExitFuncName is called when production funcName is exited.
+func (s *BaseAnzerListener) ExitFuncName(ctx *FuncNameContext) {}
+
 // EnterFuncNameId is called when production funcNameId is entered.
 func (s *BaseAnzerListener) EnterFuncNameId(ctx *FuncNameIdContext) {}
 
 // ExitFuncNameId is called when production funcNameId is exited.
 func (s *BaseAnzerListener) ExitFuncNameId(ctx *FuncNameIdContext) {}
+
+// EnterFuncParamId is called when production funcParamId is entered.
+func (s *BaseAnzerListener) EnterFuncParamId(ctx *FuncParamIdContext) {}
+
+// ExitFuncParamId is called when production funcParamId is exited.
+func (s *BaseAnzerListener) ExitFuncParamId(ctx *FuncParamIdContext) {}
+
+// EnterFuncEnvName is called when production funcEnvName is entered.
+func (s *BaseAnzerListener) EnterFuncEnvName(ctx *FuncEnvNameContext) {}
+
+// ExitFuncEnvName is called when production funcEnvName is exited.
+func (s *BaseAnzerListener) ExitFuncEnvName(ctx *FuncEnvNameContext) {}
+
+// EnterFuncParamValue is called when production funcParamValue is entered.
+func (s *BaseAnzerListener) EnterFuncParamValue(ctx *FuncParamValueContext) {}
+
+// ExitFuncParamValue is called when production funcParamValue is exited.
+func (s *BaseAnzerListener) ExitFuncParamValue(ctx *FuncParamValueContext) {}
 
 // EnterJson is called when production json is entered.
 func (s *BaseAnzerListener) EnterJson(ctx *JsonContext) {}
