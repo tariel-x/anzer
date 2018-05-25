@@ -1,4 +1,5 @@
 /*
+This is the grammar for Anzer definition language of services system.
 antlr4 -Dlanguage=Go Anzer.g4
  */
  
