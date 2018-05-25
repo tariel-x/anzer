@@ -7,9 +7,9 @@ aBC33a :: ABC_123 -> X2
 
 aBC33b :: _ -> X2
 // envs
-aBC33b.env_input = in
-aBC33b.env_output = out
-aBC33b.env[abc] = 111
+aBC33b.env_input = "in"
+aBC33b.env_output = "out"
+aBC33b.env[abc] = "111"
 
 f1 = f2 . f3 . f4
 // production of types

@@ -8,15 +8,16 @@ system: statement+;
 
 statement: dataSig
     | funcSig
-    | funcDef;
+    | funcDef
+    | funcParam;
 
-dataSig: 'data' dataNameId '=' json;
+/**
+ * Data type
+ */
 
-funcSig: funcNameId '::' dataName '->' dataName;
+dataSig: 'data' dataNameId '=' dataDefinition;
 
-funcDef: definingFuncName '=' funcNameId ('.' funcNameId)*;
-
-definingFuncName: funcNameId;
+dataDefinition: json;
 
 dataName: dataNameId
     | '_'
@@ -26,9 +27,38 @@ dataNameId: DATA_NAME_ID;
 
 DATA_NAME_ID: [A-Z] [A-Z0-9_] +;
 
+/**
+ * Functions
+ */
+
+//signature
+funcSig: funcNameId '::' dataName '->' dataName;
+
+//definition
+funcDef: funcName '=' funcNameId ('.' funcNameId)*;
+
+//params
+
+funcParam: funcParamConfig
+    | funcParamEnv;
+
+funcParamConfig: funcName '.' funcParamId '=' funcParamValue;
+
+funcParamEnv: funcName '.env[' funcParamId ']' '=' funcParamValue;
+
+funcName: funcNameId;
+
 funcNameId: FUNC_NAME_ID;
 
 FUNC_NAME_ID: [a-z] [a-zA-Z0-9]*;
+
+funcParamId: FUNC_NAME_ID;
+
+FUNC_PARAM_ID: [a-z0-9]+;
+
+funcParamValue: FUNC_PARAM_VALUE;
+
+FUNC_PARAM_VALUE: '"' [.]+ '"';
 
 /**
  * JSON Definition
