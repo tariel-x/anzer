@@ -21,21 +21,29 @@ func NewBaseType(name string, val string) BaseType {
 }
 
 type BaseFunc struct {
-	name string
-	arg  string
-	ret  string
+	arg string
+	ret string
+	Def *FuncBody
+}
+
+type FuncBody struct {
+	Name    string
+	Product []FuncBody
+	Param   *FuncBody
 }
 
 func NewBaseFunc(name string, arg string, ret string) BaseFunc {
 	return BaseFunc{
-		name: name,
-		arg:  arg,
-		ret:  ret,
+		Def: &FuncBody{
+			Name: name,
+		},
+		arg: arg,
+		ret: ret,
 	}
 }
 
 func (f *BaseFunc) Name() string {
-	return f.name
+	return f.Def.Name
 }
 
 func (f *BaseFunc) Arg() string {
