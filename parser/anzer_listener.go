@@ -44,6 +44,9 @@ type AnzerListener interface {
 	// EnterComposeFunc is called when entering the composeFunc production.
 	EnterComposeFunc(c *ComposeFuncContext)
 
+	// EnterProductFunc is called when entering the productFunc production.
+	EnterProductFunc(c *ProductFuncContext)
+
 	// EnterFuncName is called when entering the funcName production.
 	EnterFuncName(c *FuncNameContext)
 
@@ -106,6 +109,9 @@ type AnzerListener interface {
 
 	// ExitComposeFunc is called when exiting the composeFunc production.
 	ExitComposeFunc(c *ComposeFuncContext)
+
+	// ExitProductFunc is called when exiting the productFunc production.
+	ExitProductFunc(c *ProductFuncContext)
 
 	// ExitFuncName is called when exiting the funcName production.
 	ExitFuncName(c *FuncNameContext)

@@ -47,7 +47,9 @@ funcParamEnv: funcName '.env[' funcEnvName ']' '=' funcParamValue;
 funcParamConfig: funcName '.' funcParamId '=' funcParamValue;
 
 // composition
-composeFunc: funcName | '<' funcName (',' funcName)* '>';
+composeFunc: funcName | productFunc;
+
+productFunc: '<' funcName (',' funcName)* '>';
 
 funcName: funcNameId;
 

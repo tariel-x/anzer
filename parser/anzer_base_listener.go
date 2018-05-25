@@ -93,6 +93,12 @@ func (s *BaseAnzerListener) EnterComposeFunc(ctx *ComposeFuncContext) {}
 // ExitComposeFunc is called when production composeFunc is exited.
 func (s *BaseAnzerListener) ExitComposeFunc(ctx *ComposeFuncContext) {}
 
+// EnterProductFunc is called when production productFunc is entered.
+func (s *BaseAnzerListener) EnterProductFunc(ctx *ProductFuncContext) {}
+
+// ExitProductFunc is called when production productFunc is exited.
+func (s *BaseAnzerListener) ExitProductFunc(ctx *ProductFuncContext) {}
+
 // EnterFuncName is called when production funcName is entered.
 func (s *BaseAnzerListener) EnterFuncName(ctx *FuncNameContext) {}
 
