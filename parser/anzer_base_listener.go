@@ -87,6 +87,12 @@ func (s *BaseAnzerListener) EnterFuncParamConfig(ctx *FuncParamConfigContext) {}
 // ExitFuncParamConfig is called when production funcParamConfig is exited.
 func (s *BaseAnzerListener) ExitFuncParamConfig(ctx *FuncParamConfigContext) {}
 
+// EnterComposeFunc is called when production composeFunc is entered.
+func (s *BaseAnzerListener) EnterComposeFunc(ctx *ComposeFuncContext) {}
+
+// ExitComposeFunc is called when production composeFunc is exited.
+func (s *BaseAnzerListener) ExitComposeFunc(ctx *ComposeFuncContext) {}
+
 // EnterFuncName is called when production funcName is entered.
 func (s *BaseAnzerListener) EnterFuncName(ctx *FuncNameContext) {}
 

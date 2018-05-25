@@ -41,6 +41,9 @@ type AnzerListener interface {
 	// EnterFuncParamConfig is called when entering the funcParamConfig production.
 	EnterFuncParamConfig(c *FuncParamConfigContext)
 
+	// EnterComposeFunc is called when entering the composeFunc production.
+	EnterComposeFunc(c *ComposeFuncContext)
+
 	// EnterFuncName is called when entering the funcName production.
 	EnterFuncName(c *FuncNameContext)
 
@@ -100,6 +103,9 @@ type AnzerListener interface {
 
 	// ExitFuncParamConfig is called when exiting the funcParamConfig production.
 	ExitFuncParamConfig(c *FuncParamConfigContext)
+
+	// ExitComposeFunc is called when exiting the composeFunc production.
+	ExitComposeFunc(c *ComposeFuncContext)
 
 	// ExitFuncName is called when exiting the funcName production.
 	ExitFuncName(c *FuncNameContext)

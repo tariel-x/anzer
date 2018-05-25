@@ -35,7 +35,7 @@ DATA_NAME_ID: [A-Z] [A-Z0-9_] +;
 funcSig: funcNameId '::' dataName '->' dataName;
 
 //definition
-funcDef: funcName '=' funcNameId ('.' funcNameId)*;
+funcDef: funcName '=' composeFunc ('.' composeFunc)*;
 
 //params
 funcParam: funcParamConfig | funcParamEnv;
@@ -45,6 +45,9 @@ funcParamEnv: funcName '.env[' funcEnvName ']' '=' funcParamValue;
 
 //param
 funcParamConfig: funcName '.' funcParamId '=' funcParamValue;
+
+// composition
+composeFunc: funcName | '<' funcName (',' funcName)* '>';
 
 funcName: funcNameId;
 
