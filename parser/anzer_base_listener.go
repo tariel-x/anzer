@@ -1,7 +1,6 @@
-// Code generated from Anzer.g4 by ANTLR 4.7.1. DO NOT EDIT.
+// Generated from /home/nikita/go/src/github.com/tariel-x/anzer/parser/Anzer.g4 by ANTLR 4.7.
 
 package parser // Anzer
-
 import "github.com/antlr/antlr4/runtime/Go/antlr"
 
 // BaseAnzerListener is a complete listener for a parse tree produced by AnzerParser.

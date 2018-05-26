@@ -4,6 +4,10 @@ data ABC_123 = {
 }
 data X2={"b":false}
 
+data X3=X2*ABC_123
+data XX = X3
+data X5= X3|XX
+
 // envs
 a :: ABC_123 -> X2
 a.env_input = "in"
@@ -13,7 +17,7 @@ a.env["abc"] = "111"
 a = f2 . f3 . f4
 
 
-// production of types
+// production of functions
 b :: _ -> X2
 b = f1 . <f2,f3>
 

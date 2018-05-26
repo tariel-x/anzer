@@ -20,7 +20,9 @@ statement
 
 dataSig: 'data' DATA_NAME_ID '=' dataDefinition;
 
-dataDefinition: json;
+dataDefinition: json | DATA_NAME_ID (DATA_AND_OR DATA_NAME_ID)*;
+
+DATA_AND_OR: [*|];
 
 DATA_NAME_ID: [A-Z] [A-Z0-9_] +;
 
@@ -46,7 +48,7 @@ funcParamConfig: FUNC_NAME_ID '.' FUNC_PARAM_ID '=' funcParamValue;
 // composition
 composeFunc: FUNC_NAME_ID | productFunc;
 
-productFunc: '<' FUNC_NAME_ID (',' FUNC_NAME_ID)* '>';
+productFunc: '<' composeFunc (',' composeFunc)* '>';
 
 dataName: DATA_NAME_ID | '_';
 
