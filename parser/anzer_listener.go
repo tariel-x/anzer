@@ -22,17 +22,11 @@ type AnzerListener interface {
 	// EnterFuncSig is called when entering the funcSig production.
 	EnterFuncSig(c *FuncSigContext)
 
+	// EnterFuncParams is called when entering the funcParams production.
+	EnterFuncParams(c *FuncParamsContext)
+
 	// EnterFuncDef is called when entering the funcDef production.
 	EnterFuncDef(c *FuncDefContext)
-
-	// EnterFuncParam is called when entering the funcParam production.
-	EnterFuncParam(c *FuncParamContext)
-
-	// EnterFuncParamEnv is called when entering the funcParamEnv production.
-	EnterFuncParamEnv(c *FuncParamEnvContext)
-
-	// EnterFuncParamConfig is called when entering the funcParamConfig production.
-	EnterFuncParamConfig(c *FuncParamConfigContext)
 
 	// EnterComposeFunc is called when entering the composeFunc production.
 	EnterComposeFunc(c *ComposeFuncContext)
@@ -42,12 +36,6 @@ type AnzerListener interface {
 
 	// EnterDataName is called when entering the dataName production.
 	EnterDataName(c *DataNameContext)
-
-	// EnterFuncEnvName is called when entering the funcEnvName production.
-	EnterFuncEnvName(c *FuncEnvNameContext)
-
-	// EnterFuncParamValue is called when entering the funcParamValue production.
-	EnterFuncParamValue(c *FuncParamValueContext)
 
 	// EnterJson is called when entering the json production.
 	EnterJson(c *JsonContext)
@@ -76,17 +64,11 @@ type AnzerListener interface {
 	// ExitFuncSig is called when exiting the funcSig production.
 	ExitFuncSig(c *FuncSigContext)
 
+	// ExitFuncParams is called when exiting the funcParams production.
+	ExitFuncParams(c *FuncParamsContext)
+
 	// ExitFuncDef is called when exiting the funcDef production.
 	ExitFuncDef(c *FuncDefContext)
-
-	// ExitFuncParam is called when exiting the funcParam production.
-	ExitFuncParam(c *FuncParamContext)
-
-	// ExitFuncParamEnv is called when exiting the funcParamEnv production.
-	ExitFuncParamEnv(c *FuncParamEnvContext)
-
-	// ExitFuncParamConfig is called when exiting the funcParamConfig production.
-	ExitFuncParamConfig(c *FuncParamConfigContext)
 
 	// ExitComposeFunc is called when exiting the composeFunc production.
 	ExitComposeFunc(c *ComposeFuncContext)
@@ -96,12 +78,6 @@ type AnzerListener interface {
 
 	// ExitDataName is called when exiting the dataName production.
 	ExitDataName(c *DataNameContext)
-
-	// ExitFuncEnvName is called when exiting the funcEnvName production.
-	ExitFuncEnvName(c *FuncEnvNameContext)
-
-	// ExitFuncParamValue is called when exiting the funcParamValue production.
-	ExitFuncParamValue(c *FuncParamValueContext)
 
 	// ExitJson is called when exiting the json production.
 	ExitJson(c *JsonContext)

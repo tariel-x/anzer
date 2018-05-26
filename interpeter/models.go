@@ -1,22 +1,16 @@
 package interpeter
 
 type BaseType struct {
-	name string
-	val  string
-}
-
-func (t *BaseType) Name() string {
-	return t.name
-}
-
-func (t *BaseType) Val() string {
-	return t.val
+	Name string
+	Val  string
+	Op   string
+	Arg  *BaseType
 }
 
 func NewBaseType(name string, val string) BaseType {
 	return BaseType{
-		name: name,
-		val:  val,
+		Name: name,
+		Val:  val,
 	}
 }
 

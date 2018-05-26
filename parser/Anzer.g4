@@ -11,7 +11,6 @@ statement
     : dataSig
     | funcSig
     | funcDef
-    | funcParam
     ;
 
 /**
@@ -31,19 +30,12 @@ DATA_NAME_ID: [A-Z] [A-Z0-9_] +;
  */
 
 //signature
-funcSig: FUNC_NAME_ID '::' dataName '->' dataName;
+funcSig: FUNC_NAME_ID '::' dataName '->' dataName funcParams?;
+
+funcParams: json;
 
 //definition
 funcDef: FUNC_NAME_ID '=' composeFunc ('.' composeFunc)*;
-
-//params
-funcParam: funcParamConfig | funcParamEnv;
-
-//env
-funcParamEnv: FUNC_NAME_ID '.env[' funcEnvName ']' '=' funcParamValue;
-
-//param
-funcParamConfig: FUNC_NAME_ID '.' FUNC_PARAM_ID '=' funcParamValue;
 
 // composition
 composeFunc: FUNC_NAME_ID | productFunc;
@@ -55,11 +47,6 @@ dataName: DATA_NAME_ID | '_';
 FUNC_NAME_ID: [a-z] [a-zA-Z0-9]*;
 
 FUNC_PARAM_ID: [a-z0-9_]+;
-
-funcEnvName: STRING;
-
-funcParamValue: STRING;
-
 /**
  * JSON Definition
  */
