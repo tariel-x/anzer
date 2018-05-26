@@ -19,6 +19,12 @@ type AnzerListener interface {
 	// EnterDataDefinition is called when entering the dataDefinition production.
 	EnterDataDefinition(c *DataDefinitionContext)
 
+	// EnterJsonDataDefinition is called when entering the jsonDataDefinition production.
+	EnterJsonDataDefinition(c *JsonDataDefinitionContext)
+
+	// EnterRecursiveDataDefinition is called when entering the recursiveDataDefinition production.
+	EnterRecursiveDataDefinition(c *RecursiveDataDefinitionContext)
+
 	// EnterFuncSig is called when entering the funcSig production.
 	EnterFuncSig(c *FuncSigContext)
 
@@ -60,6 +66,12 @@ type AnzerListener interface {
 
 	// ExitDataDefinition is called when exiting the dataDefinition production.
 	ExitDataDefinition(c *DataDefinitionContext)
+
+	// ExitJsonDataDefinition is called when exiting the jsonDataDefinition production.
+	ExitJsonDataDefinition(c *JsonDataDefinitionContext)
+
+	// ExitRecursiveDataDefinition is called when exiting the recursiveDataDefinition production.
+	ExitRecursiveDataDefinition(c *RecursiveDataDefinitionContext)
 
 	// ExitFuncSig is called when exiting the funcSig production.
 	ExitFuncSig(c *FuncSigContext)

@@ -44,6 +44,18 @@ func (s *BaseAnzerListener) EnterDataDefinition(ctx *DataDefinitionContext) {}
 // ExitDataDefinition is called when production dataDefinition is exited.
 func (s *BaseAnzerListener) ExitDataDefinition(ctx *DataDefinitionContext) {}
 
+// EnterJsonDataDefinition is called when production jsonDataDefinition is entered.
+func (s *BaseAnzerListener) EnterJsonDataDefinition(ctx *JsonDataDefinitionContext) {}
+
+// ExitJsonDataDefinition is called when production jsonDataDefinition is exited.
+func (s *BaseAnzerListener) ExitJsonDataDefinition(ctx *JsonDataDefinitionContext) {}
+
+// EnterRecursiveDataDefinition is called when production recursiveDataDefinition is entered.
+func (s *BaseAnzerListener) EnterRecursiveDataDefinition(ctx *RecursiveDataDefinitionContext) {}
+
+// ExitRecursiveDataDefinition is called when production recursiveDataDefinition is exited.
+func (s *BaseAnzerListener) ExitRecursiveDataDefinition(ctx *RecursiveDataDefinitionContext) {}
+
 // EnterFuncSig is called when production funcSig is entered.
 func (s *BaseAnzerListener) EnterFuncSig(ctx *FuncSigContext) {}
 

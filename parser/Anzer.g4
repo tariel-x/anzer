@@ -19,7 +19,11 @@ statement
 
 dataSig: 'data' DATA_NAME_ID '=' dataDefinition;
 
-dataDefinition: json | DATA_NAME_ID (DATA_AND_OR DATA_NAME_ID)*;
+dataDefinition: jsonDataDefinition | recursiveDataDefinition;
+
+jsonDataDefinition: json;
+
+recursiveDataDefinition: DATA_NAME_ID (DATA_AND_OR DATA_NAME_ID)*;
 
 DATA_AND_OR: [*|];
 
