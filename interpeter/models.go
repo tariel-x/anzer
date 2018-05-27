@@ -2,21 +2,28 @@ package interpeter
 
 import "encoding/json"
 
-const OPERAND_PROD = 0
-const OPERAND_SUM = 1
+const OpernadProduction = 0
+const OpernadSum = 1
 
 type BaseType struct {
-	Name    *string
 	Type    *json.RawMessage
-	Alias   *string
+	Name    *string
 	Operand *int
 	Arg     *BaseType
 }
 
-func NewBaseType(name string, val string) BaseType {
+func NewBaseType(Type string) BaseType {
+	b := []byte(Type)
+	j := json.RawMessage(b)
 	return BaseType{
-		Name: name,
-		Val:  val,
+		Type: &j,
+	}
+}
+
+func NewBaseTypeComplex(Name string, Operand int) BaseType {
+	return BaseType{
+		Name: &Name,
+		Operand: &Operand,
 	}
 }
 
