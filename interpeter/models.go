@@ -1,10 +1,16 @@
 package interpeter
 
+import "encoding/json"
+
+const OPERAND_PROD = 0
+const OPERAND_SUM = 1
+
 type BaseType struct {
-	Name string
-	Val  string
-	Op   string
-	Arg  *BaseType
+	Name    *string
+	Type    *json.RawMessage
+	Alias   *string
+	Operand *int
+	Arg     *BaseType
 }
 
 func NewBaseType(name string, val string) BaseType {
