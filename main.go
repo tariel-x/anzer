@@ -20,10 +20,10 @@ func main() {
 	antlr.ParseTreeWalkerDefault.Walk(listener, tree)
 	fmt.Println("-----------------")
 	for _, t := range listener.Types {
-		fmt.Printf("%s = %s\n", t.Name, t.Val)
+		fmt.Printf("%s = %s\n", t.Name, t.Type)
 	}
 	fmt.Println("-----------------")
-	for _, t := range listener.Funcs {
-		fmt.Printf("%s :: %s -> %s\n", t.Name(), t.Arg(), t.Ret())
+	for name, t := range listener.Funcs {
+		fmt.Printf("%s :: %s -> %s\n", name, t.Arg, t.Ret)
 	}
 }

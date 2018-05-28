@@ -22,41 +22,57 @@ func NewBaseType(Type string) BaseType {
 
 func NewBaseTypeComplex(Name string, Operand int) BaseType {
 	return BaseType{
-		Name: &Name,
+		Name:    &Name,
 		Operand: &Operand,
 	}
 }
 
 type BaseFunc struct {
-	arg string
-	ret string
-	Def *FuncBody
+	Name string
+	Arg  string
+	Ret  string
+	Def  *FuncBody
 }
 
 type FuncBody struct {
-	Name    string
+	Name    *string
 	Product []FuncBody
 	Param   *FuncBody
 }
 
 func NewBaseFunc(name string, arg string, ret string) BaseFunc {
 	return BaseFunc{
-		Def: &FuncBody{
-			Name: name,
-		},
-		arg: arg,
-		ret: ret,
+		Name: name,
+		Arg:  arg,
+		Ret:  ret,
 	}
 }
 
-func (f *BaseFunc) Name() string {
-	return f.Def.Name
+func (f *BaseFunc) AppendComposition(name string) *FuncBody {
+	fb := &FuncBody{
+		Name: &name,
+	}
+	f.Def = fb
+	return fb
 }
 
-func (f *BaseFunc) Arg() string {
-	return f.arg
+func (b *FuncBody) AppendComposition(name string) *FuncBody {
+	fb := &FuncBody{
+		Name: &name,
+	}
+	b.Param = fb
+	return fb
 }
 
-func (f *BaseFunc) Ret() string {
-	return f.ret
+func (b *FuncBody) AppendProdComposition(names []string) []FuncBody {
+	fbs := []FuncBody{}
+	for _, name := range names {
+		fb := &FuncBody{
+			Name: &name,
+		}
+		fbs = append(fbs, *fb)
+	}
+
+	b.Product = fbs
+	return fbs
 }
