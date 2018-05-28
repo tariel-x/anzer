@@ -29,12 +29,12 @@ func NewListener() *Listener {
 func (l *Listener) EnterDataSig(ctx *parser.DataSigContext) {
 	name := ctx.DATA_NAME_ID().GetText()
 	for _, child := range ctx.DataDefinition().GetChildren() {
-		l.processDataDef(name, child)
+		l.processDataDef(name, child, nil)
 	}
-	l.Types[name] = NewBaseType(name, val)
+	l.Types[name] = NewBaseType(val)
 }
 
-func (l *Listener) processDataDef(fname string, child antlr.Tree) *FuncBody {
+func (l *Listener) processDataDef(fname string, child antlr.Tree, def *BaseType) *BaseType {
 	p := child.GetPayload()
 	switch t := p.(type) {
 	case *antlr.CommonToken:
