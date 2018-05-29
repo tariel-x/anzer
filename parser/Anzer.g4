@@ -17,15 +17,19 @@ statement
  * Data type
  */
 
-dataSig: 'data' DATA_NAME_ID '=' dataDefinition;
+dataSig: jsonDataDef | logicDataDef;
 
-dataDefinition: jsonDataDefinition | recursiveDataDefinition;
+jsonDataDef: 'data' DATA_NAME_ID '=' json;
 
-jsonDataDefinition: json;
+logicDataDef: 'data' DATA_NAME_ID '=' (dataAnd | dataOr);
 
-recursiveDataDefinition: DATA_NAME_ID (DATA_AND_OR DATA_NAME_ID)*;
+dataOr: DATA_NAME_ID (DATA_OR DATA_NAME_ID)*;
 
-DATA_AND_OR: [*|];
+dataAnd: DATA_NAME_ID (DATA_AND DATA_NAME_ID)*;
+
+DATA_AND: '&';
+
+DATA_OR: '|';
 
 DATA_NAME_ID: [A-Z] [A-Z0-9_] +;
 

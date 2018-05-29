@@ -28,30 +28,7 @@ func NewListener() *Listener {
 
 func (l *Listener) EnterDataSig(ctx *parser.DataSigContext) {
 	name := ctx.DATA_NAME_ID().GetText()
-	for _, child := range ctx.DataDefinition().GetChildren() {
-		l.processDataDef(name, child, nil)
-	}
-	l.Types[name] = NewBaseType(val)
-}
-
-func (l *Listener) processDataDef(fname string, child antlr.Tree, def *BaseType) *BaseType {
-	p := child.GetPayload()
-	switch t := p.(type) {
-	case *antlr.BaseParserRuleContext:
-		if t.GetRuleIndex() == parser.AnzerParserRULE_jsonDataDefinition {
-			return l.processJsonDataDef(fname, t, def)
-		}
-	default:
-		_ = t
-	}
-	return nil
-}
-
-func (l *Listener) processJsonDataDef(fname string, child antlr.BaseParserRuleContext, def *BaseType) *BaseType {
-	if def == nil {
-		return NewBaseType(child.GetText())
-	}
-	return
+	fmt.Println(name)
 }
 
 func (l *Listener) EnterFuncSig(ctx *parser.FuncSigContext) {
@@ -96,23 +73,4 @@ func (l *Listener) processFuncDef(fb *FuncBody, name string, child antlr.Tree) *
 		_ = t
 	}
 	return nil
-}
-
-func (l *Listener) appendFunc(fb *FuncBody, name string) *FuncBody {
-	cfb := FuncBody{
-		Name: name,
-	}
-	fb.Param = &cfb
-	return fb.Param
-}
-
-func (l *Listener) appendProduct(fb *FuncBody, name string, tree antlr.Tree) *FuncBody {
-	children := tree.GetChildren()
-	product := []FuncBody{}
-	for _, child := range children {
-		pfb := l.processFuncDef(fb, name, child)
-		product = append(product, *pfb)
-	}
-	fb.Product = product
-	return fb
 }
