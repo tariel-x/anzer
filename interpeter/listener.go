@@ -1,8 +1,6 @@
 package interpeter
 
 import (
-	"fmt"
-	//"fmt"
 	"github.com/antlr/antlr4/runtime/Go/antlr"
 	"github.com/tariel-x/anzer/parser"
 )
@@ -26,13 +24,34 @@ func NewListener() *Listener {
 	fmt.Println(ctx.GetText())
 } */
 
-func (l *Listener) EnterDataSig(ctx *parser.DataSigContext) {
+func (l *Listener) EnterJsonDataDef(ctx *parser.JsonDataDefContext) {
 	name := ctx.DATA_NAME_ID().GetText()
-	val := ctx.DataDefinition().GetText()
-	l.Types[name] = NewBaseType(name, val)
+	value := ctx.Json().GetText()
+	l.Types[name] = *NewBaseType(value)
 }
 
-func (l *Listener) EnterFuncSig(ctx *parser.FuncSigContext) {
+func (l *Listener) EnterLogicDataDef(ctx *parser.LogicDataDefContext) {
+	name := ctx.DATA_NAME_ID().GetText()
+	bt := &BaseType{}
+	if ctx.DataOr() != nil {
+		l.makeLogicDataDef(ctx.DataOr().GetChildren(), OpernadSum, bt)
+	} else if ctx.DataAnd() != nil {
+		l.makeLogicDataDef(ctx.DataAnd().GetChildren(), OpernadProduction, bt)
+	}
+	l.Types[name] = *bt
+}
+
+func (l *Listener) makeLogicDataDef(children []antlr.Tree, op int, def *BaseType) {
+	def.Operand = &op
+	for _, child := range children {
+		p := child.GetPayload().(*antlr.BaseParserRuleContext)
+		if p.GetRuleIndex() == parser.AnzerParserRULE_dataNameId {
+			def.Args = append(def.Args, p.GetText())
+		}
+	}
+}
+
+/*func (l *Listener) EnterFuncSig(ctx *parser.FuncSigContext) {
 	name := ctx.FUNC_NAME_ID().GetText()
 	arg := ctx.DataName(0).GetText()
 	ret := ctx.DataName(1).GetText()
@@ -74,23 +93,4 @@ func (l *Listener) processFuncDef(fb *FuncBody, name string, child antlr.Tree) *
 		_ = t
 	}
 	return nil
-}
-
-func (l *Listener) appendFunc(fb *FuncBody, name string) *FuncBody {
-	cfb := FuncBody{
-		Name: name,
-	}
-	fb.Param = &cfb
-	return fb.Param
-}
-
-func (l *Listener) appendProduct(fb *FuncBody, name string, tree antlr.Tree) *FuncBody {
-	children := tree.GetChildren()
-	product := []FuncBody{}
-	for _, child := range children {
-		pfb := l.processFuncDef(fb, name, child)
-		product = append(product, *pfb)
-	}
-	fb.Product = product
-	return fb
-}
+}*/

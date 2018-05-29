@@ -1,49 +1,70 @@
 package interpeter
 
+import "encoding/json"
+
+const OpernadProduction = 0
+const OpernadSum = 1
+
 type BaseType struct {
-	Name string
-	Val  string
-	Op   string
-	Arg  *BaseType
+	Type    *json.RawMessage
+	Operand *int
+	Args     []string
 }
 
-func NewBaseType(name string, val string) BaseType {
-	return BaseType{
-		Name: name,
-		Val:  val,
+func NewBaseType(Type string) *BaseType {
+	b := []byte(Type)
+	j := json.RawMessage(b)
+	return &BaseType{
+		Type: &j,
 	}
 }
 
 type BaseFunc struct {
-	arg string
-	ret string
-	Def *FuncBody
+	Name string
+	Arg  string
+	Ret  string
+	Def  *FuncBody
 }
 
 type FuncBody struct {
-	Name    string
+	Name    *string
 	Product []FuncBody
 	Param   *FuncBody
 }
 
 func NewBaseFunc(name string, arg string, ret string) BaseFunc {
 	return BaseFunc{
-		Def: &FuncBody{
-			Name: name,
-		},
-		arg: arg,
-		ret: ret,
+		Name: name,
+		Arg:  arg,
+		Ret:  ret,
 	}
 }
 
-func (f *BaseFunc) Name() string {
-	return f.Def.Name
+func (f *BaseFunc) AppendComposition(name string) *FuncBody {
+	fb := &FuncBody{
+		Name: &name,
+	}
+	f.Def = fb
+	return fb
 }
 
-func (f *BaseFunc) Arg() string {
-	return f.arg
+func (b *FuncBody) AppendComposition(name string) *FuncBody {
+	fb := &FuncBody{
+		Name: &name,
+	}
+	b.Param = fb
+	return fb
 }
 
-func (f *BaseFunc) Ret() string {
-	return f.ret
+func (b *FuncBody) AppendProdComposition(names []string) []FuncBody {
+	fbs := []FuncBody{}
+	for _, name := range names {
+		fb := &FuncBody{
+			Name: &name,
+		}
+		fbs = append(fbs, *fb)
+	}
+
+	b.Product = fbs
+	return fbs
 }

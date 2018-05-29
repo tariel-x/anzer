@@ -16,14 +16,29 @@ type AnzerListener interface {
 	// EnterDataSig is called when entering the dataSig production.
 	EnterDataSig(c *DataSigContext)
 
-	// EnterDataDefinition is called when entering the dataDefinition production.
-	EnterDataDefinition(c *DataDefinitionContext)
+	// EnterJsonDataDef is called when entering the jsonDataDef production.
+	EnterJsonDataDef(c *JsonDataDefContext)
 
-	// EnterJsonDataDefinition is called when entering the jsonDataDefinition production.
-	EnterJsonDataDefinition(c *JsonDataDefinitionContext)
+	// EnterLogicDataDef is called when entering the logicDataDef production.
+	EnterLogicDataDef(c *LogicDataDefContext)
 
-	// EnterRecursiveDataDefinition is called when entering the recursiveDataDefinition production.
-	EnterRecursiveDataDefinition(c *RecursiveDataDefinitionContext)
+	// EnterDataArg is called when entering the dataArg production.
+	EnterDataArg(c *DataArgContext)
+
+	// EnterDataOr is called when entering the dataOr production.
+	EnterDataOr(c *DataOrContext)
+
+	// EnterDataAnd is called when entering the dataAnd production.
+	EnterDataAnd(c *DataAndContext)
+
+	// EnterDataNameId is called when entering the dataNameId production.
+	EnterDataNameId(c *DataNameIdContext)
+
+	// EnterDataOrOperand is called when entering the dataOrOperand production.
+	EnterDataOrOperand(c *DataOrOperandContext)
+
+	// EnterDataAndOperand is called when entering the dataAndOperand production.
+	EnterDataAndOperand(c *DataAndOperandContext)
 
 	// EnterFuncSig is called when entering the funcSig production.
 	EnterFuncSig(c *FuncSigContext)
@@ -64,14 +79,29 @@ type AnzerListener interface {
 	// ExitDataSig is called when exiting the dataSig production.
 	ExitDataSig(c *DataSigContext)
 
-	// ExitDataDefinition is called when exiting the dataDefinition production.
-	ExitDataDefinition(c *DataDefinitionContext)
+	// ExitJsonDataDef is called when exiting the jsonDataDef production.
+	ExitJsonDataDef(c *JsonDataDefContext)
 
-	// ExitJsonDataDefinition is called when exiting the jsonDataDefinition production.
-	ExitJsonDataDefinition(c *JsonDataDefinitionContext)
+	// ExitLogicDataDef is called when exiting the logicDataDef production.
+	ExitLogicDataDef(c *LogicDataDefContext)
 
-	// ExitRecursiveDataDefinition is called when exiting the recursiveDataDefinition production.
-	ExitRecursiveDataDefinition(c *RecursiveDataDefinitionContext)
+	// ExitDataArg is called when exiting the dataArg production.
+	ExitDataArg(c *DataArgContext)
+
+	// ExitDataOr is called when exiting the dataOr production.
+	ExitDataOr(c *DataOrContext)
+
+	// ExitDataAnd is called when exiting the dataAnd production.
+	ExitDataAnd(c *DataAndContext)
+
+	// ExitDataNameId is called when exiting the dataNameId production.
+	ExitDataNameId(c *DataNameIdContext)
+
+	// ExitDataOrOperand is called when exiting the dataOrOperand production.
+	ExitDataOrOperand(c *DataOrOperandContext)
+
+	// ExitDataAndOperand is called when exiting the dataAndOperand production.
+	ExitDataAndOperand(c *DataAndOperandContext)
 
 	// ExitFuncSig is called when exiting the funcSig production.
 	ExitFuncSig(c *FuncSigContext)

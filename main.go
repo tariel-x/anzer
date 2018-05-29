@@ -19,11 +19,17 @@ func main() {
 	listener := interpeter.NewListener()
 	antlr.ParseTreeWalkerDefault.Walk(listener, tree)
 	fmt.Println("-----------------")
-	for _, t := range listener.Types {
-		fmt.Printf("%s = %s\n", t.Name, t.Val)
+	for name, t := range listener.Types {
+		if t.Type != nil {
+			fmt.Printf("%s = %s\n", name, *t.Type)
+		} else if t.Operand != nil && t.Args != nil {
+			fmt.Printf("%s %d = %v\n", name, *t.Operand, t.Args)
+		} else {
+			fmt.Printf("Some strage type\n")
+		}
 	}
 	fmt.Println("-----------------")
-	for _, t := range listener.Funcs {
-		fmt.Printf("%s :: %s -> %s\n", t.Name(), t.Arg(), t.Ret())
+	for name, t := range listener.Funcs {
+		fmt.Printf("%s :: %s -> %s\n", name, t.Arg, t.Ret)
 	}
 }

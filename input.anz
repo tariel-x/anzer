@@ -5,9 +5,9 @@ data ABC_123 = {
 }
 data X2={"b":500}
 
-data X3=X2*ABC_123
+data X3=X2&ABC_123
 data XX = X3
-data X5= X3|XX
+data X5= X3|XX|X5
 
 // envs
 a :: ABC_123 -> X2 {
