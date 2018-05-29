@@ -19,8 +19,8 @@ func main() {
 	listener := interpeter.NewListener()
 	antlr.ParseTreeWalkerDefault.Walk(listener, tree)
 	fmt.Println("-----------------")
-	for _, t := range listener.Types {
-		fmt.Printf("%s = %s\n", t.Name, t.Type)
+	for name, t := range listener.Types {
+		fmt.Printf("%s = %s\n", name, t.Type)
 	}
 	fmt.Println("-----------------")
 	for name, t := range listener.Funcs {

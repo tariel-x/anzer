@@ -1,9 +1,7 @@
 package interpeter
 
 import (
-	"fmt"
-	//"fmt"
-	"github.com/antlr/antlr4/runtime/Go/antlr"
+
 	"github.com/tariel-x/anzer/parser"
 )
 
@@ -26,12 +24,13 @@ func NewListener() *Listener {
 	fmt.Println(ctx.GetText())
 } */
 
-func (l *Listener) EnterDataSig(ctx *parser.DataSigContext) {
+func (l *Listener) EnterJsonDataDef(ctx *parser.JsonDataDefContext) {
 	name := ctx.DATA_NAME_ID().GetText()
-	fmt.Println(name)
+	value := ctx.Json().GetText()
+	l.Types[name] = *NewBaseType(value)
 }
 
-func (l *Listener) EnterFuncSig(ctx *parser.FuncSigContext) {
+/*func (l *Listener) EnterFuncSig(ctx *parser.FuncSigContext) {
 	name := ctx.FUNC_NAME_ID().GetText()
 	arg := ctx.DataName(0).GetText()
 	ret := ctx.DataName(1).GetText()
@@ -73,4 +72,4 @@ func (l *Listener) processFuncDef(fb *FuncBody, name string, child antlr.Tree) *
 		_ = t
 	}
 	return nil
-}
+}*/
