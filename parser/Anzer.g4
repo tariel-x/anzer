@@ -23,6 +23,8 @@ jsonDataDef: 'data' DATA_NAME_ID '=' json;
 
 logicDataDef: 'data' DATA_NAME_ID '=' (dataAnd | dataOr);
 
+dataArg: dataNameId | json;
+
 dataOr: DATA_NAME_ID (DATA_OR DATA_NAME_ID)*;
 
 dataAnd: DATA_NAME_ID (DATA_AND DATA_NAME_ID)*;
@@ -30,6 +32,8 @@ dataAnd: DATA_NAME_ID (DATA_AND DATA_NAME_ID)*;
 DATA_AND: '&';
 
 DATA_OR: '|';
+
+dataNameId: DATA_NAME_ID;
 
 DATA_NAME_ID: [A-Z] [A-Z0-9_] +;
 

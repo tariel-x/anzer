@@ -15,84 +15,96 @@ var _ = reflect.Copy
 var _ = strconv.Itoa
 
 var parserATN = []uint16{
-	3, 24715, 42794, 33075, 47597, 16764, 15335, 30598, 22884, 3, 27, 144,
+	3, 24715, 42794, 33075, 47597, 16764, 15335, 30598, 22884, 3, 28, 169,
 	4, 2, 9, 2, 4, 3, 9, 3, 4, 4, 9, 4, 4, 5, 9, 5, 4, 6, 9, 6, 4, 7, 9, 7,
 	4, 8, 9, 8, 4, 9, 9, 9, 4, 10, 9, 10, 4, 11, 9, 11, 4, 12, 9, 12, 4, 13,
-	9, 13, 4, 14, 9, 14, 4, 15, 9, 15, 4, 16, 9, 16, 4, 17, 9, 17, 3, 2, 6,
-	2, 36, 10, 2, 13, 2, 14, 2, 37, 3, 3, 3, 3, 3, 3, 5, 3, 43, 10, 3, 3, 4,
-	3, 4, 3, 4, 3, 4, 3, 4, 3, 5, 3, 5, 5, 5, 52, 10, 5, 3, 6, 3, 6, 3, 7,
-	3, 7, 3, 7, 7, 7, 59, 10, 7, 12, 7, 14, 7, 62, 11, 7, 3, 8, 3, 8, 3, 8,
-	3, 8, 3, 8, 3, 8, 5, 8, 70, 10, 8, 3, 9, 3, 9, 3, 10, 3, 10, 3, 10, 3,
-	10, 3, 10, 7, 10, 79, 10, 10, 12, 10, 14, 10, 82, 11, 10, 3, 11, 3, 11,
-	5, 11, 86, 10, 11, 3, 12, 3, 12, 3, 12, 3, 12, 7, 12, 92, 10, 12, 12, 12,
-	14, 12, 95, 11, 12, 3, 12, 3, 12, 3, 13, 3, 13, 3, 14, 3, 14, 3, 14, 3,
-	14, 3, 14, 3, 14, 3, 14, 5, 14, 108, 10, 14, 3, 15, 3, 15, 3, 15, 3, 15,
-	7, 15, 114, 10, 15, 12, 15, 14, 15, 117, 11, 15, 3, 15, 3, 15, 3, 15, 3,
-	15, 5, 15, 123, 10, 15, 3, 16, 3, 16, 3, 16, 3, 16, 3, 17, 3, 17, 3, 17,
-	3, 17, 7, 17, 133, 10, 17, 12, 17, 14, 17, 136, 11, 17, 3, 17, 3, 17, 3,
-	17, 3, 17, 5, 17, 142, 10, 17, 3, 17, 2, 2, 18, 2, 4, 6, 8, 10, 12, 14,
-	16, 18, 20, 22, 24, 26, 28, 30, 32, 2, 3, 4, 2, 11, 11, 21, 21, 2, 146,
-	2, 35, 3, 2, 2, 2, 4, 42, 3, 2, 2, 2, 6, 44, 3, 2, 2, 2, 8, 51, 3, 2, 2,
-	2, 10, 53, 3, 2, 2, 2, 12, 55, 3, 2, 2, 2, 14, 63, 3, 2, 2, 2, 16, 71,
-	3, 2, 2, 2, 18, 73, 3, 2, 2, 2, 20, 85, 3, 2, 2, 2, 22, 87, 3, 2, 2, 2,
-	24, 98, 3, 2, 2, 2, 26, 107, 3, 2, 2, 2, 28, 122, 3, 2, 2, 2, 30, 124,
-	3, 2, 2, 2, 32, 141, 3, 2, 2, 2, 34, 36, 5, 4, 3, 2, 35, 34, 3, 2, 2, 2,
-	36, 37, 3, 2, 2, 2, 37, 35, 3, 2, 2, 2, 37, 38, 3, 2, 2, 2, 38, 3, 3, 2,
-	2, 2, 39, 43, 5, 6, 4, 2, 40, 43, 5, 14, 8, 2, 41, 43, 5, 18, 10, 2, 42,
-	39, 3, 2, 2, 2, 42, 40, 3, 2, 2, 2, 42, 41, 3, 2, 2, 2, 43, 5, 3, 2, 2,
-	2, 44, 45, 7, 3, 2, 2, 45, 46, 7, 21, 2, 2, 46, 47, 7, 4, 2, 2, 47, 48,
-	5, 8, 5, 2, 48, 7, 3, 2, 2, 2, 49, 52, 5, 10, 6, 2, 50, 52, 5, 12, 7, 2,
-	51, 49, 3, 2, 2, 2, 51, 50, 3, 2, 2, 2, 52, 9, 3, 2, 2, 2, 53, 54, 5, 26,
-	14, 2, 54, 11, 3, 2, 2, 2, 55, 60, 7, 21, 2, 2, 56, 57, 7, 20, 2, 2, 57,
-	59, 7, 21, 2, 2, 58, 56, 3, 2, 2, 2, 59, 62, 3, 2, 2, 2, 60, 58, 3, 2,
-	2, 2, 60, 61, 3, 2, 2, 2, 61, 13, 3, 2, 2, 2, 62, 60, 3, 2, 2, 2, 63, 64,
-	7, 22, 2, 2, 64, 65, 7, 5, 2, 2, 65, 66, 5, 24, 13, 2, 66, 67, 7, 6, 2,
-	2, 67, 69, 5, 24, 13, 2, 68, 70, 5, 16, 9, 2, 69, 68, 3, 2, 2, 2, 69, 70,
-	3, 2, 2, 2, 70, 15, 3, 2, 2, 2, 71, 72, 5, 26, 14, 2, 72, 17, 3, 2, 2,
-	2, 73, 74, 7, 22, 2, 2, 74, 75, 7, 4, 2, 2, 75, 80, 5, 20, 11, 2, 76, 77,
-	7, 7, 2, 2, 77, 79, 5, 20, 11, 2, 78, 76, 3, 2, 2, 2, 79, 82, 3, 2, 2,
-	2, 80, 78, 3, 2, 2, 2, 80, 81, 3, 2, 2, 2, 81, 19, 3, 2, 2, 2, 82, 80,
-	3, 2, 2, 2, 83, 86, 7, 22, 2, 2, 84, 86, 5, 22, 12, 2, 85, 83, 3, 2, 2,
-	2, 85, 84, 3, 2, 2, 2, 86, 21, 3, 2, 2, 2, 87, 88, 7, 8, 2, 2, 88, 93,
-	5, 20, 11, 2, 89, 90, 7, 9, 2, 2, 90, 92, 5, 20, 11, 2, 91, 89, 3, 2, 2,
-	2, 92, 95, 3, 2, 2, 2, 93, 91, 3, 2, 2, 2, 93, 94, 3, 2, 2, 2, 94, 96,
-	3, 2, 2, 2, 95, 93, 3, 2, 2, 2, 96, 97, 7, 10, 2, 2, 97, 23, 3, 2, 2, 2,
-	98, 99, 9, 2, 2, 2, 99, 25, 3, 2, 2, 2, 100, 108, 7, 24, 2, 2, 101, 108,
-	7, 25, 2, 2, 102, 108, 5, 28, 15, 2, 103, 108, 5, 32, 17, 2, 104, 108,
-	7, 12, 2, 2, 105, 108, 7, 13, 2, 2, 106, 108, 7, 14, 2, 2, 107, 100, 3,
-	2, 2, 2, 107, 101, 3, 2, 2, 2, 107, 102, 3, 2, 2, 2, 107, 103, 3, 2, 2,
-	2, 107, 104, 3, 2, 2, 2, 107, 105, 3, 2, 2, 2, 107, 106, 3, 2, 2, 2, 108,
-	27, 3, 2, 2, 2, 109, 110, 7, 15, 2, 2, 110, 115, 5, 30, 16, 2, 111, 112,
-	7, 9, 2, 2, 112, 114, 5, 30, 16, 2, 113, 111, 3, 2, 2, 2, 114, 117, 3,
-	2, 2, 2, 115, 113, 3, 2, 2, 2, 115, 116, 3, 2, 2, 2, 116, 118, 3, 2, 2,
-	2, 117, 115, 3, 2, 2, 2, 118, 119, 7, 16, 2, 2, 119, 123, 3, 2, 2, 2, 120,
-	121, 7, 15, 2, 2, 121, 123, 7, 16, 2, 2, 122, 109, 3, 2, 2, 2, 122, 120,
-	3, 2, 2, 2, 123, 29, 3, 2, 2, 2, 124, 125, 7, 24, 2, 2, 125, 126, 7, 17,
-	2, 2, 126, 127, 5, 26, 14, 2, 127, 31, 3, 2, 2, 2, 128, 129, 7, 18, 2,
-	2, 129, 134, 5, 26, 14, 2, 130, 131, 7, 9, 2, 2, 131, 133, 5, 26, 14, 2,
-	132, 130, 3, 2, 2, 2, 133, 136, 3, 2, 2, 2, 134, 132, 3, 2, 2, 2, 134,
-	135, 3, 2, 2, 2, 135, 137, 3, 2, 2, 2, 136, 134, 3, 2, 2, 2, 137, 138,
-	7, 19, 2, 2, 138, 142, 3, 2, 2, 2, 139, 140, 7, 18, 2, 2, 140, 142, 7,
-	19, 2, 2, 141, 128, 3, 2, 2, 2, 141, 139, 3, 2, 2, 2, 142, 33, 3, 2, 2,
-	2, 15, 37, 42, 51, 60, 69, 80, 85, 93, 107, 115, 122, 134, 141,
+	9, 13, 4, 14, 9, 14, 4, 15, 9, 15, 4, 16, 9, 16, 4, 17, 9, 17, 4, 18, 9,
+	18, 4, 19, 9, 19, 4, 20, 9, 20, 3, 2, 6, 2, 42, 10, 2, 13, 2, 14, 2, 43,
+	3, 3, 3, 3, 3, 3, 5, 3, 49, 10, 3, 3, 4, 3, 4, 5, 4, 53, 10, 4, 3, 5, 3,
+	5, 3, 5, 3, 5, 3, 5, 3, 6, 3, 6, 3, 6, 3, 6, 3, 6, 5, 6, 65, 10, 6, 3,
+	7, 3, 7, 5, 7, 69, 10, 7, 3, 8, 3, 8, 3, 8, 7, 8, 74, 10, 8, 12, 8, 14,
+	8, 77, 11, 8, 3, 9, 3, 9, 3, 9, 7, 9, 82, 10, 9, 12, 9, 14, 9, 85, 11,
+	9, 3, 10, 3, 10, 3, 11, 3, 11, 3, 11, 3, 11, 3, 11, 3, 11, 5, 11, 95, 10,
+	11, 3, 12, 3, 12, 3, 13, 3, 13, 3, 13, 3, 13, 3, 13, 7, 13, 104, 10, 13,
+	12, 13, 14, 13, 107, 11, 13, 3, 14, 3, 14, 5, 14, 111, 10, 14, 3, 15, 3,
+	15, 3, 15, 3, 15, 7, 15, 117, 10, 15, 12, 15, 14, 15, 120, 11, 15, 3, 15,
+	3, 15, 3, 16, 3, 16, 3, 17, 3, 17, 3, 17, 3, 17, 3, 17, 3, 17, 3, 17, 5,
+	17, 133, 10, 17, 3, 18, 3, 18, 3, 18, 3, 18, 7, 18, 139, 10, 18, 12, 18,
+	14, 18, 142, 11, 18, 3, 18, 3, 18, 3, 18, 3, 18, 5, 18, 148, 10, 18, 3,
+	19, 3, 19, 3, 19, 3, 19, 3, 20, 3, 20, 3, 20, 3, 20, 7, 20, 158, 10, 20,
+	12, 20, 14, 20, 161, 11, 20, 3, 20, 3, 20, 3, 20, 3, 20, 5, 20, 167, 10,
+	20, 3, 20, 2, 2, 21, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28,
+	30, 32, 34, 36, 38, 2, 3, 4, 2, 11, 11, 22, 22, 2, 171, 2, 41, 3, 2, 2,
+	2, 4, 48, 3, 2, 2, 2, 6, 52, 3, 2, 2, 2, 8, 54, 3, 2, 2, 2, 10, 59, 3,
+	2, 2, 2, 12, 68, 3, 2, 2, 2, 14, 70, 3, 2, 2, 2, 16, 78, 3, 2, 2, 2, 18,
+	86, 3, 2, 2, 2, 20, 88, 3, 2, 2, 2, 22, 96, 3, 2, 2, 2, 24, 98, 3, 2, 2,
+	2, 26, 110, 3, 2, 2, 2, 28, 112, 3, 2, 2, 2, 30, 123, 3, 2, 2, 2, 32, 132,
+	3, 2, 2, 2, 34, 147, 3, 2, 2, 2, 36, 149, 3, 2, 2, 2, 38, 166, 3, 2, 2,
+	2, 40, 42, 5, 4, 3, 2, 41, 40, 3, 2, 2, 2, 42, 43, 3, 2, 2, 2, 43, 41,
+	3, 2, 2, 2, 43, 44, 3, 2, 2, 2, 44, 3, 3, 2, 2, 2, 45, 49, 5, 6, 4, 2,
+	46, 49, 5, 20, 11, 2, 47, 49, 5, 24, 13, 2, 48, 45, 3, 2, 2, 2, 48, 46,
+	3, 2, 2, 2, 48, 47, 3, 2, 2, 2, 49, 5, 3, 2, 2, 2, 50, 53, 5, 8, 5, 2,
+	51, 53, 5, 10, 6, 2, 52, 50, 3, 2, 2, 2, 52, 51, 3, 2, 2, 2, 53, 7, 3,
+	2, 2, 2, 54, 55, 7, 3, 2, 2, 55, 56, 7, 22, 2, 2, 56, 57, 7, 4, 2, 2, 57,
+	58, 5, 32, 17, 2, 58, 9, 3, 2, 2, 2, 59, 60, 7, 3, 2, 2, 60, 61, 7, 22,
+	2, 2, 61, 64, 7, 4, 2, 2, 62, 65, 5, 16, 9, 2, 63, 65, 5, 14, 8, 2, 64,
+	62, 3, 2, 2, 2, 64, 63, 3, 2, 2, 2, 65, 11, 3, 2, 2, 2, 66, 69, 5, 18,
+	10, 2, 67, 69, 5, 32, 17, 2, 68, 66, 3, 2, 2, 2, 68, 67, 3, 2, 2, 2, 69,
+	13, 3, 2, 2, 2, 70, 75, 7, 22, 2, 2, 71, 72, 7, 21, 2, 2, 72, 74, 7, 22,
+	2, 2, 73, 71, 3, 2, 2, 2, 74, 77, 3, 2, 2, 2, 75, 73, 3, 2, 2, 2, 75, 76,
+	3, 2, 2, 2, 76, 15, 3, 2, 2, 2, 77, 75, 3, 2, 2, 2, 78, 83, 7, 22, 2, 2,
+	79, 80, 7, 20, 2, 2, 80, 82, 7, 22, 2, 2, 81, 79, 3, 2, 2, 2, 82, 85, 3,
+	2, 2, 2, 83, 81, 3, 2, 2, 2, 83, 84, 3, 2, 2, 2, 84, 17, 3, 2, 2, 2, 85,
+	83, 3, 2, 2, 2, 86, 87, 7, 22, 2, 2, 87, 19, 3, 2, 2, 2, 88, 89, 7, 23,
+	2, 2, 89, 90, 7, 5, 2, 2, 90, 91, 5, 30, 16, 2, 91, 92, 7, 6, 2, 2, 92,
+	94, 5, 30, 16, 2, 93, 95, 5, 22, 12, 2, 94, 93, 3, 2, 2, 2, 94, 95, 3,
+	2, 2, 2, 95, 21, 3, 2, 2, 2, 96, 97, 5, 32, 17, 2, 97, 23, 3, 2, 2, 2,
+	98, 99, 7, 23, 2, 2, 99, 100, 7, 4, 2, 2, 100, 105, 5, 26, 14, 2, 101,
+	102, 7, 7, 2, 2, 102, 104, 5, 26, 14, 2, 103, 101, 3, 2, 2, 2, 104, 107,
+	3, 2, 2, 2, 105, 103, 3, 2, 2, 2, 105, 106, 3, 2, 2, 2, 106, 25, 3, 2,
+	2, 2, 107, 105, 3, 2, 2, 2, 108, 111, 7, 23, 2, 2, 109, 111, 5, 28, 15,
+	2, 110, 108, 3, 2, 2, 2, 110, 109, 3, 2, 2, 2, 111, 27, 3, 2, 2, 2, 112,
+	113, 7, 8, 2, 2, 113, 118, 5, 26, 14, 2, 114, 115, 7, 9, 2, 2, 115, 117,
+	5, 26, 14, 2, 116, 114, 3, 2, 2, 2, 117, 120, 3, 2, 2, 2, 118, 116, 3,
+	2, 2, 2, 118, 119, 3, 2, 2, 2, 119, 121, 3, 2, 2, 2, 120, 118, 3, 2, 2,
+	2, 121, 122, 7, 10, 2, 2, 122, 29, 3, 2, 2, 2, 123, 124, 9, 2, 2, 2, 124,
+	31, 3, 2, 2, 2, 125, 133, 7, 25, 2, 2, 126, 133, 7, 26, 2, 2, 127, 133,
+	5, 34, 18, 2, 128, 133, 5, 38, 20, 2, 129, 133, 7, 12, 2, 2, 130, 133,
+	7, 13, 2, 2, 131, 133, 7, 14, 2, 2, 132, 125, 3, 2, 2, 2, 132, 126, 3,
+	2, 2, 2, 132, 127, 3, 2, 2, 2, 132, 128, 3, 2, 2, 2, 132, 129, 3, 2, 2,
+	2, 132, 130, 3, 2, 2, 2, 132, 131, 3, 2, 2, 2, 133, 33, 3, 2, 2, 2, 134,
+	135, 7, 15, 2, 2, 135, 140, 5, 36, 19, 2, 136, 137, 7, 9, 2, 2, 137, 139,
+	5, 36, 19, 2, 138, 136, 3, 2, 2, 2, 139, 142, 3, 2, 2, 2, 140, 138, 3,
+	2, 2, 2, 140, 141, 3, 2, 2, 2, 141, 143, 3, 2, 2, 2, 142, 140, 3, 2, 2,
+	2, 143, 144, 7, 16, 2, 2, 144, 148, 3, 2, 2, 2, 145, 146, 7, 15, 2, 2,
+	146, 148, 7, 16, 2, 2, 147, 134, 3, 2, 2, 2, 147, 145, 3, 2, 2, 2, 148,
+	35, 3, 2, 2, 2, 149, 150, 7, 25, 2, 2, 150, 151, 7, 17, 2, 2, 151, 152,
+	5, 32, 17, 2, 152, 37, 3, 2, 2, 2, 153, 154, 7, 18, 2, 2, 154, 159, 5,
+	32, 17, 2, 155, 156, 7, 9, 2, 2, 156, 158, 5, 32, 17, 2, 157, 155, 3, 2,
+	2, 2, 158, 161, 3, 2, 2, 2, 159, 157, 3, 2, 2, 2, 159, 160, 3, 2, 2, 2,
+	160, 162, 3, 2, 2, 2, 161, 159, 3, 2, 2, 2, 162, 163, 7, 19, 2, 2, 163,
+	167, 3, 2, 2, 2, 164, 165, 7, 18, 2, 2, 165, 167, 7, 19, 2, 2, 166, 153,
+	3, 2, 2, 2, 166, 164, 3, 2, 2, 2, 167, 39, 3, 2, 2, 2, 18, 43, 48, 52,
+	64, 68, 75, 83, 94, 105, 110, 118, 132, 140, 147, 159, 166,
 }
 var deserializer = antlr.NewATNDeserializer(nil)
 var deserializedATN = deserializer.DeserializeFromUInt16(parserATN)
 
 var literalNames = []string{
 	"", "'data'", "'='", "'::'", "'->'", "'.'", "'<'", "','", "'>'", "'_'",
-	"'true'", "'false'", "'null'", "'{'", "'}'", "':'", "'['", "']'",
+	"'true'", "'false'", "'null'", "'{'", "'}'", "':'", "'['", "']'", "'&'",
+	"'|'",
 }
 var symbolicNames = []string{
 	"", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "",
-	"DATA_AND_OR", "DATA_NAME_ID", "FUNC_NAME_ID", "FUNC_PARAM_ID", "STRING",
-	"NUMBER", "WS", "LineComment",
+	"DATA_AND", "DATA_OR", "DATA_NAME_ID", "FUNC_NAME_ID", "FUNC_PARAM_ID",
+	"STRING", "NUMBER", "WS", "LineComment",
 }
 
 var ruleNames = []string{
-	"system", "statement", "dataSig", "dataDefinition", "jsonDataDefinition",
-	"recursiveDataDefinition", "funcSig", "funcParams", "funcDef", "composeFunc",
-	"productFunc", "dataName", "json", "obj", "pair", "array",
+	"system", "statement", "dataSig", "jsonDataDef", "logicDataDef", "dataArg",
+	"dataOr", "dataAnd", "dataNameId", "funcSig", "funcParams", "funcDef",
+	"composeFunc", "productFunc", "dataName", "json", "obj", "pair", "array",
 }
 var decisionToDFA = make([]*antlr.DFA, len(deserializedATN.DecisionToState))
 
@@ -140,34 +152,38 @@ const (
 	AnzerParserT__14         = 15
 	AnzerParserT__15         = 16
 	AnzerParserT__16         = 17
-	AnzerParserDATA_AND_OR   = 18
-	AnzerParserDATA_NAME_ID  = 19
-	AnzerParserFUNC_NAME_ID  = 20
-	AnzerParserFUNC_PARAM_ID = 21
-	AnzerParserSTRING        = 22
-	AnzerParserNUMBER        = 23
-	AnzerParserWS            = 24
-	AnzerParserLineComment   = 25
+	AnzerParserDATA_AND      = 18
+	AnzerParserDATA_OR       = 19
+	AnzerParserDATA_NAME_ID  = 20
+	AnzerParserFUNC_NAME_ID  = 21
+	AnzerParserFUNC_PARAM_ID = 22
+	AnzerParserSTRING        = 23
+	AnzerParserNUMBER        = 24
+	AnzerParserWS            = 25
+	AnzerParserLineComment   = 26
 )
 
 // AnzerParser rules.
 const (
-	AnzerParserRULE_system                  = 0
-	AnzerParserRULE_statement               = 1
-	AnzerParserRULE_dataSig                 = 2
-	AnzerParserRULE_dataDefinition          = 3
-	AnzerParserRULE_jsonDataDefinition      = 4
-	AnzerParserRULE_recursiveDataDefinition = 5
-	AnzerParserRULE_funcSig                 = 6
-	AnzerParserRULE_funcParams              = 7
-	AnzerParserRULE_funcDef                 = 8
-	AnzerParserRULE_composeFunc             = 9
-	AnzerParserRULE_productFunc             = 10
-	AnzerParserRULE_dataName                = 11
-	AnzerParserRULE_json                    = 12
-	AnzerParserRULE_obj                     = 13
-	AnzerParserRULE_pair                    = 14
-	AnzerParserRULE_array                   = 15
+	AnzerParserRULE_system       = 0
+	AnzerParserRULE_statement    = 1
+	AnzerParserRULE_dataSig      = 2
+	AnzerParserRULE_jsonDataDef  = 3
+	AnzerParserRULE_logicDataDef = 4
+	AnzerParserRULE_dataArg      = 5
+	AnzerParserRULE_dataOr       = 6
+	AnzerParserRULE_dataAnd      = 7
+	AnzerParserRULE_dataNameId   = 8
+	AnzerParserRULE_funcSig      = 9
+	AnzerParserRULE_funcParams   = 10
+	AnzerParserRULE_funcDef      = 11
+	AnzerParserRULE_composeFunc  = 12
+	AnzerParserRULE_productFunc  = 13
+	AnzerParserRULE_dataName     = 14
+	AnzerParserRULE_json         = 15
+	AnzerParserRULE_obj          = 16
+	AnzerParserRULE_pair         = 17
+	AnzerParserRULE_array        = 18
 )
 
 // ISystemContext is an interface to support dynamic dispatch.
@@ -273,17 +289,17 @@ func (p *AnzerParser) System() (localctx ISystemContext) {
 	}()
 
 	p.EnterOuterAlt(localctx, 1)
-	p.SetState(33)
+	p.SetState(39)
 	p.GetErrorHandler().Sync(p)
 	_la = p.GetTokenStream().LA(1)
 
 	for ok := true; ok; ok = _la == AnzerParserT__0 || _la == AnzerParserFUNC_NAME_ID {
 		{
-			p.SetState(32)
+			p.SetState(38)
 			p.Statement()
 		}
 
-		p.SetState(35)
+		p.SetState(41)
 		p.GetErrorHandler().Sync(p)
 		_la = p.GetTokenStream().LA(1)
 	}
@@ -399,27 +415,27 @@ func (p *AnzerParser) Statement() (localctx IStatementContext) {
 		}
 	}()
 
-	p.SetState(40)
+	p.SetState(46)
 	p.GetErrorHandler().Sync(p)
 	switch p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 1, p.GetParserRuleContext()) {
 	case 1:
 		p.EnterOuterAlt(localctx, 1)
 		{
-			p.SetState(37)
+			p.SetState(43)
 			p.DataSig()
 		}
 
 	case 2:
 		p.EnterOuterAlt(localctx, 2)
 		{
-			p.SetState(38)
+			p.SetState(44)
 			p.FuncSig()
 		}
 
 	case 3:
 		p.EnterOuterAlt(localctx, 3)
 		{
-			p.SetState(39)
+			p.SetState(45)
 			p.FuncDef()
 		}
 
@@ -466,18 +482,24 @@ func NewDataSigContext(parser antlr.Parser, parent antlr.ParserRuleContext, invo
 
 func (s *DataSigContext) GetParser() antlr.Parser { return s.parser }
 
-func (s *DataSigContext) DATA_NAME_ID() antlr.TerminalNode {
-	return s.GetToken(AnzerParserDATA_NAME_ID, 0)
-}
-
-func (s *DataSigContext) DataDefinition() IDataDefinitionContext {
-	var t = s.GetTypedRuleContext(reflect.TypeOf((*IDataDefinitionContext)(nil)).Elem(), 0)
+func (s *DataSigContext) JsonDataDef() IJsonDataDefContext {
+	var t = s.GetTypedRuleContext(reflect.TypeOf((*IJsonDataDefContext)(nil)).Elem(), 0)
 
 	if t == nil {
 		return nil
 	}
 
-	return t.(IDataDefinitionContext)
+	return t.(IJsonDataDefContext)
+}
+
+func (s *DataSigContext) LogicDataDef() ILogicDataDefContext {
+	var t = s.GetTypedRuleContext(reflect.TypeOf((*ILogicDataDefContext)(nil)).Elem(), 0)
+
+	if t == nil {
+		return nil
+	}
+
+	return t.(ILogicDataDefContext)
 }
 
 func (s *DataSigContext) GetRuleContext() antlr.RuleContext {
@@ -520,189 +542,71 @@ func (p *AnzerParser) DataSig() (localctx IDataSigContext) {
 		}
 	}()
 
-	p.EnterOuterAlt(localctx, 1)
-	{
-		p.SetState(42)
-		p.Match(AnzerParserT__0)
-	}
-	{
-		p.SetState(43)
-		p.Match(AnzerParserDATA_NAME_ID)
-	}
-	{
-		p.SetState(44)
-		p.Match(AnzerParserT__1)
-	}
-	{
-		p.SetState(45)
-		p.DataDefinition()
-	}
-
-	return localctx
-}
-
-// IDataDefinitionContext is an interface to support dynamic dispatch.
-type IDataDefinitionContext interface {
-	antlr.ParserRuleContext
-
-	// GetParser returns the parser.
-	GetParser() antlr.Parser
-
-	// IsDataDefinitionContext differentiates from other interfaces.
-	IsDataDefinitionContext()
-}
-
-type DataDefinitionContext struct {
-	*antlr.BaseParserRuleContext
-	parser antlr.Parser
-}
-
-func NewEmptyDataDefinitionContext() *DataDefinitionContext {
-	var p = new(DataDefinitionContext)
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(nil, -1)
-	p.RuleIndex = AnzerParserRULE_dataDefinition
-	return p
-}
-
-func (*DataDefinitionContext) IsDataDefinitionContext() {}
-
-func NewDataDefinitionContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *DataDefinitionContext {
-	var p = new(DataDefinitionContext)
-
-	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(parent, invokingState)
-
-	p.parser = parser
-	p.RuleIndex = AnzerParserRULE_dataDefinition
-
-	return p
-}
-
-func (s *DataDefinitionContext) GetParser() antlr.Parser { return s.parser }
-
-func (s *DataDefinitionContext) JsonDataDefinition() IJsonDataDefinitionContext {
-	var t = s.GetTypedRuleContext(reflect.TypeOf((*IJsonDataDefinitionContext)(nil)).Elem(), 0)
-
-	if t == nil {
-		return nil
-	}
-
-	return t.(IJsonDataDefinitionContext)
-}
-
-func (s *DataDefinitionContext) RecursiveDataDefinition() IRecursiveDataDefinitionContext {
-	var t = s.GetTypedRuleContext(reflect.TypeOf((*IRecursiveDataDefinitionContext)(nil)).Elem(), 0)
-
-	if t == nil {
-		return nil
-	}
-
-	return t.(IRecursiveDataDefinitionContext)
-}
-
-func (s *DataDefinitionContext) GetRuleContext() antlr.RuleContext {
-	return s
-}
-
-func (s *DataDefinitionContext) ToStringTree(ruleNames []string, recog antlr.Recognizer) string {
-	return antlr.TreesStringTree(s, ruleNames, recog)
-}
-
-func (s *DataDefinitionContext) EnterRule(listener antlr.ParseTreeListener) {
-	if listenerT, ok := listener.(AnzerListener); ok {
-		listenerT.EnterDataDefinition(s)
-	}
-}
-
-func (s *DataDefinitionContext) ExitRule(listener antlr.ParseTreeListener) {
-	if listenerT, ok := listener.(AnzerListener); ok {
-		listenerT.ExitDataDefinition(s)
-	}
-}
-
-func (p *AnzerParser) DataDefinition() (localctx IDataDefinitionContext) {
-	localctx = NewDataDefinitionContext(p, p.GetParserRuleContext(), p.GetState())
-	p.EnterRule(localctx, 6, AnzerParserRULE_dataDefinition)
-
-	defer func() {
-		p.ExitRule()
-	}()
-
-	defer func() {
-		if err := recover(); err != nil {
-			if v, ok := err.(antlr.RecognitionException); ok {
-				localctx.SetException(v)
-				p.GetErrorHandler().ReportError(p, v)
-				p.GetErrorHandler().Recover(p, v)
-			} else {
-				panic(err)
-			}
-		}
-	}()
-
-	p.SetState(49)
+	p.SetState(50)
 	p.GetErrorHandler().Sync(p)
-
-	switch p.GetTokenStream().LA(1) {
-	case AnzerParserT__9, AnzerParserT__10, AnzerParserT__11, AnzerParserT__12, AnzerParserT__15, AnzerParserSTRING, AnzerParserNUMBER:
+	switch p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 2, p.GetParserRuleContext()) {
+	case 1:
 		p.EnterOuterAlt(localctx, 1)
 		{
-			p.SetState(47)
-			p.JsonDataDefinition()
+			p.SetState(48)
+			p.JsonDataDef()
 		}
 
-	case AnzerParserDATA_NAME_ID:
+	case 2:
 		p.EnterOuterAlt(localctx, 2)
 		{
-			p.SetState(48)
-			p.RecursiveDataDefinition()
+			p.SetState(49)
+			p.LogicDataDef()
 		}
 
-	default:
-		panic(antlr.NewNoViableAltException(p, nil, nil, nil, nil, nil))
 	}
 
 	return localctx
 }
 
-// IJsonDataDefinitionContext is an interface to support dynamic dispatch.
-type IJsonDataDefinitionContext interface {
+// IJsonDataDefContext is an interface to support dynamic dispatch.
+type IJsonDataDefContext interface {
 	antlr.ParserRuleContext
 
 	// GetParser returns the parser.
 	GetParser() antlr.Parser
 
-	// IsJsonDataDefinitionContext differentiates from other interfaces.
-	IsJsonDataDefinitionContext()
+	// IsJsonDataDefContext differentiates from other interfaces.
+	IsJsonDataDefContext()
 }
 
-type JsonDataDefinitionContext struct {
+type JsonDataDefContext struct {
 	*antlr.BaseParserRuleContext
 	parser antlr.Parser
 }
 
-func NewEmptyJsonDataDefinitionContext() *JsonDataDefinitionContext {
-	var p = new(JsonDataDefinitionContext)
+func NewEmptyJsonDataDefContext() *JsonDataDefContext {
+	var p = new(JsonDataDefContext)
 	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(nil, -1)
-	p.RuleIndex = AnzerParserRULE_jsonDataDefinition
+	p.RuleIndex = AnzerParserRULE_jsonDataDef
 	return p
 }
 
-func (*JsonDataDefinitionContext) IsJsonDataDefinitionContext() {}
+func (*JsonDataDefContext) IsJsonDataDefContext() {}
 
-func NewJsonDataDefinitionContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *JsonDataDefinitionContext {
-	var p = new(JsonDataDefinitionContext)
+func NewJsonDataDefContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *JsonDataDefContext {
+	var p = new(JsonDataDefContext)
 
 	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(parent, invokingState)
 
 	p.parser = parser
-	p.RuleIndex = AnzerParserRULE_jsonDataDefinition
+	p.RuleIndex = AnzerParserRULE_jsonDataDef
 
 	return p
 }
 
-func (s *JsonDataDefinitionContext) GetParser() antlr.Parser { return s.parser }
+func (s *JsonDataDefContext) GetParser() antlr.Parser { return s.parser }
 
-func (s *JsonDataDefinitionContext) Json() IJsonContext {
+func (s *JsonDataDefContext) DATA_NAME_ID() antlr.TerminalNode {
+	return s.GetToken(AnzerParserDATA_NAME_ID, 0)
+}
+
+func (s *JsonDataDefContext) Json() IJsonContext {
 	var t = s.GetTypedRuleContext(reflect.TypeOf((*IJsonContext)(nil)).Elem(), 0)
 
 	if t == nil {
@@ -712,29 +616,29 @@ func (s *JsonDataDefinitionContext) Json() IJsonContext {
 	return t.(IJsonContext)
 }
 
-func (s *JsonDataDefinitionContext) GetRuleContext() antlr.RuleContext {
+func (s *JsonDataDefContext) GetRuleContext() antlr.RuleContext {
 	return s
 }
 
-func (s *JsonDataDefinitionContext) ToStringTree(ruleNames []string, recog antlr.Recognizer) string {
+func (s *JsonDataDefContext) ToStringTree(ruleNames []string, recog antlr.Recognizer) string {
 	return antlr.TreesStringTree(s, ruleNames, recog)
 }
 
-func (s *JsonDataDefinitionContext) EnterRule(listener antlr.ParseTreeListener) {
+func (s *JsonDataDefContext) EnterRule(listener antlr.ParseTreeListener) {
 	if listenerT, ok := listener.(AnzerListener); ok {
-		listenerT.EnterJsonDataDefinition(s)
+		listenerT.EnterJsonDataDef(s)
 	}
 }
 
-func (s *JsonDataDefinitionContext) ExitRule(listener antlr.ParseTreeListener) {
+func (s *JsonDataDefContext) ExitRule(listener antlr.ParseTreeListener) {
 	if listenerT, ok := listener.(AnzerListener); ok {
-		listenerT.ExitJsonDataDefinition(s)
+		listenerT.ExitJsonDataDef(s)
 	}
 }
 
-func (p *AnzerParser) JsonDataDefinition() (localctx IJsonDataDefinitionContext) {
-	localctx = NewJsonDataDefinitionContext(p, p.GetParserRuleContext(), p.GetState())
-	p.EnterRule(localctx, 8, AnzerParserRULE_jsonDataDefinition)
+func (p *AnzerParser) JsonDataDef() (localctx IJsonDataDefContext) {
+	localctx = NewJsonDataDefContext(p, p.GetParserRuleContext(), p.GetState())
+	p.EnterRule(localctx, 6, AnzerParserRULE_jsonDataDef)
 
 	defer func() {
 		p.ExitRule()
@@ -754,90 +658,360 @@ func (p *AnzerParser) JsonDataDefinition() (localctx IJsonDataDefinitionContext)
 
 	p.EnterOuterAlt(localctx, 1)
 	{
-		p.SetState(51)
+		p.SetState(52)
+		p.Match(AnzerParserT__0)
+	}
+	{
+		p.SetState(53)
+		p.Match(AnzerParserDATA_NAME_ID)
+	}
+	{
+		p.SetState(54)
+		p.Match(AnzerParserT__1)
+	}
+	{
+		p.SetState(55)
 		p.Json()
 	}
 
 	return localctx
 }
 
-// IRecursiveDataDefinitionContext is an interface to support dynamic dispatch.
-type IRecursiveDataDefinitionContext interface {
+// ILogicDataDefContext is an interface to support dynamic dispatch.
+type ILogicDataDefContext interface {
 	antlr.ParserRuleContext
 
 	// GetParser returns the parser.
 	GetParser() antlr.Parser
 
-	// IsRecursiveDataDefinitionContext differentiates from other interfaces.
-	IsRecursiveDataDefinitionContext()
+	// IsLogicDataDefContext differentiates from other interfaces.
+	IsLogicDataDefContext()
 }
 
-type RecursiveDataDefinitionContext struct {
+type LogicDataDefContext struct {
 	*antlr.BaseParserRuleContext
 	parser antlr.Parser
 }
 
-func NewEmptyRecursiveDataDefinitionContext() *RecursiveDataDefinitionContext {
-	var p = new(RecursiveDataDefinitionContext)
+func NewEmptyLogicDataDefContext() *LogicDataDefContext {
+	var p = new(LogicDataDefContext)
 	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(nil, -1)
-	p.RuleIndex = AnzerParserRULE_recursiveDataDefinition
+	p.RuleIndex = AnzerParserRULE_logicDataDef
 	return p
 }
 
-func (*RecursiveDataDefinitionContext) IsRecursiveDataDefinitionContext() {}
+func (*LogicDataDefContext) IsLogicDataDefContext() {}
 
-func NewRecursiveDataDefinitionContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *RecursiveDataDefinitionContext {
-	var p = new(RecursiveDataDefinitionContext)
+func NewLogicDataDefContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *LogicDataDefContext {
+	var p = new(LogicDataDefContext)
 
 	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(parent, invokingState)
 
 	p.parser = parser
-	p.RuleIndex = AnzerParserRULE_recursiveDataDefinition
+	p.RuleIndex = AnzerParserRULE_logicDataDef
 
 	return p
 }
 
-func (s *RecursiveDataDefinitionContext) GetParser() antlr.Parser { return s.parser }
+func (s *LogicDataDefContext) GetParser() antlr.Parser { return s.parser }
 
-func (s *RecursiveDataDefinitionContext) AllDATA_NAME_ID() []antlr.TerminalNode {
-	return s.GetTokens(AnzerParserDATA_NAME_ID)
+func (s *LogicDataDefContext) DATA_NAME_ID() antlr.TerminalNode {
+	return s.GetToken(AnzerParserDATA_NAME_ID, 0)
 }
 
-func (s *RecursiveDataDefinitionContext) DATA_NAME_ID(i int) antlr.TerminalNode {
-	return s.GetToken(AnzerParserDATA_NAME_ID, i)
+func (s *LogicDataDefContext) DataAnd() IDataAndContext {
+	var t = s.GetTypedRuleContext(reflect.TypeOf((*IDataAndContext)(nil)).Elem(), 0)
+
+	if t == nil {
+		return nil
+	}
+
+	return t.(IDataAndContext)
 }
 
-func (s *RecursiveDataDefinitionContext) AllDATA_AND_OR() []antlr.TerminalNode {
-	return s.GetTokens(AnzerParserDATA_AND_OR)
+func (s *LogicDataDefContext) DataOr() IDataOrContext {
+	var t = s.GetTypedRuleContext(reflect.TypeOf((*IDataOrContext)(nil)).Elem(), 0)
+
+	if t == nil {
+		return nil
+	}
+
+	return t.(IDataOrContext)
 }
 
-func (s *RecursiveDataDefinitionContext) DATA_AND_OR(i int) antlr.TerminalNode {
-	return s.GetToken(AnzerParserDATA_AND_OR, i)
-}
-
-func (s *RecursiveDataDefinitionContext) GetRuleContext() antlr.RuleContext {
+func (s *LogicDataDefContext) GetRuleContext() antlr.RuleContext {
 	return s
 }
 
-func (s *RecursiveDataDefinitionContext) ToStringTree(ruleNames []string, recog antlr.Recognizer) string {
+func (s *LogicDataDefContext) ToStringTree(ruleNames []string, recog antlr.Recognizer) string {
 	return antlr.TreesStringTree(s, ruleNames, recog)
 }
 
-func (s *RecursiveDataDefinitionContext) EnterRule(listener antlr.ParseTreeListener) {
+func (s *LogicDataDefContext) EnterRule(listener antlr.ParseTreeListener) {
 	if listenerT, ok := listener.(AnzerListener); ok {
-		listenerT.EnterRecursiveDataDefinition(s)
+		listenerT.EnterLogicDataDef(s)
 	}
 }
 
-func (s *RecursiveDataDefinitionContext) ExitRule(listener antlr.ParseTreeListener) {
+func (s *LogicDataDefContext) ExitRule(listener antlr.ParseTreeListener) {
 	if listenerT, ok := listener.(AnzerListener); ok {
-		listenerT.ExitRecursiveDataDefinition(s)
+		listenerT.ExitLogicDataDef(s)
 	}
 }
 
-func (p *AnzerParser) RecursiveDataDefinition() (localctx IRecursiveDataDefinitionContext) {
-	localctx = NewRecursiveDataDefinitionContext(p, p.GetParserRuleContext(), p.GetState())
-	p.EnterRule(localctx, 10, AnzerParserRULE_recursiveDataDefinition)
+func (p *AnzerParser) LogicDataDef() (localctx ILogicDataDefContext) {
+	localctx = NewLogicDataDefContext(p, p.GetParserRuleContext(), p.GetState())
+	p.EnterRule(localctx, 8, AnzerParserRULE_logicDataDef)
+
+	defer func() {
+		p.ExitRule()
+	}()
+
+	defer func() {
+		if err := recover(); err != nil {
+			if v, ok := err.(antlr.RecognitionException); ok {
+				localctx.SetException(v)
+				p.GetErrorHandler().ReportError(p, v)
+				p.GetErrorHandler().Recover(p, v)
+			} else {
+				panic(err)
+			}
+		}
+	}()
+
+	p.EnterOuterAlt(localctx, 1)
+	{
+		p.SetState(57)
+		p.Match(AnzerParserT__0)
+	}
+	{
+		p.SetState(58)
+		p.Match(AnzerParserDATA_NAME_ID)
+	}
+	{
+		p.SetState(59)
+		p.Match(AnzerParserT__1)
+	}
+	p.SetState(62)
+	p.GetErrorHandler().Sync(p)
+	switch p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 3, p.GetParserRuleContext()) {
+	case 1:
+		{
+			p.SetState(60)
+			p.DataAnd()
+		}
+
+	case 2:
+		{
+			p.SetState(61)
+			p.DataOr()
+		}
+
+	}
+
+	return localctx
+}
+
+// IDataArgContext is an interface to support dynamic dispatch.
+type IDataArgContext interface {
+	antlr.ParserRuleContext
+
+	// GetParser returns the parser.
+	GetParser() antlr.Parser
+
+	// IsDataArgContext differentiates from other interfaces.
+	IsDataArgContext()
+}
+
+type DataArgContext struct {
+	*antlr.BaseParserRuleContext
+	parser antlr.Parser
+}
+
+func NewEmptyDataArgContext() *DataArgContext {
+	var p = new(DataArgContext)
+	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(nil, -1)
+	p.RuleIndex = AnzerParserRULE_dataArg
+	return p
+}
+
+func (*DataArgContext) IsDataArgContext() {}
+
+func NewDataArgContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *DataArgContext {
+	var p = new(DataArgContext)
+
+	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(parent, invokingState)
+
+	p.parser = parser
+	p.RuleIndex = AnzerParserRULE_dataArg
+
+	return p
+}
+
+func (s *DataArgContext) GetParser() antlr.Parser { return s.parser }
+
+func (s *DataArgContext) DataNameId() IDataNameIdContext {
+	var t = s.GetTypedRuleContext(reflect.TypeOf((*IDataNameIdContext)(nil)).Elem(), 0)
+
+	if t == nil {
+		return nil
+	}
+
+	return t.(IDataNameIdContext)
+}
+
+func (s *DataArgContext) Json() IJsonContext {
+	var t = s.GetTypedRuleContext(reflect.TypeOf((*IJsonContext)(nil)).Elem(), 0)
+
+	if t == nil {
+		return nil
+	}
+
+	return t.(IJsonContext)
+}
+
+func (s *DataArgContext) GetRuleContext() antlr.RuleContext {
+	return s
+}
+
+func (s *DataArgContext) ToStringTree(ruleNames []string, recog antlr.Recognizer) string {
+	return antlr.TreesStringTree(s, ruleNames, recog)
+}
+
+func (s *DataArgContext) EnterRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(AnzerListener); ok {
+		listenerT.EnterDataArg(s)
+	}
+}
+
+func (s *DataArgContext) ExitRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(AnzerListener); ok {
+		listenerT.ExitDataArg(s)
+	}
+}
+
+func (p *AnzerParser) DataArg() (localctx IDataArgContext) {
+	localctx = NewDataArgContext(p, p.GetParserRuleContext(), p.GetState())
+	p.EnterRule(localctx, 10, AnzerParserRULE_dataArg)
+
+	defer func() {
+		p.ExitRule()
+	}()
+
+	defer func() {
+		if err := recover(); err != nil {
+			if v, ok := err.(antlr.RecognitionException); ok {
+				localctx.SetException(v)
+				p.GetErrorHandler().ReportError(p, v)
+				p.GetErrorHandler().Recover(p, v)
+			} else {
+				panic(err)
+			}
+		}
+	}()
+
+	p.SetState(66)
+	p.GetErrorHandler().Sync(p)
+
+	switch p.GetTokenStream().LA(1) {
+	case AnzerParserDATA_NAME_ID:
+		p.EnterOuterAlt(localctx, 1)
+		{
+			p.SetState(64)
+			p.DataNameId()
+		}
+
+	case AnzerParserT__9, AnzerParserT__10, AnzerParserT__11, AnzerParserT__12, AnzerParserT__15, AnzerParserSTRING, AnzerParserNUMBER:
+		p.EnterOuterAlt(localctx, 2)
+		{
+			p.SetState(65)
+			p.Json()
+		}
+
+	default:
+		panic(antlr.NewNoViableAltException(p, nil, nil, nil, nil, nil))
+	}
+
+	return localctx
+}
+
+// IDataOrContext is an interface to support dynamic dispatch.
+type IDataOrContext interface {
+	antlr.ParserRuleContext
+
+	// GetParser returns the parser.
+	GetParser() antlr.Parser
+
+	// IsDataOrContext differentiates from other interfaces.
+	IsDataOrContext()
+}
+
+type DataOrContext struct {
+	*antlr.BaseParserRuleContext
+	parser antlr.Parser
+}
+
+func NewEmptyDataOrContext() *DataOrContext {
+	var p = new(DataOrContext)
+	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(nil, -1)
+	p.RuleIndex = AnzerParserRULE_dataOr
+	return p
+}
+
+func (*DataOrContext) IsDataOrContext() {}
+
+func NewDataOrContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *DataOrContext {
+	var p = new(DataOrContext)
+
+	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(parent, invokingState)
+
+	p.parser = parser
+	p.RuleIndex = AnzerParserRULE_dataOr
+
+	return p
+}
+
+func (s *DataOrContext) GetParser() antlr.Parser { return s.parser }
+
+func (s *DataOrContext) AllDATA_NAME_ID() []antlr.TerminalNode {
+	return s.GetTokens(AnzerParserDATA_NAME_ID)
+}
+
+func (s *DataOrContext) DATA_NAME_ID(i int) antlr.TerminalNode {
+	return s.GetToken(AnzerParserDATA_NAME_ID, i)
+}
+
+func (s *DataOrContext) AllDATA_OR() []antlr.TerminalNode {
+	return s.GetTokens(AnzerParserDATA_OR)
+}
+
+func (s *DataOrContext) DATA_OR(i int) antlr.TerminalNode {
+	return s.GetToken(AnzerParserDATA_OR, i)
+}
+
+func (s *DataOrContext) GetRuleContext() antlr.RuleContext {
+	return s
+}
+
+func (s *DataOrContext) ToStringTree(ruleNames []string, recog antlr.Recognizer) string {
+	return antlr.TreesStringTree(s, ruleNames, recog)
+}
+
+func (s *DataOrContext) EnterRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(AnzerListener); ok {
+		listenerT.EnterDataOr(s)
+	}
+}
+
+func (s *DataOrContext) ExitRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(AnzerListener); ok {
+		listenerT.ExitDataOr(s)
+	}
+}
+
+func (p *AnzerParser) DataOr() (localctx IDataOrContext) {
+	localctx = NewDataOrContext(p, p.GetParserRuleContext(), p.GetState())
+	p.EnterRule(localctx, 12, AnzerParserRULE_dataOr)
 	var _la int
 
 	defer func() {
@@ -858,26 +1032,239 @@ func (p *AnzerParser) RecursiveDataDefinition() (localctx IRecursiveDataDefiniti
 
 	p.EnterOuterAlt(localctx, 1)
 	{
-		p.SetState(53)
+		p.SetState(68)
 		p.Match(AnzerParserDATA_NAME_ID)
 	}
-	p.SetState(58)
+	p.SetState(73)
 	p.GetErrorHandler().Sync(p)
 	_la = p.GetTokenStream().LA(1)
 
-	for _la == AnzerParserDATA_AND_OR {
+	for _la == AnzerParserDATA_OR {
 		{
-			p.SetState(54)
-			p.Match(AnzerParserDATA_AND_OR)
+			p.SetState(69)
+			p.Match(AnzerParserDATA_OR)
 		}
 		{
-			p.SetState(55)
+			p.SetState(70)
 			p.Match(AnzerParserDATA_NAME_ID)
 		}
 
-		p.SetState(60)
+		p.SetState(75)
 		p.GetErrorHandler().Sync(p)
 		_la = p.GetTokenStream().LA(1)
+	}
+
+	return localctx
+}
+
+// IDataAndContext is an interface to support dynamic dispatch.
+type IDataAndContext interface {
+	antlr.ParserRuleContext
+
+	// GetParser returns the parser.
+	GetParser() antlr.Parser
+
+	// IsDataAndContext differentiates from other interfaces.
+	IsDataAndContext()
+}
+
+type DataAndContext struct {
+	*antlr.BaseParserRuleContext
+	parser antlr.Parser
+}
+
+func NewEmptyDataAndContext() *DataAndContext {
+	var p = new(DataAndContext)
+	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(nil, -1)
+	p.RuleIndex = AnzerParserRULE_dataAnd
+	return p
+}
+
+func (*DataAndContext) IsDataAndContext() {}
+
+func NewDataAndContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *DataAndContext {
+	var p = new(DataAndContext)
+
+	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(parent, invokingState)
+
+	p.parser = parser
+	p.RuleIndex = AnzerParserRULE_dataAnd
+
+	return p
+}
+
+func (s *DataAndContext) GetParser() antlr.Parser { return s.parser }
+
+func (s *DataAndContext) AllDATA_NAME_ID() []antlr.TerminalNode {
+	return s.GetTokens(AnzerParserDATA_NAME_ID)
+}
+
+func (s *DataAndContext) DATA_NAME_ID(i int) antlr.TerminalNode {
+	return s.GetToken(AnzerParserDATA_NAME_ID, i)
+}
+
+func (s *DataAndContext) AllDATA_AND() []antlr.TerminalNode {
+	return s.GetTokens(AnzerParserDATA_AND)
+}
+
+func (s *DataAndContext) DATA_AND(i int) antlr.TerminalNode {
+	return s.GetToken(AnzerParserDATA_AND, i)
+}
+
+func (s *DataAndContext) GetRuleContext() antlr.RuleContext {
+	return s
+}
+
+func (s *DataAndContext) ToStringTree(ruleNames []string, recog antlr.Recognizer) string {
+	return antlr.TreesStringTree(s, ruleNames, recog)
+}
+
+func (s *DataAndContext) EnterRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(AnzerListener); ok {
+		listenerT.EnterDataAnd(s)
+	}
+}
+
+func (s *DataAndContext) ExitRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(AnzerListener); ok {
+		listenerT.ExitDataAnd(s)
+	}
+}
+
+func (p *AnzerParser) DataAnd() (localctx IDataAndContext) {
+	localctx = NewDataAndContext(p, p.GetParserRuleContext(), p.GetState())
+	p.EnterRule(localctx, 14, AnzerParserRULE_dataAnd)
+	var _la int
+
+	defer func() {
+		p.ExitRule()
+	}()
+
+	defer func() {
+		if err := recover(); err != nil {
+			if v, ok := err.(antlr.RecognitionException); ok {
+				localctx.SetException(v)
+				p.GetErrorHandler().ReportError(p, v)
+				p.GetErrorHandler().Recover(p, v)
+			} else {
+				panic(err)
+			}
+		}
+	}()
+
+	p.EnterOuterAlt(localctx, 1)
+	{
+		p.SetState(76)
+		p.Match(AnzerParserDATA_NAME_ID)
+	}
+	p.SetState(81)
+	p.GetErrorHandler().Sync(p)
+	_la = p.GetTokenStream().LA(1)
+
+	for _la == AnzerParserDATA_AND {
+		{
+			p.SetState(77)
+			p.Match(AnzerParserDATA_AND)
+		}
+		{
+			p.SetState(78)
+			p.Match(AnzerParserDATA_NAME_ID)
+		}
+
+		p.SetState(83)
+		p.GetErrorHandler().Sync(p)
+		_la = p.GetTokenStream().LA(1)
+	}
+
+	return localctx
+}
+
+// IDataNameIdContext is an interface to support dynamic dispatch.
+type IDataNameIdContext interface {
+	antlr.ParserRuleContext
+
+	// GetParser returns the parser.
+	GetParser() antlr.Parser
+
+	// IsDataNameIdContext differentiates from other interfaces.
+	IsDataNameIdContext()
+}
+
+type DataNameIdContext struct {
+	*antlr.BaseParserRuleContext
+	parser antlr.Parser
+}
+
+func NewEmptyDataNameIdContext() *DataNameIdContext {
+	var p = new(DataNameIdContext)
+	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(nil, -1)
+	p.RuleIndex = AnzerParserRULE_dataNameId
+	return p
+}
+
+func (*DataNameIdContext) IsDataNameIdContext() {}
+
+func NewDataNameIdContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *DataNameIdContext {
+	var p = new(DataNameIdContext)
+
+	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(parent, invokingState)
+
+	p.parser = parser
+	p.RuleIndex = AnzerParserRULE_dataNameId
+
+	return p
+}
+
+func (s *DataNameIdContext) GetParser() antlr.Parser { return s.parser }
+
+func (s *DataNameIdContext) DATA_NAME_ID() antlr.TerminalNode {
+	return s.GetToken(AnzerParserDATA_NAME_ID, 0)
+}
+
+func (s *DataNameIdContext) GetRuleContext() antlr.RuleContext {
+	return s
+}
+
+func (s *DataNameIdContext) ToStringTree(ruleNames []string, recog antlr.Recognizer) string {
+	return antlr.TreesStringTree(s, ruleNames, recog)
+}
+
+func (s *DataNameIdContext) EnterRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(AnzerListener); ok {
+		listenerT.EnterDataNameId(s)
+	}
+}
+
+func (s *DataNameIdContext) ExitRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(AnzerListener); ok {
+		listenerT.ExitDataNameId(s)
+	}
+}
+
+func (p *AnzerParser) DataNameId() (localctx IDataNameIdContext) {
+	localctx = NewDataNameIdContext(p, p.GetParserRuleContext(), p.GetState())
+	p.EnterRule(localctx, 16, AnzerParserRULE_dataNameId)
+
+	defer func() {
+		p.ExitRule()
+	}()
+
+	defer func() {
+		if err := recover(); err != nil {
+			if v, ok := err.(antlr.RecognitionException); ok {
+				localctx.SetException(v)
+				p.GetErrorHandler().ReportError(p, v)
+				p.GetErrorHandler().Recover(p, v)
+			} else {
+				panic(err)
+			}
+		}
+	}()
+
+	p.EnterOuterAlt(localctx, 1)
+	{
+		p.SetState(84)
+		p.Match(AnzerParserDATA_NAME_ID)
 	}
 
 	return localctx
@@ -980,7 +1367,7 @@ func (s *FuncSigContext) ExitRule(listener antlr.ParseTreeListener) {
 
 func (p *AnzerParser) FuncSig() (localctx IFuncSigContext) {
 	localctx = NewFuncSigContext(p, p.GetParserRuleContext(), p.GetState())
-	p.EnterRule(localctx, 12, AnzerParserRULE_funcSig)
+	p.EnterRule(localctx, 18, AnzerParserRULE_funcSig)
 	var _la int
 
 	defer func() {
@@ -1001,32 +1388,32 @@ func (p *AnzerParser) FuncSig() (localctx IFuncSigContext) {
 
 	p.EnterOuterAlt(localctx, 1)
 	{
-		p.SetState(61)
+		p.SetState(86)
 		p.Match(AnzerParserFUNC_NAME_ID)
 	}
 	{
-		p.SetState(62)
+		p.SetState(87)
 		p.Match(AnzerParserT__2)
 	}
 	{
-		p.SetState(63)
+		p.SetState(88)
 		p.DataName()
 	}
 	{
-		p.SetState(64)
+		p.SetState(89)
 		p.Match(AnzerParserT__3)
 	}
 	{
-		p.SetState(65)
+		p.SetState(90)
 		p.DataName()
 	}
-	p.SetState(67)
+	p.SetState(92)
 	p.GetErrorHandler().Sync(p)
 	_la = p.GetTokenStream().LA(1)
 
 	if ((_la)&-(0x1f+1)) == 0 && ((1<<uint(_la))&((1<<AnzerParserT__9)|(1<<AnzerParserT__10)|(1<<AnzerParserT__11)|(1<<AnzerParserT__12)|(1<<AnzerParserT__15)|(1<<AnzerParserSTRING)|(1<<AnzerParserNUMBER))) != 0 {
 		{
-			p.SetState(66)
+			p.SetState(91)
 			p.FuncParams()
 		}
 
@@ -1105,7 +1492,7 @@ func (s *FuncParamsContext) ExitRule(listener antlr.ParseTreeListener) {
 
 func (p *AnzerParser) FuncParams() (localctx IFuncParamsContext) {
 	localctx = NewFuncParamsContext(p, p.GetParserRuleContext(), p.GetState())
-	p.EnterRule(localctx, 14, AnzerParserRULE_funcParams)
+	p.EnterRule(localctx, 20, AnzerParserRULE_funcParams)
 
 	defer func() {
 		p.ExitRule()
@@ -1125,7 +1512,7 @@ func (p *AnzerParser) FuncParams() (localctx IFuncParamsContext) {
 
 	p.EnterOuterAlt(localctx, 1)
 	{
-		p.SetState(69)
+		p.SetState(94)
 		p.Json()
 	}
 
@@ -1219,7 +1606,7 @@ func (s *FuncDefContext) ExitRule(listener antlr.ParseTreeListener) {
 
 func (p *AnzerParser) FuncDef() (localctx IFuncDefContext) {
 	localctx = NewFuncDefContext(p, p.GetParserRuleContext(), p.GetState())
-	p.EnterRule(localctx, 16, AnzerParserRULE_funcDef)
+	p.EnterRule(localctx, 22, AnzerParserRULE_funcDef)
 	var _la int
 
 	defer func() {
@@ -1240,32 +1627,32 @@ func (p *AnzerParser) FuncDef() (localctx IFuncDefContext) {
 
 	p.EnterOuterAlt(localctx, 1)
 	{
-		p.SetState(71)
+		p.SetState(96)
 		p.Match(AnzerParserFUNC_NAME_ID)
 	}
 	{
-		p.SetState(72)
+		p.SetState(97)
 		p.Match(AnzerParserT__1)
 	}
 	{
-		p.SetState(73)
+		p.SetState(98)
 		p.ComposeFunc()
 	}
-	p.SetState(78)
+	p.SetState(103)
 	p.GetErrorHandler().Sync(p)
 	_la = p.GetTokenStream().LA(1)
 
 	for _la == AnzerParserT__4 {
 		{
-			p.SetState(74)
+			p.SetState(99)
 			p.Match(AnzerParserT__4)
 		}
 		{
-			p.SetState(75)
+			p.SetState(100)
 			p.ComposeFunc()
 		}
 
-		p.SetState(80)
+		p.SetState(105)
 		p.GetErrorHandler().Sync(p)
 		_la = p.GetTokenStream().LA(1)
 	}
@@ -1347,7 +1734,7 @@ func (s *ComposeFuncContext) ExitRule(listener antlr.ParseTreeListener) {
 
 func (p *AnzerParser) ComposeFunc() (localctx IComposeFuncContext) {
 	localctx = NewComposeFuncContext(p, p.GetParserRuleContext(), p.GetState())
-	p.EnterRule(localctx, 18, AnzerParserRULE_composeFunc)
+	p.EnterRule(localctx, 24, AnzerParserRULE_composeFunc)
 
 	defer func() {
 		p.ExitRule()
@@ -1365,21 +1752,21 @@ func (p *AnzerParser) ComposeFunc() (localctx IComposeFuncContext) {
 		}
 	}()
 
-	p.SetState(83)
+	p.SetState(108)
 	p.GetErrorHandler().Sync(p)
 
 	switch p.GetTokenStream().LA(1) {
 	case AnzerParserFUNC_NAME_ID:
 		p.EnterOuterAlt(localctx, 1)
 		{
-			p.SetState(81)
+			p.SetState(106)
 			p.Match(AnzerParserFUNC_NAME_ID)
 		}
 
 	case AnzerParserT__5:
 		p.EnterOuterAlt(localctx, 2)
 		{
-			p.SetState(82)
+			p.SetState(107)
 			p.ProductFunc()
 		}
 
@@ -1473,7 +1860,7 @@ func (s *ProductFuncContext) ExitRule(listener antlr.ParseTreeListener) {
 
 func (p *AnzerParser) ProductFunc() (localctx IProductFuncContext) {
 	localctx = NewProductFuncContext(p, p.GetParserRuleContext(), p.GetState())
-	p.EnterRule(localctx, 20, AnzerParserRULE_productFunc)
+	p.EnterRule(localctx, 26, AnzerParserRULE_productFunc)
 	var _la int
 
 	defer func() {
@@ -1494,33 +1881,33 @@ func (p *AnzerParser) ProductFunc() (localctx IProductFuncContext) {
 
 	p.EnterOuterAlt(localctx, 1)
 	{
-		p.SetState(85)
+		p.SetState(110)
 		p.Match(AnzerParserT__5)
 	}
 	{
-		p.SetState(86)
+		p.SetState(111)
 		p.ComposeFunc()
 	}
-	p.SetState(91)
+	p.SetState(116)
 	p.GetErrorHandler().Sync(p)
 	_la = p.GetTokenStream().LA(1)
 
 	for _la == AnzerParserT__6 {
 		{
-			p.SetState(87)
+			p.SetState(112)
 			p.Match(AnzerParserT__6)
 		}
 		{
-			p.SetState(88)
+			p.SetState(113)
 			p.ComposeFunc()
 		}
 
-		p.SetState(93)
+		p.SetState(118)
 		p.GetErrorHandler().Sync(p)
 		_la = p.GetTokenStream().LA(1)
 	}
 	{
-		p.SetState(94)
+		p.SetState(119)
 		p.Match(AnzerParserT__7)
 	}
 
@@ -1591,7 +1978,7 @@ func (s *DataNameContext) ExitRule(listener antlr.ParseTreeListener) {
 
 func (p *AnzerParser) DataName() (localctx IDataNameContext) {
 	localctx = NewDataNameContext(p, p.GetParserRuleContext(), p.GetState())
-	p.EnterRule(localctx, 22, AnzerParserRULE_dataName)
+	p.EnterRule(localctx, 28, AnzerParserRULE_dataName)
 	var _la int
 
 	defer func() {
@@ -1611,7 +1998,7 @@ func (p *AnzerParser) DataName() (localctx IDataNameContext) {
 	}()
 
 	p.EnterOuterAlt(localctx, 1)
-	p.SetState(96)
+	p.SetState(121)
 	_la = p.GetTokenStream().LA(1)
 
 	if !(_la == AnzerParserT__8 || _la == AnzerParserDATA_NAME_ID) {
@@ -1712,7 +2099,7 @@ func (s *JsonContext) ExitRule(listener antlr.ParseTreeListener) {
 
 func (p *AnzerParser) Json() (localctx IJsonContext) {
 	localctx = NewJsonContext(p, p.GetParserRuleContext(), p.GetState())
-	p.EnterRule(localctx, 24, AnzerParserRULE_json)
+	p.EnterRule(localctx, 30, AnzerParserRULE_json)
 
 	defer func() {
 		p.ExitRule()
@@ -1730,56 +2117,56 @@ func (p *AnzerParser) Json() (localctx IJsonContext) {
 		}
 	}()
 
-	p.SetState(105)
+	p.SetState(130)
 	p.GetErrorHandler().Sync(p)
 
 	switch p.GetTokenStream().LA(1) {
 	case AnzerParserSTRING:
 		p.EnterOuterAlt(localctx, 1)
 		{
-			p.SetState(98)
+			p.SetState(123)
 			p.Match(AnzerParserSTRING)
 		}
 
 	case AnzerParserNUMBER:
 		p.EnterOuterAlt(localctx, 2)
 		{
-			p.SetState(99)
+			p.SetState(124)
 			p.Match(AnzerParserNUMBER)
 		}
 
 	case AnzerParserT__12:
 		p.EnterOuterAlt(localctx, 3)
 		{
-			p.SetState(100)
+			p.SetState(125)
 			p.Obj()
 		}
 
 	case AnzerParserT__15:
 		p.EnterOuterAlt(localctx, 4)
 		{
-			p.SetState(101)
+			p.SetState(126)
 			p.Array()
 		}
 
 	case AnzerParserT__9:
 		p.EnterOuterAlt(localctx, 5)
 		{
-			p.SetState(102)
+			p.SetState(127)
 			p.Match(AnzerParserT__9)
 		}
 
 	case AnzerParserT__10:
 		p.EnterOuterAlt(localctx, 6)
 		{
-			p.SetState(103)
+			p.SetState(128)
 			p.Match(AnzerParserT__10)
 		}
 
 	case AnzerParserT__11:
 		p.EnterOuterAlt(localctx, 7)
 		{
-			p.SetState(104)
+			p.SetState(129)
 			p.Match(AnzerParserT__11)
 		}
 
@@ -1873,7 +2260,7 @@ func (s *ObjContext) ExitRule(listener antlr.ParseTreeListener) {
 
 func (p *AnzerParser) Obj() (localctx IObjContext) {
 	localctx = NewObjContext(p, p.GetParserRuleContext(), p.GetState())
-	p.EnterRule(localctx, 26, AnzerParserRULE_obj)
+	p.EnterRule(localctx, 32, AnzerParserRULE_obj)
 	var _la int
 
 	defer func() {
@@ -1892,50 +2279,50 @@ func (p *AnzerParser) Obj() (localctx IObjContext) {
 		}
 	}()
 
-	p.SetState(120)
+	p.SetState(145)
 	p.GetErrorHandler().Sync(p)
-	switch p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 10, p.GetParserRuleContext()) {
+	switch p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 13, p.GetParserRuleContext()) {
 	case 1:
 		p.EnterOuterAlt(localctx, 1)
 		{
-			p.SetState(107)
+			p.SetState(132)
 			p.Match(AnzerParserT__12)
 		}
 		{
-			p.SetState(108)
+			p.SetState(133)
 			p.Pair()
 		}
-		p.SetState(113)
+		p.SetState(138)
 		p.GetErrorHandler().Sync(p)
 		_la = p.GetTokenStream().LA(1)
 
 		for _la == AnzerParserT__6 {
 			{
-				p.SetState(109)
+				p.SetState(134)
 				p.Match(AnzerParserT__6)
 			}
 			{
-				p.SetState(110)
+				p.SetState(135)
 				p.Pair()
 			}
 
-			p.SetState(115)
+			p.SetState(140)
 			p.GetErrorHandler().Sync(p)
 			_la = p.GetTokenStream().LA(1)
 		}
 		{
-			p.SetState(116)
+			p.SetState(141)
 			p.Match(AnzerParserT__13)
 		}
 
 	case 2:
 		p.EnterOuterAlt(localctx, 2)
 		{
-			p.SetState(118)
+			p.SetState(143)
 			p.Match(AnzerParserT__12)
 		}
 		{
-			p.SetState(119)
+			p.SetState(144)
 			p.Match(AnzerParserT__13)
 		}
 
@@ -2018,7 +2405,7 @@ func (s *PairContext) ExitRule(listener antlr.ParseTreeListener) {
 
 func (p *AnzerParser) Pair() (localctx IPairContext) {
 	localctx = NewPairContext(p, p.GetParserRuleContext(), p.GetState())
-	p.EnterRule(localctx, 28, AnzerParserRULE_pair)
+	p.EnterRule(localctx, 34, AnzerParserRULE_pair)
 
 	defer func() {
 		p.ExitRule()
@@ -2038,15 +2425,15 @@ func (p *AnzerParser) Pair() (localctx IPairContext) {
 
 	p.EnterOuterAlt(localctx, 1)
 	{
-		p.SetState(122)
+		p.SetState(147)
 		p.Match(AnzerParserSTRING)
 	}
 	{
-		p.SetState(123)
+		p.SetState(148)
 		p.Match(AnzerParserT__14)
 	}
 	{
-		p.SetState(124)
+		p.SetState(149)
 		p.Json()
 	}
 
@@ -2136,7 +2523,7 @@ func (s *ArrayContext) ExitRule(listener antlr.ParseTreeListener) {
 
 func (p *AnzerParser) Array() (localctx IArrayContext) {
 	localctx = NewArrayContext(p, p.GetParserRuleContext(), p.GetState())
-	p.EnterRule(localctx, 30, AnzerParserRULE_array)
+	p.EnterRule(localctx, 36, AnzerParserRULE_array)
 	var _la int
 
 	defer func() {
@@ -2155,50 +2542,50 @@ func (p *AnzerParser) Array() (localctx IArrayContext) {
 		}
 	}()
 
-	p.SetState(139)
+	p.SetState(164)
 	p.GetErrorHandler().Sync(p)
-	switch p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 12, p.GetParserRuleContext()) {
+	switch p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 15, p.GetParserRuleContext()) {
 	case 1:
 		p.EnterOuterAlt(localctx, 1)
 		{
-			p.SetState(126)
+			p.SetState(151)
 			p.Match(AnzerParserT__15)
 		}
 		{
-			p.SetState(127)
+			p.SetState(152)
 			p.Json()
 		}
-		p.SetState(132)
+		p.SetState(157)
 		p.GetErrorHandler().Sync(p)
 		_la = p.GetTokenStream().LA(1)
 
 		for _la == AnzerParserT__6 {
 			{
-				p.SetState(128)
+				p.SetState(153)
 				p.Match(AnzerParserT__6)
 			}
 			{
-				p.SetState(129)
+				p.SetState(154)
 				p.Json()
 			}
 
-			p.SetState(134)
+			p.SetState(159)
 			p.GetErrorHandler().Sync(p)
 			_la = p.GetTokenStream().LA(1)
 		}
 		{
-			p.SetState(135)
+			p.SetState(160)
 			p.Match(AnzerParserT__16)
 		}
 
 	case 2:
 		p.EnterOuterAlt(localctx, 2)
 		{
-			p.SetState(137)
+			p.SetState(162)
 			p.Match(AnzerParserT__15)
 		}
 		{
-			p.SetState(138)
+			p.SetState(163)
 			p.Match(AnzerParserT__16)
 		}
 

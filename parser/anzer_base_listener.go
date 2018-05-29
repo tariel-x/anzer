@@ -38,23 +38,41 @@ func (s *BaseAnzerListener) EnterDataSig(ctx *DataSigContext) {}
 // ExitDataSig is called when production dataSig is exited.
 func (s *BaseAnzerListener) ExitDataSig(ctx *DataSigContext) {}
 
-// EnterDataDefinition is called when production dataDefinition is entered.
-func (s *BaseAnzerListener) EnterDataDefinition(ctx *DataDefinitionContext) {}
+// EnterJsonDataDef is called when production jsonDataDef is entered.
+func (s *BaseAnzerListener) EnterJsonDataDef(ctx *JsonDataDefContext) {}
 
-// ExitDataDefinition is called when production dataDefinition is exited.
-func (s *BaseAnzerListener) ExitDataDefinition(ctx *DataDefinitionContext) {}
+// ExitJsonDataDef is called when production jsonDataDef is exited.
+func (s *BaseAnzerListener) ExitJsonDataDef(ctx *JsonDataDefContext) {}
 
-// EnterJsonDataDefinition is called when production jsonDataDefinition is entered.
-func (s *BaseAnzerListener) EnterJsonDataDefinition(ctx *JsonDataDefinitionContext) {}
+// EnterLogicDataDef is called when production logicDataDef is entered.
+func (s *BaseAnzerListener) EnterLogicDataDef(ctx *LogicDataDefContext) {}
 
-// ExitJsonDataDefinition is called when production jsonDataDefinition is exited.
-func (s *BaseAnzerListener) ExitJsonDataDefinition(ctx *JsonDataDefinitionContext) {}
+// ExitLogicDataDef is called when production logicDataDef is exited.
+func (s *BaseAnzerListener) ExitLogicDataDef(ctx *LogicDataDefContext) {}
 
-// EnterRecursiveDataDefinition is called when production recursiveDataDefinition is entered.
-func (s *BaseAnzerListener) EnterRecursiveDataDefinition(ctx *RecursiveDataDefinitionContext) {}
+// EnterDataArg is called when production dataArg is entered.
+func (s *BaseAnzerListener) EnterDataArg(ctx *DataArgContext) {}
 
-// ExitRecursiveDataDefinition is called when production recursiveDataDefinition is exited.
-func (s *BaseAnzerListener) ExitRecursiveDataDefinition(ctx *RecursiveDataDefinitionContext) {}
+// ExitDataArg is called when production dataArg is exited.
+func (s *BaseAnzerListener) ExitDataArg(ctx *DataArgContext) {}
+
+// EnterDataOr is called when production dataOr is entered.
+func (s *BaseAnzerListener) EnterDataOr(ctx *DataOrContext) {}
+
+// ExitDataOr is called when production dataOr is exited.
+func (s *BaseAnzerListener) ExitDataOr(ctx *DataOrContext) {}
+
+// EnterDataAnd is called when production dataAnd is entered.
+func (s *BaseAnzerListener) EnterDataAnd(ctx *DataAndContext) {}
+
+// ExitDataAnd is called when production dataAnd is exited.
+func (s *BaseAnzerListener) ExitDataAnd(ctx *DataAndContext) {}
+
+// EnterDataNameId is called when production dataNameId is entered.
+func (s *BaseAnzerListener) EnterDataNameId(ctx *DataNameIdContext) {}
+
+// ExitDataNameId is called when production dataNameId is exited.
+func (s *BaseAnzerListener) ExitDataNameId(ctx *DataNameIdContext) {}
 
 // EnterFuncSig is called when production funcSig is entered.
 func (s *BaseAnzerListener) EnterFuncSig(ctx *FuncSigContext) {}
