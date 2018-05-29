@@ -7,9 +7,8 @@ const OpernadSum = 1
 
 type BaseType struct {
 	Type    *json.RawMessage
-	Name    *string
 	Operand *int
-	Arg     *BaseType
+	Args     []string
 }
 
 func NewBaseType(Type string) *BaseType {
@@ -17,13 +16,6 @@ func NewBaseType(Type string) *BaseType {
 	j := json.RawMessage(b)
 	return &BaseType{
 		Type: &j,
-	}
-}
-
-func NewBaseTypeComplex(Name string, Operand int) BaseType {
-	return BaseType{
-		Name:    &Name,
-		Operand: &Operand,
 	}
 }
 

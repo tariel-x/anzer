@@ -1,7 +1,7 @@
 package interpeter
 
 import (
-
+	"github.com/antlr/antlr4/runtime/Go/antlr"
 	"github.com/tariel-x/anzer/parser"
 )
 
@@ -28,6 +28,27 @@ func (l *Listener) EnterJsonDataDef(ctx *parser.JsonDataDefContext) {
 	name := ctx.DATA_NAME_ID().GetText()
 	value := ctx.Json().GetText()
 	l.Types[name] = *NewBaseType(value)
+}
+
+func (l *Listener) EnterLogicDataDef(ctx *parser.LogicDataDefContext) {
+	name := ctx.DATA_NAME_ID().GetText()
+	bt := &BaseType{}
+	if ctx.DataOr() != nil {
+		l.makeLogicDataDef(ctx.DataOr().GetChildren(), OpernadSum, bt)
+	} else {
+		l.makeLogicDataDef(ctx.DataOr().GetChildren(), OpernadProduction, bt)
+	}
+	l.Types[name] = *bt
+}
+
+func (l *Listener) makeLogicDataDef(children []antlr.Tree, op int, def *BaseType) {
+	def.Operand = &op
+	for _, child := range children {
+		p := child.GetPayload().(antlr.BaseParserRuleContext)
+		if p.GetRuleIndex() == parser.AnzerParserRULE_dataNameId {
+			def.Args = append(def.Args, p.GetText())
+		}
+	}
 }
 
 /*func (l *Listener) EnterFuncSig(ctx *parser.FuncSigContext) {
