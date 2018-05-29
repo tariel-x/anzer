@@ -12,10 +12,10 @@ type BaseType struct {
 	Arg     *BaseType
 }
 
-func NewBaseType(Type string) BaseType {
+func NewBaseType(Type string) *BaseType {
 	b := []byte(Type)
 	j := json.RawMessage(b)
-	return BaseType{
+	return &BaseType{
 		Type: &j,
 	}
 }

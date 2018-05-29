@@ -37,14 +37,21 @@ func (l *Listener) EnterDataSig(ctx *parser.DataSigContext) {
 func (l *Listener) processDataDef(fname string, child antlr.Tree, def *BaseType) *BaseType {
 	p := child.GetPayload()
 	switch t := p.(type) {
-	case *antlr.CommonToken:
-		return l.appendFunc(fb, t.GetText())
 	case *antlr.BaseParserRuleContext:
-		return l.appendProduct(fb, t.GetText(), t)
+		if t.GetRuleIndex() == parser.AnzerParserRULE_jsonDataDefinition {
+			return l.processJsonDataDef(fname, t, def)
+		}
 	default:
 		_ = t
 	}
 	return nil
+}
+
+func (l *Listener) processJsonDataDef(fname string, child antlr.BaseParserRuleContext, def *BaseType) *BaseType {
+	if def == nil {
+		return NewBaseType(child.GetText())
+	}
+	return
 }
 
 func (l *Listener) EnterFuncSig(ctx *parser.FuncSigContext) {
