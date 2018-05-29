@@ -74,6 +74,18 @@ func (s *BaseAnzerListener) EnterDataNameId(ctx *DataNameIdContext) {}
 // ExitDataNameId is called when production dataNameId is exited.
 func (s *BaseAnzerListener) ExitDataNameId(ctx *DataNameIdContext) {}
 
+// EnterDataOrOperand is called when production dataOrOperand is entered.
+func (s *BaseAnzerListener) EnterDataOrOperand(ctx *DataOrOperandContext) {}
+
+// ExitDataOrOperand is called when production dataOrOperand is exited.
+func (s *BaseAnzerListener) ExitDataOrOperand(ctx *DataOrOperandContext) {}
+
+// EnterDataAndOperand is called when production dataAndOperand is entered.
+func (s *BaseAnzerListener) EnterDataAndOperand(ctx *DataAndOperandContext) {}
+
+// ExitDataAndOperand is called when production dataAndOperand is exited.
+func (s *BaseAnzerListener) ExitDataAndOperand(ctx *DataAndOperandContext) {}
+
 // EnterFuncSig is called when production funcSig is entered.
 func (s *BaseAnzerListener) EnterFuncSig(ctx *FuncSigContext) {}
 

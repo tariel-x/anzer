@@ -34,6 +34,12 @@ type AnzerListener interface {
 	// EnterDataNameId is called when entering the dataNameId production.
 	EnterDataNameId(c *DataNameIdContext)
 
+	// EnterDataOrOperand is called when entering the dataOrOperand production.
+	EnterDataOrOperand(c *DataOrOperandContext)
+
+	// EnterDataAndOperand is called when entering the dataAndOperand production.
+	EnterDataAndOperand(c *DataAndOperandContext)
+
 	// EnterFuncSig is called when entering the funcSig production.
 	EnterFuncSig(c *FuncSigContext)
 
@@ -90,6 +96,12 @@ type AnzerListener interface {
 
 	// ExitDataNameId is called when exiting the dataNameId production.
 	ExitDataNameId(c *DataNameIdContext)
+
+	// ExitDataOrOperand is called when exiting the dataOrOperand production.
+	ExitDataOrOperand(c *DataOrOperandContext)
+
+	// ExitDataAndOperand is called when exiting the dataAndOperand production.
+	ExitDataAndOperand(c *DataAndOperandContext)
 
 	// ExitFuncSig is called when exiting the funcSig production.
 	ExitFuncSig(c *FuncSigContext)

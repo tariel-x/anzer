@@ -35,8 +35,8 @@ func (l *Listener) EnterLogicDataDef(ctx *parser.LogicDataDefContext) {
 	bt := &BaseType{}
 	if ctx.DataOr() != nil {
 		l.makeLogicDataDef(ctx.DataOr().GetChildren(), OpernadSum, bt)
-	} else {
-		l.makeLogicDataDef(ctx.DataOr().GetChildren(), OpernadProduction, bt)
+	} else if ctx.DataAnd() != nil {
+		l.makeLogicDataDef(ctx.DataAnd().GetChildren(), OpernadProduction, bt)
 	}
 	l.Types[name] = *bt
 }
@@ -44,7 +44,7 @@ func (l *Listener) EnterLogicDataDef(ctx *parser.LogicDataDefContext) {
 func (l *Listener) makeLogicDataDef(children []antlr.Tree, op int, def *BaseType) {
 	def.Operand = &op
 	for _, child := range children {
-		p := child.GetPayload().(antlr.BaseParserRuleContext)
+		p := child.GetPayload().(*antlr.BaseParserRuleContext)
 		if p.GetRuleIndex() == parser.AnzerParserRULE_dataNameId {
 			def.Args = append(def.Args, p.GetText())
 		}
