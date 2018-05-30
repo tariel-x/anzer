@@ -1,6 +1,7 @@
 package interpeter
 
 import (
+	"fmt"
 	"github.com/antlr/antlr4/runtime/Go/antlr"
 	"github.com/tariel-x/anzer/parser"
 )
@@ -8,13 +9,13 @@ import (
 type Listener struct {
 	*parser.BaseAnzerListener
 	Types map[string]BaseType
-	Funcs map[string]BaseFunc
+	Funcs map[string]FuncDef
 }
 
 func NewListener() *Listener {
 	l := new(Listener)
 	types := map[string]BaseType{}
-	funcs := map[string]BaseFunc{}
+	funcs := map[string]FuncDef{}
 	l.Types = types
 	l.Funcs = funcs
 	return l
@@ -51,11 +52,11 @@ func (l *Listener) makeLogicDataDef(children []antlr.Tree, op int, def *BaseType
 	}
 }
 
-/*func (l *Listener) EnterFuncSig(ctx *parser.FuncSigContext) {
+func (l *Listener) EnterFuncSig(ctx *parser.FuncSigContext) {
 	name := ctx.FUNC_NAME_ID().GetText()
 	arg := ctx.DataName(0).GetText()
 	ret := ctx.DataName(1).GetText()
-	l.Funcs[name] = NewBaseFunc(name, arg, ret)
+	l.Funcs[name] = NewFuncDef(name, arg, ret)
 }
 
 func (l *Listener) EnterFuncDef(ctx *parser.FuncDefContext) {
@@ -78,8 +79,8 @@ func (l *Listener) EnterFuncDef(ctx *parser.FuncDefContext) {
 	}
 	fmt.Printf("func %s: %v\n", name, funcDef)
 	fmt.Printf("func %s: definition %v\n", name, funcDef.Def)
-	fmt.Printf("func %s: definition param %v\n", name, funcDef.Def.Param)
-	fmt.Printf("func %s: definition param param %v\n", name, funcDef.Def.Param.Param)
+	fmt.Printf("func %s: definition param %v\n", name, funcDef.Def.ComposeTo)
+	fmt.Printf("func %s: definition param param %v\n", name, funcDef.Def.ComposeTo.ComposeTo)
 }
 
 func (l *Listener) processFuncDef(fb *FuncBody, name string, child antlr.Tree) *FuncBody {
@@ -93,4 +94,4 @@ func (l *Listener) processFuncDef(fb *FuncBody, name string, child antlr.Tree) *
 		_ = t
 	}
 	return nil
-}*/
+}

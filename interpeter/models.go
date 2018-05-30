@@ -8,7 +8,7 @@ const OpernadSum = 1
 type BaseType struct {
 	Type    *json.RawMessage
 	Operand *int
-	Args     []string
+	Args    []string
 }
 
 func NewBaseType(Type string) *BaseType {
@@ -19,7 +19,7 @@ func NewBaseType(Type string) *BaseType {
 	}
 }
 
-type BaseFunc struct {
+type FuncDef struct {
 	Name string
 	Arg  string
 	Ret  string
@@ -27,12 +27,12 @@ type BaseFunc struct {
 }
 
 type FuncBody struct {
-	Name    *string
-	Product []FuncBody
-	Param   *FuncBody
+	Name      *string
+	Product   []FuncBody
+	ComposeTo *FuncBody
 }
 
-func NewBaseFunc(name string, arg string, ret string) BaseFunc {
+func NewFuncDef(name string, arg string, ret string) BaseFunc {
 	return BaseFunc{
 		Name: name,
 		Arg:  arg,
@@ -40,7 +40,7 @@ func NewBaseFunc(name string, arg string, ret string) BaseFunc {
 	}
 }
 
-func (f *BaseFunc) AppendComposition(name string) *FuncBody {
+func (f *FuncDef) AppendComposition(name string) *FuncBody {
 	fb := &FuncBody{
 		Name: &name,
 	}
@@ -52,7 +52,7 @@ func (b *FuncBody) AppendComposition(name string) *FuncBody {
 	fb := &FuncBody{
 		Name: &name,
 	}
-	b.Param = fb
+	b.ComposeTo = fb
 	return fb
 }
 
