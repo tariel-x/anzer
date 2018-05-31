@@ -26,14 +26,16 @@ type FuncDef struct {
 	Def  *FuncBody
 }
 
+type FuncProduction []FuncBody
+
 type FuncBody struct {
 	Name      *string
-	Product   []FuncBody
+	Product   FuncProduction
 	ComposeTo *FuncBody
 }
 
-func NewFuncDef(name string, arg string, ret string) BaseFunc {
-	return BaseFunc{
+func NewFuncDef(name string, arg string, ret string) FuncDef {
+	return FuncDef{
 		Name: name,
 		Arg:  arg,
 		Ret:  ret,
@@ -56,8 +58,9 @@ func (b *FuncBody) AppendComposition(name string) *FuncBody {
 	return fb
 }
 
-func (b *FuncBody) AppendProdComposition(names []string) []FuncBody {
-	fbs := []FuncBody{}
+func (b *FuncBody) AppendProdComposition(names []string) *FuncBody {
+	cfb := FuncBody{}
+	fbs := FuncProduction{}
 	for _, name := range names {
 		fb := &FuncBody{
 			Name: &name,
@@ -65,6 +68,7 @@ func (b *FuncBody) AppendProdComposition(names []string) []FuncBody {
 		fbs = append(fbs, *fb)
 	}
 
-	b.Product = fbs
-	return fbs
+	cfb.Product = fbs
+	b.ComposeTo = &cfb
+	return &cfb
 }

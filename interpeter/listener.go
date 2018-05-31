@@ -73,7 +73,7 @@ func (l *Listener) EnterFuncDef(ctx *parser.FuncDefContext) {
 	for _, cf := range ctx.AllComposeFunc() {
 		children := cf.GetChildren()
 		for _, child := range children {
-			fb = l.processFuncDef(fb, name, child)
+			fb = l.processFuncDef(fb, child)
 		}
 
 	}
@@ -83,13 +83,26 @@ func (l *Listener) EnterFuncDef(ctx *parser.FuncDefContext) {
 	fmt.Printf("func %s: definition param param %v\n", name, funcDef.Def.ComposeTo.ComposeTo)
 }
 
-func (l *Listener) processFuncDef(fb *FuncBody, name string, child antlr.Tree) *FuncBody {
+func (l *Listener) processFuncDef(fb *FuncBody, child antlr.Tree) *FuncBody {
 	p := child.GetPayload()
 	switch t := p.(type) {
 	case *antlr.CommonToken:
-		return l.appendFunc(fb, t.GetText())
+		return fb.AppendComposition(t.GetText())
 	case *antlr.BaseParserRuleContext:
-		return l.appendProduct(fb, t.GetText(), t)
+		return l.processFuncProduct(fb, t)
+	default:
+		_ = t
+	}
+	return nil
+}
+
+func (l *Listener) processFuncProduct(fb *FuncBody, tree antlr.Tree) *FuncBody {
+	p := tree.GetPayload()
+	switch t := p.(type) {
+	case *antlr.BaseParserRuleContext:
+		for _, child := range t.GetChildren() {
+			return l.processFuncDef(fb, child)
+		}
 	default:
 		_ = t
 	}
