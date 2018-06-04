@@ -26,15 +26,17 @@ type FuncDef struct {
 	Def  *FuncBody
 }
 
-type FuncProduction []FuncBody
-
 type FuncBody struct {
-	Name      *string
-	Product   FuncProduction
-	ComposeTo *FuncBody
+	Name       *string
+	ProductEls Production
+	SumEls     Sum
+	ComposeTo  *FuncBody
 }
 
-func NewFuncDef(name string, arg string, ret string) FuncDef {
+type Production []FuncBody
+type Sum []FuncBody
+
+func NewFunc(name, arg, ret string) FuncDef {
 	return FuncDef{
 		Name: name,
 		Arg:  arg,
@@ -42,33 +44,28 @@ func NewFuncDef(name string, arg string, ret string) FuncDef {
 	}
 }
 
-func (f *FuncDef) AppendComposition(name string) *FuncBody {
-	fb := &FuncBody{
-		Name: &name,
+func ProductFunc(product Production) *FuncBody {
+	return &FuncBody{
+		ProductEls: product,
 	}
-	f.Def = fb
-	return fb
 }
 
-func (b *FuncBody) AppendComposition(name string) *FuncBody {
-	fb := &FuncBody{
-		Name: &name,
+func SumFunc(sum Sum) *FuncBody {
+	return &FuncBody{
+		SumEls: sum,
 	}
-	b.ComposeTo = fb
-	return fb
 }
 
-func (b *FuncBody) AppendProdComposition(names []string) *FuncBody {
-	cfb := FuncBody{}
-	fbs := FuncProduction{}
-	for _, name := range names {
-		fb := &FuncBody{
-			Name: &name,
-		}
-		fbs = append(fbs, *fb)
+func SimpleFunc(name string) *FuncBody {
+	return &FuncBody{
+		Name: &name,
 	}
+}
 
-	cfb.Product = fbs
-	b.ComposeTo = &cfb
-	return &cfb
+func (fb *FuncBody) AppendTo(parent *FuncBody) {
+	parent.ComposeTo = fb
+}
+
+func (fb *FuncBody) Append(child *FuncBody) {
+	fb.ComposeTo = child
 }
