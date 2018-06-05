@@ -8,7 +8,7 @@ const OpernadSum = 1
 type BaseType struct {
 	Type    *json.RawMessage
 	Operand *int
-	Args     []string
+	Args    []string
 }
 
 func NewBaseType(Type string) *BaseType {
@@ -19,7 +19,7 @@ func NewBaseType(Type string) *BaseType {
 	}
 }
 
-type BaseFunc struct {
+type FuncDef struct {
 	Name string
 	Arg  string
 	Ret  string
@@ -27,44 +27,45 @@ type BaseFunc struct {
 }
 
 type FuncBody struct {
-	Name    *string
-	Product []FuncBody
-	Param   *FuncBody
+	Name       *string
+	ProductEls Production
+	SumEls     Sum
+	ComposeTo  *FuncBody
 }
 
-func NewBaseFunc(name string, arg string, ret string) BaseFunc {
-	return BaseFunc{
+type Production []FuncBody
+type Sum []FuncBody
+
+func NewFunc(name, arg, ret string) FuncDef {
+	return FuncDef{
 		Name: name,
 		Arg:  arg,
 		Ret:  ret,
 	}
 }
 
-func (f *BaseFunc) AppendComposition(name string) *FuncBody {
-	fb := &FuncBody{
-		Name: &name,
+func ProductFunc(product Production) *FuncBody {
+	return &FuncBody{
+		ProductEls: product,
 	}
-	f.Def = fb
-	return fb
 }
 
-func (b *FuncBody) AppendComposition(name string) *FuncBody {
-	fb := &FuncBody{
-		Name: &name,
+func SumFunc(sum Sum) *FuncBody {
+	return &FuncBody{
+		SumEls: sum,
 	}
-	b.Param = fb
-	return fb
 }
 
-func (b *FuncBody) AppendProdComposition(names []string) []FuncBody {
-	fbs := []FuncBody{}
-	for _, name := range names {
-		fb := &FuncBody{
-			Name: &name,
-		}
-		fbs = append(fbs, *fb)
+func SimpleFunc(name string) *FuncBody {
+	return &FuncBody{
+		Name: &name,
 	}
+}
 
-	b.Product = fbs
-	return fbs
+func (fb *FuncBody) AppendTo(parent *FuncBody) {
+	parent.ComposeTo = fb
+}
+
+func (fb *FuncBody) Append(child *FuncBody) {
+	fb.ComposeTo = child
 }

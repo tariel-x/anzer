@@ -31,5 +31,24 @@ func main() {
 	fmt.Println("-----------------")
 	for name, t := range listener.Funcs {
 		fmt.Printf("%s :: %s -> %s\n", name, t.Arg, t.Ret)
+		displayFunc(*t.Def)
+		fmt.Printf("\n")
+	}
+}
+
+
+func displayFunc(fd interpeter.FuncBody) {
+	if fd.Name != nil {
+		fmt.Printf(" %s", *fd.Name)
+		if fd.ComposeTo != nil {
+			displayFunc(*fd.ComposeTo)
+		}
+	} else if fd.ProductEls != nil {
+		fmt.Print(" <")
+		for _, childFd := range fd.ProductEls {
+			fmt.Print(",")
+			displayFunc(childFd)
+		}
+		fmt.Print(">")
 	}
 }

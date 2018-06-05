@@ -8,21 +8,17 @@ import (
 type Listener struct {
 	*parser.BaseAnzerListener
 	Types map[string]BaseType
-	Funcs map[string]BaseFunc
+	Funcs map[string]FuncDef
 }
 
 func NewListener() *Listener {
 	l := new(Listener)
 	types := map[string]BaseType{}
-	funcs := map[string]BaseFunc{}
+	funcs := map[string]FuncDef{}
 	l.Types = types
 	l.Funcs = funcs
 	return l
 }
-
-/* func (l *Listener) EnterEveryRule(ctx antlr.ParserRuleContext) {
-	fmt.Println(ctx.GetText())
-} */
 
 func (l *Listener) EnterJsonDataDef(ctx *parser.JsonDataDefContext) {
 	name := ctx.DATA_NAME_ID().GetText()
@@ -51,46 +47,63 @@ func (l *Listener) makeLogicDataDef(children []antlr.Tree, op int, def *BaseType
 	}
 }
 
-/*func (l *Listener) EnterFuncSig(ctx *parser.FuncSigContext) {
+func (l *Listener) EnterFuncSig(ctx *parser.FuncSigContext) {
 	name := ctx.FUNC_NAME_ID().GetText()
 	arg := ctx.DataName(0).GetText()
 	ret := ctx.DataName(1).GetText()
-	l.Funcs[name] = NewBaseFunc(name, arg, ret)
+	l.Funcs[name] = NewFunc(name, arg, ret)
 }
 
 func (l *Listener) EnterFuncDef(ctx *parser.FuncDefContext) {
 	name := ctx.FUNC_NAME_ID().GetText()
-	fmt.Printf("name %s\n", name)
-
-	funcDef, exists := l.Funcs[name]
-	if !exists {
-		panic(fmt.Errorf("Can not find func %s", name))
+	def := l.Funcs[name]
+	composes := ctx.AllComposeFunc()
+	fb := &FuncBody{}
+	childFb := fb
+	for _, compose := range composes {
+		childFb = l.processCompose(compose, childFb)
 	}
-
-	fb := funcDef.Def
-
-	for _, cf := range ctx.AllComposeFunc() {
-		children := cf.GetChildren()
-		for _, child := range children {
-			fb = l.processFuncDef(fb, name, child)
-		}
-
-	}
-	fmt.Printf("func %s: %v\n", name, funcDef)
-	fmt.Printf("func %s: definition %v\n", name, funcDef.Def)
-	fmt.Printf("func %s: definition param %v\n", name, funcDef.Def.Param)
-	fmt.Printf("func %s: definition param param %v\n", name, funcDef.Def.Param.Param)
+	def.Def = fb.ComposeTo
+	l.Funcs[name] = def
 }
 
-func (l *Listener) processFuncDef(fb *FuncBody, name string, child antlr.Tree) *FuncBody {
-	p := child.GetPayload()
-	switch t := p.(type) {
-	case *antlr.CommonToken:
-		return l.appendFunc(fb, t.GetText())
-	case *antlr.BaseParserRuleContext:
-		return l.appendProduct(fb, t.GetText(), t)
-	default:
-		_ = t
+func (l *Listener) processCompose(ctx antlr.ParserRuleContext, fb *FuncBody) *FuncBody {
+	if ctx.GetRuleIndex() != parser.AnzerParserRULE_composeFunc {
+		panic("Not a compose func")
+	}
+	for _, child := range ctx.GetChildren() {
+		p := child.GetPayload()
+		switch t := p.(type) {
+		case *antlr.CommonToken:
+			name := t.GetText()
+			return l.processCommonToken(name, fb)
+		case *antlr.BaseParserRuleContext:
+			return l.processProductFunc(t, fb)
+		}
 	}
 	return nil
-}*/
+}
+
+func (l *Listener) processCommonToken(name string, fb *FuncBody) *FuncBody {
+	childFb := SimpleFunc(name)
+	fb.Append(childFb)
+	return childFb
+}
+
+func (l *Listener) processProductFunc(ctx antlr.ParserRuleContext, fb *FuncBody) *FuncBody {
+	if ctx.GetRuleIndex() != parser.AnzerParserRULE_productFunc {
+		panic("Not a product func")
+	}
+	prods := Production{}
+	for _, child := range ctx.GetChildren() {
+		p := child.GetPayload()
+		switch t := p.(type) {
+		case *antlr.BaseParserRuleContext:
+			childFb := l.processCompose(t, fb)
+			prods = append(prods, *childFb)
+		}
+	}
+	childFb := ProductFunc(prods)
+	childFb.AppendTo(fb)
+	return childFb
+}
