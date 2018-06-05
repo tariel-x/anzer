@@ -69,6 +69,24 @@ func (l *Listener) EnterFuncDef(ctx *parser.FuncDefContext) {
 }
 
 func (l *Listener) processCompose(ctx parser.IComposeFuncContext, fb *FuncBody) {
-	children := ctx.GetChildren()
-	for
+	for _, child := range ctx.GetChildren() {
+		p := child.GetPayload()
+		switch t := p.(type) {
+		case *antlr.CommonToken:
+			name := t.GetText()
+			fb = l.processCommonToken(name, fb)
+		case *parser.ProductFuncContext:
+			fb = l.processProductFunc(t, fb)
+		}
+	}
+}
+
+func (l *Listener) processCommonToken(name string, fb *FuncBody) *FuncBody {
+	childFb := SimpleFunc(name)
+	childFb.AppendTo(fb)
+	return childFb
+}
+
+func (l *Listener) processProductFunc(ctx *parser.ProductFuncContext, fb *FuncBody) *FuncBody {
+	return nil
 }
