@@ -31,5 +31,6 @@ func main() {
 	fmt.Println("-----------------")
 	for name, t := range listener.Funcs {
 		fmt.Printf("%s :: %s -> %s\n", name, t.Arg, t.Ret)
+		fmt.Printf("%s :: %v\n", name, t.Def)
 	}
 }

@@ -65,8 +65,9 @@ func (l *Listener) EnterFuncDef(ctx *parser.FuncDefContext) {
 	def := l.Funcs[name]
 	composes := ctx.AllComposeFunc()
 	def.Def = &FuncBody{}
+	fb := def.Def
 	for _, compose := range composes {
-		l.processCompose(compose, def.Def)
+		l.processCompose(compose, fb)
 	}
 }
 
@@ -79,12 +80,12 @@ func (l *Listener) processCompose(ctx antlr.ParserRuleContext, fb *FuncBody) *Fu
 		switch t := p.(type) {
 		case *antlr.CommonToken:
 			name := t.GetText()
-			fb = l.processCommonToken(name, fb)
+			return l.processCommonToken(name, fb)
 		case *antlr.BaseParserRuleContext:
-			fb = l.processProductFunc(t, fb)
+			return l.processProductFunc(t, fb)
 		}
 	}
-	return fb
+	return nil
 }
 
 func (l *Listener) processCommonToken(name string, fb *FuncBody) *FuncBody {
@@ -98,12 +99,16 @@ func (l *Listener) processProductFunc(ctx antlr.ParserRuleContext, fb *FuncBody)
 		panic("Not a product func")
 	}
 	fmt.Printf("--- --- new complex func: %s\n", ctx.GetText())
+	prods := Production{}
 	for _, child := range ctx.GetChildren() {
 		p := child.GetPayload()
 		switch t := p.(type) {
 		case *antlr.BaseParserRuleContext:
-			fb = l.processCompose(t, fb)
+			childFb := l.processCompose(t, fb)
+			prods = append(prods, *childFb)
 		}
 	}
-	return fb
+	childFb := ProductFunc(prods)
+	childFb.AppendTo(fb)
+	return childFb
 }
