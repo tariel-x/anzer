@@ -31,6 +31,16 @@ func main() {
 	fmt.Println("-----------------")
 	for name, t := range listener.Funcs {
 		fmt.Printf("%s :: %s -> %s\n", name, t.Arg, t.Ret)
-		fmt.Printf("%s :: %v\n", name, t.Def)
+		displayFunc(*t.Def)
+	}
+}
+
+
+func displayFunc(fd interpeter.FuncBody) {
+	if fd.Name != nil {
+		fmt.Printf("--- Simple %s\n", *fd.Name)
+		if fd.ComposeTo != nil {
+			displayFunc(*fd.ComposeTo)
+		}
 	}
 }

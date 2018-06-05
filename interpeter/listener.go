@@ -64,11 +64,13 @@ func (l *Listener) EnterFuncDef(ctx *parser.FuncDefContext) {
 	name := ctx.FUNC_NAME_ID().GetText()
 	def := l.Funcs[name]
 	composes := ctx.AllComposeFunc()
-	def.Def = &FuncBody{}
-	fb := def.Def
+	fb := &FuncBody{}
+	childFb := fb
 	for _, compose := range composes {
-		l.processCompose(compose, fb)
+		childFb = l.processCompose(compose, childFb)
 	}
+	def.Def = fb.ComposeTo
+	l.Funcs[name] = def
 }
 
 func (l *Listener) processCompose(ctx antlr.ParserRuleContext, fb *FuncBody) *FuncBody {
@@ -90,7 +92,7 @@ func (l *Listener) processCompose(ctx antlr.ParserRuleContext, fb *FuncBody) *Fu
 
 func (l *Listener) processCommonToken(name string, fb *FuncBody) *FuncBody {
 	childFb := SimpleFunc(name)
-	childFb.AppendTo(fb)
+	fb.Append(childFb)
 	return childFb
 }
 
