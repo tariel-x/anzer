@@ -1,6 +1,8 @@
 package interpeter
 
 import (
+	"fmt"
+
 	"github.com/antlr/antlr4/runtime/Go/antlr"
 	"github.com/tariel-x/anzer/parser"
 )
@@ -68,17 +70,21 @@ func (l *Listener) EnterFuncDef(ctx *parser.FuncDefContext) {
 	}
 }
 
-func (l *Listener) processCompose(ctx parser.IComposeFuncContext, fb *FuncBody) {
+func (l *Listener) processCompose(ctx antlr.ParserRuleContext, fb *FuncBody) *FuncBody {
+	if ctx.GetRuleIndex() != parser.AnzerParserRULE_composeFunc {
+		panic("Not a compose func")
+	}
 	for _, child := range ctx.GetChildren() {
 		p := child.GetPayload()
 		switch t := p.(type) {
 		case *antlr.CommonToken:
 			name := t.GetText()
 			fb = l.processCommonToken(name, fb)
-		case *parser.ProductFuncContext:
+		case *antlr.BaseParserRuleContext:
 			fb = l.processProductFunc(t, fb)
 		}
 	}
+	return fb
 }
 
 func (l *Listener) processCommonToken(name string, fb *FuncBody) *FuncBody {
@@ -87,6 +93,17 @@ func (l *Listener) processCommonToken(name string, fb *FuncBody) *FuncBody {
 	return childFb
 }
 
-func (l *Listener) processProductFunc(ctx *parser.ProductFuncContext, fb *FuncBody) *FuncBody {
-	return nil
+func (l *Listener) processProductFunc(ctx antlr.ParserRuleContext, fb *FuncBody) *FuncBody {
+	if ctx.GetRuleIndex() != parser.AnzerParserRULE_productFunc {
+		panic("Not a product func")
+	}
+	fmt.Printf("--- --- new complex func: %s\n", ctx.GetText())
+	for _, child := range ctx.GetChildren() {
+		p := child.GetPayload()
+		switch t := p.(type) {
+		case *antlr.BaseParserRuleContext:
+			fb = l.processCompose(t, fb)
+		}
+	}
+	return fb
 }
