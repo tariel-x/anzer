@@ -1,8 +1,6 @@
 package interpeter
 
 import (
-	"fmt"
-
 	"github.com/antlr/antlr4/runtime/Go/antlr"
 	"github.com/tariel-x/anzer/parser"
 )
@@ -21,10 +19,6 @@ func NewListener() *Listener {
 	l.Funcs = funcs
 	return l
 }
-
-/* func (l *Listener) EnterEveryRule(ctx antlr.ParserRuleContext) {
-	fmt.Println(ctx.GetText())
-} */
 
 func (l *Listener) EnterJsonDataDef(ctx *parser.JsonDataDefContext) {
 	name := ctx.DATA_NAME_ID().GetText()
@@ -100,7 +94,6 @@ func (l *Listener) processProductFunc(ctx antlr.ParserRuleContext, fb *FuncBody)
 	if ctx.GetRuleIndex() != parser.AnzerParserRULE_productFunc {
 		panic("Not a product func")
 	}
-	fmt.Printf("--- --- new complex func: %s\n", ctx.GetText())
 	prods := Production{}
 	for _, child := range ctx.GetChildren() {
 		p := child.GetPayload()
