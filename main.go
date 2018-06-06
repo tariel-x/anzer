@@ -5,6 +5,8 @@ import (
 	"github.com/antlr/antlr4/runtime/Go/antlr"
 	"github.com/tariel-x/anzer/interpeter"
 	"github.com/tariel-x/anzer/parser"
+	"github.com/tariel-x/anzer/types"
+
 	"os"
 )
 
@@ -34,6 +36,9 @@ func main() {
 		displayFunc(*t.Def)
 		fmt.Printf("\n")
 	}
+	fmt.Println("-----------------")
+	typeChecker := types.NewChecker(listener.Types)
+	typeChecker.Simplify()
 }
 
 

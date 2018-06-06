@@ -1,8 +1,23 @@
 data ABC_123 = {
-    "a":true,
-    "b":123.1,
-    "c": "ccc"
+   "$schema": "http://json-schema.org/draft-06/schema#",
+   "title": "Person",
+   "type": "object",
+   "properties": {
+       "firstName": {
+           "type": "string"
+       },
+       "lastName": {
+           "type": "string"
+       },
+       "age": {
+           "description": "Age in years",
+           "type": "integer",
+           "minimum": 0
+       }
+   },
+   "required": ["firstName", "lastName"]
 }
+
 data X2={"b":500}
 
 data X3=X2&ABC_123
