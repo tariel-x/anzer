@@ -74,5 +74,12 @@ func (c *Checker) simplifyType(name string) (*JsonSchema, error) {
 		}
 		return schema, nil
 	}
+	if def.Type == nil && def.Args != nil && def.Operand != nil {
+		return c.simplifyComplexType(def)
+	}
+	return nil, fmt.Errorf("Can not simplify type %s", name)
+}
+
+func (c *Checker) simplifyComplexType(def interpeter.BaseType) (*JsonSchema, error) {
 	return nil, nil
 }
