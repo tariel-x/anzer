@@ -59,8 +59,7 @@ func (c *Checker) getType(name string) (*JsonSchema, error) {
 	if exists {
 		return &schema, nil
 	}
-
-	return nil, nil
+	return c.simplifyType(name)
 }
 
 func (c *Checker) simplifyType(name string) (*JsonSchema, error) {
