@@ -83,6 +83,10 @@ func (c *Checker) simplifySimple(raw json.RawMessage) (*JsonSchema, error) {
 }
 
 func (c *Checker) simplifyComplexType(def interpeter.BaseType) (*JsonSchema, error) {
+	if len(def.Args) == 0 {
+		return c.getType(def.Args[0])
+	}
+
 	schema := c.makeProdBootstrap()
 	required := []string{}
 	for _, childName := range def.Args {
@@ -101,7 +105,7 @@ func (c *Checker) makeProdBootstrap() JsonSchema {
 	return JsonSchema{
 		Type: string2point(TypeObject),
 		JSTypeObj: JSTypeObj{
-			AdditionalProperties: bool2point(true),
+			AdditionalProperties: bool2point(false),
 			Properties:           map[string]JsonSchema{},
 		},
 	}
