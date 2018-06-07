@@ -1,10 +1,20 @@
 package types
 
+const (
+	TypeObject = "object"
+	TypeNumber = "number"
+	TypeArray  = "array"
+)
+
 type JsonSchema struct {
 	JSTypeString
 	JSTypeInt
-	JSTypeObj
 	JSTypeArr
+
+	Required             []string              `json:"required"`
+	Properties           map[string]JsonSchema `json:"properties"`
+	AdditionalProperties *bool                 `json:"additionalProperties"`
+
 	Title       *string               `json:"title"`
 	Type        *string               `json:"type"`
 	Enum        []string              `json:"enum"`
@@ -20,12 +30,6 @@ type JSTypeString struct {
 type JSTypeInt struct {
 	Minimum *int `json:"minimum"`
 	Maximum *int `json:"maximum"`
-}
-
-type JSTypeObj struct {
-	Required             []string              `json:"required"`
-	Properties           map[string]JsonSchema `json:"properties"`
-	AdditionalProperties *bool                 `json:"additionalProperties"`
 }
 
 type JSTypeArr struct {

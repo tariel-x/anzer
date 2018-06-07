@@ -29,15 +29,6 @@ func (c *Checker) Simplify() {
 	}
 }
 
-func (c *Checker) simplifySimple(raw json.RawMessage) (*JsonSchema, error) {
-	schema := JsonSchema{}
-	err := json.Unmarshal(raw, &schema)
-	if err != nil {
-		return nil, err
-	}
-	return &schema, nil
-}
-
 func (c *Checker) simplifyAll() error {
 	types := map[string]JsonSchema{}
 	for name, _ := range c.RawTypes {
@@ -80,6 +71,39 @@ func (c *Checker) simplifyType(name string) (*JsonSchema, error) {
 	return nil, fmt.Errorf("Can not simplify type %s", name)
 }
 
+func (c *Checker) simplifySimple(raw json.RawMessage) (*JsonSchema, error) {
+	schema := JsonSchema{}
+	err := json.Unmarshal(raw, &schema)
+	if err != nil {
+		return nil, err
+	}
+	return &schema, nil
+}
+
 func (c *Checker) simplifyComplexType(def interpeter.BaseType) (*JsonSchema, error) {
-	return nil, nil
+	schema := c.makeProdBootstrap()
+	for _, childName := range def.Args {
+		childSchema, err := c.getType(childName)
+		if err != nil {
+			return nil, err
+		}
+		schema.Properties[childName] = *childSchema
+	}
+	return &schema, nil
+}
+
+func (c *Checker) makeProdBootstrap() JsonSchema {
+	return JsonSchema{
+		Type:                 string2point(TypeObject),
+		AdditionalProperties: bool2point(true),
+		Properties:           map[string]JsonSchema{},
+	}
+}
+
+func string2point(x string) *string {
+	return &x
+}
+
+func bool2point(x bool) *bool {
+	return &x
 }
