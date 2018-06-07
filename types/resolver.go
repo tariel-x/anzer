@@ -4,36 +4,34 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"github.com/tariel-x/anzer/interpeter"
+	"github.com/tariel-x/anzer/listener"
 )
 
-type Checker struct {
-	RawTypes map[string]interpeter.BaseType
-	Types    map[string]JsonSchema
+type Resolver struct {
+	RawTypes listener.Types
+	Types    Types
 }
 
-func NewChecker(types map[string]interpeter.BaseType) Checker {
-	return Checker{
+func NewResolver(types listener.Types) Resolver {
+	return Resolver{
 		RawTypes: types,
-		Types:    map[string]JsonSchema{},
+		Types:    Types{},
 	}
 }
 
-func (c *Checker) Simplify() {
-	err := c.simplifyAll()
+func (c *Resolver) GetTypes() Types {
+	return c.Types
+}
+
+func (c *Resolver) Resolve() error {
+	err := c.resolveAll()
 	if err != nil {
-		panic(err)
+		return err
 	}
-	for name, def := range c.Types {
-		stringDef, err := json.Marshal(def)
-		if err != nil {
-			panic(err)
-		}
-		fmt.Printf("Type %s %s\n\n", name, string(stringDef))
-	}
+	return nil
 }
 
-func (c *Checker) simplifyAll() error {
+func (c *Resolver) resolveAll() error {
 	for name, _ := range c.RawTypes {
 		schema, err := c.getType(name)
 		if err != nil {
@@ -47,7 +45,7 @@ func (c *Checker) simplifyAll() error {
 	return nil
 }
 
-func (c *Checker) getType(name string) (*JsonSchema, error) {
+func (c *Resolver) getType(name string) (*JsonSchema, error) {
 	schema, exists := c.Types[name]
 	if exists {
 		return &schema, nil
@@ -55,7 +53,7 @@ func (c *Checker) getType(name string) (*JsonSchema, error) {
 	return c.simplifyType(name)
 }
 
-func (c *Checker) simplifyType(name string) (*JsonSchema, error) {
+func (c *Resolver) simplifyType(name string) (*JsonSchema, error) {
 	def, exists := c.RawTypes[name]
 	if !exists {
 		return nil, fmt.Errorf("No such type %s", name)
@@ -73,7 +71,7 @@ func (c *Checker) simplifyType(name string) (*JsonSchema, error) {
 	return nil, fmt.Errorf("Can not simplify type %s", name)
 }
 
-func (c *Checker) simplifySimple(raw json.RawMessage) (*JsonSchema, error) {
+func (c *Resolver) simplifySimple(raw json.RawMessage) (*JsonSchema, error) {
 	schema := JsonSchema{}
 	err := json.Unmarshal(raw, &schema)
 	if err != nil {
@@ -82,7 +80,7 @@ func (c *Checker) simplifySimple(raw json.RawMessage) (*JsonSchema, error) {
 	return &schema, nil
 }
 
-func (c *Checker) simplifyComplexType(def interpeter.BaseType) (*JsonSchema, error) {
+func (c *Resolver) simplifyComplexType(def listener.BaseType) (*JsonSchema, error) {
 	if len(def.Args) == 0 {
 		return c.getType(def.Args[0])
 	}
@@ -101,7 +99,7 @@ func (c *Checker) simplifyComplexType(def interpeter.BaseType) (*JsonSchema, err
 	return &schema, nil
 }
 
-func (c *Checker) makeProdBootstrap() JsonSchema {
+func (c *Resolver) makeProdBootstrap() JsonSchema {
 	return JsonSchema{
 		Type: string2point(TypeObject),
 		JSTypeObj: JSTypeObj{

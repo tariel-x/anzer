@@ -1,4 +1,4 @@
-package interpeter
+package listener
 
 import (
 	"github.com/antlr/antlr4/runtime/Go/antlr"
@@ -7,14 +7,14 @@ import (
 
 type Listener struct {
 	*parser.BaseAnzerListener
-	Types map[string]BaseType
-	Funcs map[string]FuncDef
+	Types Types
+	Funcs Funcs
 }
 
 func NewListener() *Listener {
 	l := new(Listener)
-	types := map[string]BaseType{}
-	funcs := map[string]FuncDef{}
+	types := Types{}
+	funcs := Funcs{}
 	l.Types = types
 	l.Funcs = funcs
 	return l

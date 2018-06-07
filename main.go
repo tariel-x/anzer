@@ -1,9 +1,10 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"github.com/antlr/antlr4/runtime/Go/antlr"
-	"github.com/tariel-x/anzer/interpeter"
+	"github.com/tariel-x/anzer/listener"
 	"github.com/tariel-x/anzer/parser"
 	"github.com/tariel-x/anzer/types"
 
@@ -11,38 +12,43 @@ import (
 )
 
 func main() {
-	input, _ := antlr.NewFileStream(os.Args[1])
+	rawTypes, rawFuncs, err := readInput(os.Args[1])
+	die(err)
+
+	fmt.Println("-----------------")
+
+	for name, t := range rawFuncs {
+		fmt.Printf("%s :: %s -> %s\n", name, t.Arg, t.Ret)
+		displayFunc(*t.Def)
+		fmt.Printf("\n")
+	}
+
+	fmt.Println("-----------------")
+
+	resolver := types.NewResolver(rawTypes)
+	err = resolver.Resolve()
+	die(err)
+
+	for name, td := range resolver.GetTypes() {
+		displayType(name, td)
+	}
+}
+
+func readInput(fileName string) (listener.Types, listener.Funcs, error) {
+	input, _ := antlr.NewFileStream(fileName)
 	lexer := parser.NewAnzerLexer(input)
 	stream := antlr.NewCommonTokenStream(lexer, 0)
 	p := parser.NewAnzerParser(stream)
 	p.AddErrorListener(antlr.NewDiagnosticErrorListener(true))
 	p.BuildParseTrees = true
 	tree := p.System()
-	listener := interpeter.NewListener()
+	listener := listener.NewListener()
 	antlr.ParseTreeWalkerDefault.Walk(listener, tree)
-	fmt.Println("-----------------")
-	for name, t := range listener.Types {
-		if t.Type != nil {
-			fmt.Printf("%s = %s\n", name, *t.Type)
-		} else if t.Operand != nil && t.Args != nil {
-			fmt.Printf("%s %d = %v\n", name, *t.Operand, t.Args)
-		} else {
-			fmt.Printf("Some strage type\n")
-		}
-	}
-	fmt.Println("-----------------")
-	for name, t := range listener.Funcs {
-		fmt.Printf("%s :: %s -> %s\n", name, t.Arg, t.Ret)
-		displayFunc(*t.Def)
-		fmt.Printf("\n")
-	}
-	fmt.Println("-----------------")
-	typeChecker := types.NewChecker(listener.Types)
-	typeChecker.Simplify()
+	return listener.Types, listener.Funcs, nil
 }
 
 
-func displayFunc(fd interpeter.FuncBody) {
+func displayFunc(fd listener.FuncBody) {
 	if fd.Name != nil {
 		fmt.Printf(" %s", *fd.Name)
 		if fd.ComposeTo != nil {
@@ -55,5 +61,17 @@ func displayFunc(fd interpeter.FuncBody) {
 			displayFunc(childFd)
 		}
 		fmt.Print(">")
+	}
+}
+
+func displayType(name string, td types.JsonSchema) {
+	typeStr, err := json.Marshal(td)
+	die(err)
+	fmt.Printf("%s: %s\n\n", name, typeStr)
+}
+
+func die(err error) {
+	if err != nil {
+		panic(err)
 	}
 }

@@ -6,6 +6,8 @@ const (
 	TypeArray  = "array"
 )
 
+type Types map[string]JsonSchema
+
 type JsonSchema struct {
 	JSTypeString
 	JSTypeInt

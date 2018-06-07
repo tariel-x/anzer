@@ -1,9 +1,12 @@
-package interpeter
+package listener
 
 import "encoding/json"
 
 const OpernadProduction = 0
 const OpernadSum = 1
+
+type Types map[string]BaseType
+type Funcs map[string]FuncDef
 
 type BaseType struct {
 	Type    *json.RawMessage
