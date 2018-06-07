@@ -1,3 +1,9 @@
+data SOURCE = {
+    "$schema": "http://json-schema.org/draft-06/schema#",
+    "title": "Some data",
+    "type": "text"
+}
+
 data TYPE1 = {
    "$schema": "http://json-schema.org/draft-06/schema#",
    "title": "Person",
@@ -30,8 +36,20 @@ data TYPE2={
 data PERSON=TYPE1&TYPE2
 data ALIAS = PERSON
 
-// envs
-a :: ABC_123 -> X2 {
+data RESULT = {
+    "$schema": "http://json-schema.org/draft-06/schema#",
+    "title": "Some result",
+    "type": "object",
+    "properties": {
+        "result": {
+            "type": "bool"
+        }
+    },
+    "required": ["result"]
+}
+
+// services
+init :: _ -> SOURCE {
     "env_input": "in",
     "env_output": "out",
     "env": {
@@ -39,18 +57,33 @@ a :: ABC_123 -> X2 {
     }
 }
 
-a = f2 . f3 . f4
+fName :: SOURCE -> TYPE1 {
+    "env_input": "in",
+    "env_output": "out",
+    "env": {
+        "abc": 111
+    }
+}
 
-// production of functions
-b :: _ -> X2
-b = f1 . <f2,f3>
+lName :: SOURCE -> TYPE2 {
+    "env_input": "in",
+    "env_output": "out",
+    "env": {
+        "abc": 111
+    }
+}
 
-// alias for composition
-l :: _ -> X2
-l = <f2,f3>
+userAction :: ALIAS -> RESULT {
+    "env_input": "in",
+    "env_output": "out",
+    "env": {
+        "abc": 111
+    }
+}
 
-g :: XXX -> X2
-g = f1 . <f3, <f4,f5>>
+demonstrationFunc :: PERSON -> RESULT
+demonstrationFunc = <fName,lName> . init
 
-d::_->X2
-d=<f1,f2,f3>
+// main process definition
+main :: _ -> RESULT
+main = userAction . demonstrationFunc

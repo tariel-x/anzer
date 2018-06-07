@@ -19,7 +19,9 @@ func main() {
 
 	for name, t := range rawFuncs {
 		fmt.Printf("%s :: %s -> %s\n", name, t.Arg, t.Ret)
-		displayFunc(*t.Def)
+		if t.Def != nil {
+			displayFunc(*t.Def)
+		}
 		fmt.Printf("\n")
 	}
 
