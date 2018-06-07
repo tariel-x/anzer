@@ -25,12 +25,15 @@ func (c *Checker) Simplify() {
 		panic(err)
 	}
 	for name, def := range c.Types {
-		fmt.Printf("Type %s %v\n", name, def)
+		stringDef, err := json.Marshal(def)
+		if err != nil {
+			panic(err)
+		}
+		fmt.Printf("Type %s %s\n\n", name, string(stringDef))
 	}
 }
 
 func (c *Checker) simplifyAll() error {
-	types := map[string]JsonSchema{}
 	for name, _ := range c.RawTypes {
 		schema, err := c.getType(name)
 		if err != nil {
@@ -39,9 +42,8 @@ func (c *Checker) simplifyAll() error {
 		if schema == nil {
 			continue
 		}
-		types[name] = *schema
+		c.Types[name] = *schema
 	}
-	c.Types = types
 	return nil
 }
 
@@ -82,21 +84,26 @@ func (c *Checker) simplifySimple(raw json.RawMessage) (*JsonSchema, error) {
 
 func (c *Checker) simplifyComplexType(def interpeter.BaseType) (*JsonSchema, error) {
 	schema := c.makeProdBootstrap()
+	required := []string{}
 	for _, childName := range def.Args {
 		childSchema, err := c.getType(childName)
 		if err != nil {
 			return nil, err
 		}
 		schema.Properties[childName] = *childSchema
+		required = append(required, childName)
 	}
+	schema.Required = required
 	return &schema, nil
 }
 
 func (c *Checker) makeProdBootstrap() JsonSchema {
 	return JsonSchema{
-		Type:                 string2point(TypeObject),
-		AdditionalProperties: bool2point(true),
-		Properties:           map[string]JsonSchema{},
+		Type: string2point(TypeObject),
+		JSTypeObj: JSTypeObj{
+			AdditionalProperties: bool2point(true),
+			Properties:           map[string]JsonSchema{},
+		},
 	}
 }
 

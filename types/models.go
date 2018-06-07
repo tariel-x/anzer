@@ -10,30 +10,33 @@ type JsonSchema struct {
 	JSTypeString
 	JSTypeInt
 	JSTypeArr
+	JSTypeObj
 
-	Required             []string              `json:"required"`
-	Properties           map[string]JsonSchema `json:"properties"`
-	AdditionalProperties *bool                 `json:"additionalProperties"`
+	Title       *string               `json:"title,omitempty"`
+	Type        *string               `json:"type,omitempty"`
+	Enum        []string              `json:"enum,omitempty"`
+	Definitions map[string]JsonSchema `json:"definitions,omitempty"`
+}
 
-	Title       *string               `json:"title"`
-	Type        *string               `json:"type"`
-	Enum        []string              `json:"enum"`
-	Definitions map[string]JsonSchema `json:"definitions"`
+type JSTypeObj struct {
+	Required             []string              `json:"required,omitempty"`
+	Properties           map[string]JsonSchema `json:"properties,omitempty"`
+	AdditionalProperties *bool                 `json:"additionalProperties,omitempty"`
 }
 
 type JSTypeString struct {
-	MaxLength *int    `json:"maxLength"`
-	MinLength *int    `json:"minLength"`
-	Pattern   *string `json:"pattern"`
+	MaxLength *int    `json:"maxLength,omitempty"`
+	MinLength *int    `json:"minLength,omitempty"`
+	Pattern   *string `json:"pattern,omitempty"`
 }
 
 type JSTypeInt struct {
-	Minimum *int `json:"minimum"`
-	Maximum *int `json:"maximum"`
+	Minimum *int `json:"minimum,omitempty"`
+	Maximum *int `json:"maximum,omitempty"`
 }
 
 type JSTypeArr struct {
-	MaxItems *int        `json:"maxItems"`
-	MinItems *int        `json:"minItems"`
-	Items    *JsonSchema `json:"items"`
+	MaxItems *int        `json:"maxItems,omitempty"`
+	MinItems *int        `json:"minItems,omitempty"`
+	Items    *JsonSchema `json:"items,omitempty"`
 }
