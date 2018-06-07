@@ -4,6 +4,7 @@ const (
 	TypeObject = "object"
 	TypeNumber = "number"
 	TypeArray  = "array"
+	TypeString  = "string"
 )
 
 type Types map[string]JsonSchema
