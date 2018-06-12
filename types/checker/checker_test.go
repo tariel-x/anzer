@@ -120,3 +120,128 @@ func TestSubtypeObjectsSubtype(t *testing.T) {
 		t.Errorf("type1 to type2 identity is %d, expects %d", ident, TypesSubtype)
 	}
 }
+
+func TestSubtypeObjectsPropertiesEqual(t *testing.T) {
+	typeName := types.Object
+	subtypeName := types.String
+	type1 := types.JsonSchema{
+		Type: &typeName,
+		JSTypeObj: types.JSTypeObj{
+			Properties: map[string]types.JsonSchema{
+				"a": types.JsonSchema{
+					Type: &subtypeName,
+				},
+			},
+		},
+	}
+	type2 := types.JsonSchema{
+		Type: &typeName,
+		JSTypeObj: types.JSTypeObj{
+			Properties: map[string]types.JsonSchema{
+				"a": types.JsonSchema{
+					Type: &subtypeName,
+				},
+			},
+		},
+	}
+
+	ident := Subtype(type1, type2)
+	if ident != TypesEqual {
+		t.Errorf("type1 to type2 identity is %d, expects %d", ident, TypesEqual)
+	}
+}
+
+func TestSubtypeObjectsPropertiesNotEqual(t *testing.T) {
+	typeName := types.Object
+	subtypeName1 := types.String
+	subtypeName2 := types.Number
+	type1 := types.JsonSchema{
+		Type: &typeName,
+		JSTypeObj: types.JSTypeObj{
+			Properties: map[string]types.JsonSchema{
+				"a": types.JsonSchema{
+					Type: &subtypeName1,
+				},
+			},
+		},
+	}
+	type2 := types.JsonSchema{
+		Type: &typeName,
+		JSTypeObj: types.JSTypeObj{
+			Properties: map[string]types.JsonSchema{
+				"a": types.JsonSchema{
+					Type: &subtypeName2,
+				},
+			},
+		},
+	}
+
+	ident := Subtype(type1, type2)
+	if ident != TypesNotEqual {
+		t.Errorf("type1 to type2 identity is %d, expects %d", ident, TypesNotEqual)
+	}
+}
+
+func TestSubtypeObjectsPropertiesNotEqual2(t *testing.T) {
+	typeName := types.Object
+	subtypeName1 := types.String
+	type1 := types.JsonSchema{
+		Type: &typeName,
+		JSTypeObj: types.JSTypeObj{
+			Properties: map[string]types.JsonSchema{
+				"a": types.JsonSchema{
+					Type: &subtypeName1,
+				},
+			},
+		},
+	}
+	type2 := types.JsonSchema{
+		Type: &typeName,
+		JSTypeObj: types.JSTypeObj{
+			Properties: map[string]types.JsonSchema{
+				"b": types.JsonSchema{
+					Type: &subtypeName1,
+				},
+			},
+		},
+	}
+
+	ident := Subtype(type1, type2)
+	if ident != TypesNotEqual {
+		t.Errorf("type1 to type2 identity is %d, expects %d", ident, TypesNotEqual)
+	}
+}
+
+func TestSubtypeObjectsPropertiesSubtype(t *testing.T) {
+	typeName := types.Object
+	subtypeName1 := types.String
+	subtypeName2 := types.Number
+	type1 := types.JsonSchema{
+		Type: &typeName,
+		JSTypeObj: types.JSTypeObj{
+			Properties: map[string]types.JsonSchema{
+				"a": types.JsonSchema{
+					Type: &subtypeName1,
+				},
+			},
+		},
+	}
+	type2 := types.JsonSchema{
+		Type: &typeName,
+		JSTypeObj: types.JSTypeObj{
+			Properties: map[string]types.JsonSchema{
+				"a": types.JsonSchema{
+					Type: &subtypeName1,
+				},
+				"b": types.JsonSchema{
+					Type: &subtypeName2,
+				},
+			},
+		},
+	}
+
+	ident := Subtype(type1, type2)
+	if ident != TypesSubtype {
+		t.Errorf("type1 to type2 identity is %d, expects %d", ident, TypesSubtype)
+	}
+}
