@@ -17,13 +17,12 @@ func Subtype(parent, child types.JsonSchema) TypesIdentity {
 		return TypesNotEqual
 	}
 
-	var identity TypesIdentity
 	switch *parent.Type {
 	case types.Object:
-		identity = validateObject(parent, child)
+		return validateObject(parent, child)
 	}
 
-	return identity
+	return TypesNotEqual
 }
 
 func checkTypeIdentity(schema1, schema2 types.JsonSchema) TypesIdentity {
