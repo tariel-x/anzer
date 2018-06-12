@@ -1,10 +1,13 @@
 package types
 
+type TypeName string
+
 const (
-	TypeObject = "object"
-	TypeNumber = "number"
-	TypeArray  = "array"
-	TypeString  = "string"
+	Object       TypeName = "object"
+	Number       TypeName = "number"
+	Array        TypeName = "array"
+	String       TypeName = "string"
+	Unrecognized TypeName = "unrecognized"
 )
 
 type Types map[string]JsonSchema
@@ -16,7 +19,7 @@ type JsonSchema struct {
 	JSTypeObj
 
 	Title       *string               `json:"title,omitempty"`
-	Type        *string               `json:"type,omitempty"`
+	Type        *TypeName             `json:"type,omitempty"`
 	Enum        []string              `json:"enum,omitempty"`
 	Definitions map[string]JsonSchema `json:"definitions,omitempty"`
 }
