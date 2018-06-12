@@ -64,7 +64,10 @@ func validateProperties(parent, child types.JsonSchema) TypesIdentity {
 			return TypesNotEqual
 		}
 		//TODO: remember child's subtyping to avoid fail on `TestSubtypeObjectsPropertiesSubtype2` test
-		if typesIdent := Subtype(parentProp, childProp); typesIdent == TypesNotEqual {
+
+		typesIdent := Subtype(parentProp, childProp)
+
+		if typesIdent == TypesNotEqual {
 			return TypesNotEqual
 		}
 	}
