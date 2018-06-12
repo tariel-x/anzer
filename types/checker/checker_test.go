@@ -6,6 +6,10 @@ import (
 	"github.com/tariel-x/anzer/types"
 )
 
+func bool2point(x bool) *bool {
+	return &x
+}
+
 func TestSubtypeOnlyType(t *testing.T) {
 	typeName1 := types.String
 	type1 := types.JsonSchema{
@@ -243,5 +247,40 @@ func TestSubtypeObjectsPropertiesSubtype(t *testing.T) {
 	ident := Subtype(type1, type2)
 	if ident != TypesSubtype {
 		t.Errorf("type1 to type2 identity is %d, expects %d", ident, TypesSubtype)
+	}
+}
+
+func TestSubtypeObjectsPropertiesNotSubtype(t *testing.T) {
+	typeName := types.Object
+	subtypeName1 := types.String
+	subtypeName2 := types.Number
+	type1 := types.JsonSchema{
+		Type: &typeName,
+		JSTypeObj: types.JSTypeObj{
+			Properties: map[string]types.JsonSchema{
+				"a": types.JsonSchema{
+					Type: &subtypeName1,
+				},
+			},
+			AdditionalProperties: bool2point(false),
+		},
+	}
+	type2 := types.JsonSchema{
+		Type: &typeName,
+		JSTypeObj: types.JSTypeObj{
+			Properties: map[string]types.JsonSchema{
+				"a": types.JsonSchema{
+					Type: &subtypeName1,
+				},
+				"b": types.JsonSchema{
+					Type: &subtypeName2,
+				},
+			},
+		},
+	}
+
+	ident := Subtype(type1, type2)
+	if ident != TypesNotEqual {
+		t.Errorf("type1 to type2 identity is %d, expects %d", ident, TypesNotEqual)
 	}
 }
