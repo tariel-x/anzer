@@ -1,7 +1,11 @@
 package checker
 
-import "github.com/tariel-x/anzer/types"
+import (
+	"github.com/tariel-x/anzer/types"
+)
 
+// validateObject checks identity of parent and child of type `object`
+// Returns 0 if types are equal, 1 if child is subtype of parent and -1 if child is not equal and not subtype of parent.
 func validateObject(parent, child types.JsonSchema) TypesIdentity {
 	requiredIdent := validateRequired(parent, child)
 	if requiredIdent == TypesNotEqual {
@@ -10,6 +14,11 @@ func validateObject(parent, child types.JsonSchema) TypesIdentity {
 
 	propsIdent := validateProperties(parent, child)
 	if propsIdent == TypesNotEqual {
+		return TypesNotEqual
+	}
+
+	additionalIdent := validateAdditional(parent, child)
+	if !additionalIdent {
 		return TypesNotEqual
 	}
 
@@ -54,6 +63,7 @@ func validateProperties(parent, child types.JsonSchema) TypesIdentity {
 		if !exists {
 			return TypesNotEqual
 		}
+		//TODO: remember child's subtyping to avoid fail on `TestSubtypeObjectsPropertiesSubtype2` test
 		if typesIdent := Subtype(parentProp, childProp); typesIdent == TypesNotEqual {
 			return TypesNotEqual
 		}
@@ -64,4 +74,17 @@ func validateProperties(parent, child types.JsonSchema) TypesIdentity {
 	}
 
 	return identity
+}
+
+func validateAdditional(parent, child types.JsonSchema) bool {
+	if parent.AdditionalProperties == nil {
+		return true
+	}
+
+	identity := validateProperties(parent, child)
+
+	if identity == TypesSubtype && *parent.AdditionalProperties == false {
+		return false
+	}
+	return true
 }
