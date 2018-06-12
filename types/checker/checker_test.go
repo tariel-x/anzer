@@ -7,7 +7,7 @@ import (
 )
 
 func TestSubtypeOnlyType(t *testing.T) {
-	typeName1 := types.TypeName("string")
+	typeName1 := types.String
 	type1 := types.JsonSchema{
 		Type: &typeName1,
 	}
