@@ -403,3 +403,96 @@ func TestSubtypeStringCheckNotEqual(t *testing.T) {
 	}
 }
 
+func TestSubtypeArrayCheckEqual(t *testing.T) {
+	arrType := types.Array
+	strType := types.String
+	type1 := types.JsonSchema{
+		Type: &arrType,
+		JSTypeArr: types.JSTypeArr{
+			Items: &types.JsonSchema{
+				Type: &strType,
+				JSTypeString: types.JSTypeString{
+					MaxLength: int2point(1),
+				},
+			},
+		},
+	}
+	type2 := types.JsonSchema{
+		Type: &arrType,
+		JSTypeArr: types.JSTypeArr{
+			Items: &types.JsonSchema{
+				Type: &strType,
+				JSTypeString: types.JSTypeString{
+					MaxLength: int2point(1),
+				},
+			},
+		},
+	}
+
+	ident := Subtype(type1, type2)
+	if ident != TypesEqual {
+		t.Errorf("type1 to type2 identity is %d, expects %d", ident, TypesEqual)
+	}
+}
+
+func TestSubtypeArrayCheckSubtype(t *testing.T) {
+	arrType := types.Array
+	strType := types.String
+	type1 := types.JsonSchema{
+		Type: &arrType,
+		JSTypeArr: types.JSTypeArr{
+			Items: &types.JsonSchema{
+				Type: &strType,
+				JSTypeString: types.JSTypeString{},
+			},
+		},
+	}
+	type2 := types.JsonSchema{
+		Type: &arrType,
+		JSTypeArr: types.JSTypeArr{
+			Items: &types.JsonSchema{
+				Type: &strType,
+				JSTypeString: types.JSTypeString{
+					MaxLength: int2point(1),
+				},
+			},
+		},
+	}
+
+	ident := Subtype(type1, type2)
+	if ident != TypesSubtype {
+		t.Errorf("type1 to type2 identity is %d, expects %d", ident, TypesSubtype)
+	}
+}
+
+func TestSubtypeArrayCheckNotEqual(t *testing.T) {
+	arrType := types.Array
+	strType := types.String
+	type1 := types.JsonSchema{
+		Type: &arrType,
+		JSTypeArr: types.JSTypeArr{
+			Items: &types.JsonSchema{
+				Type: &strType,
+				JSTypeString: types.JSTypeString{
+					MaxLength: int2point(2),
+				},
+			},
+		},
+	}
+	type2 := types.JsonSchema{
+		Type: &arrType,
+		JSTypeArr: types.JSTypeArr{
+			Items: &types.JsonSchema{
+				Type: &strType,
+				JSTypeString: types.JSTypeString{
+					MaxLength: int2point(1),
+				},
+			},
+		},
+	}
+
+	ident := Subtype(type1, type2)
+	if ident != TypesNotEqual {
+		t.Errorf("type1 to type2 identity is %d, expects %d", ident, TypesNotEqual)
+	}
+}
