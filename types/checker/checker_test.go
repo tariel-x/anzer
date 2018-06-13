@@ -6,7 +6,7 @@ import (
 	"github.com/tariel-x/anzer/types"
 )
 
-func bool2point(x bool) *bool {
+func int2point(x int) *int {
 	return &x
 }
 
@@ -341,3 +341,65 @@ func TestSubtypeObjectsPropertiesSubtype2(t *testing.T) {
 		t.Errorf("type1 to type2 identity is %d, expects %d", ident, TypesSubtype)
 	}
 }
+
+func TestSubtypeStringCheck(t *testing.T) {
+	typeName := types.String
+	type1 := types.JsonSchema{
+		Type: &typeName,
+		JSTypeString: types.JSTypeString{
+			MaxLength: int2point(1),
+		},
+	}
+	type2 := types.JsonSchema{
+		Type: &typeName,
+		JSTypeString: types.JSTypeString{
+			MaxLength: int2point(1),
+		},
+	}
+
+	ident := Subtype(type1, type2)
+	if ident != TypesEqual {
+		t.Errorf("type1 to type2 identity is %d, expects %d", ident, TypesEqual)
+	}
+}
+
+func TestSubtypeStringCheck2(t *testing.T) {
+	typeName := types.String
+	type1 := types.JsonSchema{
+		Type: &typeName,
+		JSTypeString: types.JSTypeString{},
+	}
+	type2 := types.JsonSchema{
+		Type: &typeName,
+		JSTypeString: types.JSTypeString{
+			MaxLength: int2point(1),
+		},
+	}
+
+	ident := Subtype(type1, type2)
+	if ident != TypesSubtype {
+		t.Errorf("type1 to type2 identity is %d, expects %d", ident, TypesSubtype)
+	}
+}
+
+func TestSubtypeStringCheckNotEqual(t *testing.T) {
+	typeName := types.String
+	type1 := types.JsonSchema{
+		Type: &typeName,
+		JSTypeString: types.JSTypeString{
+			MaxLength: int2point(1),
+		},
+	}
+	type2 := types.JsonSchema{
+		Type: &typeName,
+		JSTypeString: types.JSTypeString{
+			MaxLength: int2point(2),
+		},
+	}
+
+	ident := Subtype(type1, type2)
+	if ident != TypesNotEqual {
+		t.Errorf("type1 to type2 identity is %d, expects %d", ident, TypesNotEqual)
+	}
+}
+
