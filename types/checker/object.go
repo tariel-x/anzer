@@ -4,15 +4,15 @@ import (
 	"github.com/tariel-x/anzer/types"
 )
 
-// validateObject checks identity of parent and child of type `object`
+// checkObj checks identity of parent and child of type `object`
 // Returns 0 if types are equal, 1 if child is subtype of parent and -1 if child is not equal and not subtype of parent.
-func validateObject(parent, child types.JsonSchema) TypesIdentity {
-	requiredIdent := validateRequired(parent, child)
+func checkObj(parent, child types.JsonSchema) TypesIdentity {
+	requiredIdent := checkObjRequired(parent, child)
 	if requiredIdent == TypesNotEqual {
 		return TypesNotEqual
 	}
 
-	propsIdent := validateProperties(parent, child)
+	propsIdent := checkObjProperties(parent, child)
 	if propsIdent == TypesNotEqual {
 		return TypesNotEqual
 	}
@@ -24,9 +24,9 @@ func validateObject(parent, child types.JsonSchema) TypesIdentity {
 	return TypesSubtype
 }
 
-// validateRequired checks identity of parent and child required lists.
+// checkObjRequired checks identity of parent and child required lists.
 // Returns 0 if types are equal, 1 if child is subtype of parent and -1 if child is not equal and not subtype of parent.
-func validateRequired(parent, child types.JsonSchema) TypesIdentity {
+func checkObjRequired(parent, child types.JsonSchema) TypesIdentity {
 	var identity TypesIdentity
 	identity = TypesSubtype
 
@@ -49,7 +49,7 @@ func validateRequired(parent, child types.JsonSchema) TypesIdentity {
 	return identity
 }
 
-func validateProperties(parent, child types.JsonSchema) TypesIdentity {
+func checkObjProperties(parent, child types.JsonSchema) TypesIdentity {
 	var subIdentity TypesIdentity
 	subIdentity = TypesEqual
 

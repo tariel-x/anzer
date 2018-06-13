@@ -2,17 +2,21 @@ package checker
 
 import "github.com/tariel-x/anzer/types"
 
-func validateNumber(parent, child types.JsonSchema) TypesIdentity {
+func checkNum(parent, child types.JsonSchema) TypesIdentity {
 
-	if parent.MaxLength != child.MaxLength {
+	if parent.Minimum != child.Minimum {
 		return TypesNotEqual
 	}
-
-	if parent.MinLength != child.MinLength {
+	if parent.ExclusiveMinimum != child.ExclusiveMinimum {
 		return TypesNotEqual
 	}
-
-	if parent.Pattern != child.Pattern {
+	if parent.Maximum != child.Maximum {
+		return TypesNotEqual
+	}
+	if parent.ExclusiveMaximum != child.ExclusiveMaximum {
+		return TypesNotEqual
+	}
+	if parent.MultipleOf != child.MultipleOf {
 		return TypesNotEqual
 	}
 

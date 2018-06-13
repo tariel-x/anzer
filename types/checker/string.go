@@ -2,7 +2,7 @@ package checker
 
 import "github.com/tariel-x/anzer/types"
 
-func validateString(parent, child types.JsonSchema) TypesIdentity {
+func checkStr(parent, child types.JsonSchema) TypesIdentity {
 
 	if parent.MaxLength != child.MaxLength {
 		return TypesNotEqual
