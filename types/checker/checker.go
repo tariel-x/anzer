@@ -19,11 +19,13 @@ func Subtype(parent, child types.JsonSchema) TypesIdentity {
 
 	switch *parent.Type {
 	case types.Object:
-		return checkObj(parent, child)
+		return checkObject(parent, child)
 	case types.String:
-		return checkStr(parent, child)
+		return checkString(parent, child)
 	case types.Number:
-		return checkNum(parent, child)
+		return checkNumber(parent, child)
+	case types.Array:
+		return checkArray(parent, child)
 	}
 
 	return TypesNotEqual

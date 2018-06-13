@@ -2,7 +2,7 @@ package checker
 
 import "github.com/tariel-x/anzer/types"
 
-func checkNum(parent, child types.JsonSchema) TypesIdentity {
+func checkNumber(parent, child types.JsonSchema) TypesIdentity {
 
 	if parent.Minimum != child.Minimum {
 		return TypesNotEqual

@@ -4,9 +4,9 @@ import (
 	"github.com/tariel-x/anzer/types"
 )
 
-// checkObj checks identity of parent and child of type `object`
+// checkObject checks identity of parent and child of type `object`
 // Returns 0 if types are equal, 1 if child is subtype of parent and -1 if child is not equal and not subtype of parent.
-func checkObj(parent, child types.JsonSchema) TypesIdentity {
+func checkObject(parent, child types.JsonSchema) TypesIdentity {
 	requiredIdent := checkObjRequired(parent, child)
 	if requiredIdent == TypesNotEqual {
 		return TypesNotEqual
