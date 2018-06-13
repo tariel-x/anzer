@@ -101,15 +101,14 @@ func (c *Resolver) simplifyComplexType(def listener.BaseType) (*JsonSchema, erro
 
 func (c *Resolver) makeProdBootstrap() JsonSchema {
 	return JsonSchema{
-		Type: string2point(TypeObject),
+		Type: type2point(Object),
 		JSTypeObj: JSTypeObj{
-			AdditionalProperties: bool2point(false),
 			Properties:           map[string]JsonSchema{},
 		},
 	}
 }
 
-func string2point(x string) *string {
+func type2point(x TypeName) *TypeName {
 	return &x
 }
 
