@@ -341,38 +341,3 @@ func TestSubtypeObjectsPropertiesSubtype2(t *testing.T) {
 		t.Errorf("type1 to type2 identity is %d, expects %d", ident, TypesSubtype)
 	}
 }
-
-func TestSubtypeObjectsPropertiesAdditional(t *testing.T) {
-	typeName := types.Object
-	subtypeName1 := types.String
-	subtypeName2 := types.Number
-	type1 := types.JsonSchema{
-		Type: &typeName,
-		JSTypeObj: types.JSTypeObj{
-			Properties: map[string]types.JsonSchema{
-				"a": types.JsonSchema{
-					Type: &subtypeName1,
-				},
-			},
-			AdditionalProperties: bool2point(false),
-		},
-	}
-	type2 := types.JsonSchema{
-		Type: &typeName,
-		JSTypeObj: types.JSTypeObj{
-			Properties: map[string]types.JsonSchema{
-				"a": types.JsonSchema{
-					Type: &subtypeName1,
-				},
-				"b": types.JsonSchema{
-					Type: &subtypeName2,
-				},
-			},
-		},
-	}
-
-	ident := Subtype(type1, type2)
-	if ident != TypesNotEqual {
-		t.Errorf("type1 to type2 identity is %d, expects %d", ident, TypesNotEqual)
-	}
-}

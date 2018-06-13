@@ -103,7 +103,6 @@ func (c *Resolver) makeProdBootstrap() JsonSchema {
 	return JsonSchema{
 		Type: type2point(Object),
 		JSTypeObj: JSTypeObj{
-			AdditionalProperties: bool2point(false),
 			Properties:           map[string]JsonSchema{},
 		},
 	}

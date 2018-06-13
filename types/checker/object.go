@@ -17,11 +17,6 @@ func validateObject(parent, child types.JsonSchema) TypesIdentity {
 		return TypesNotEqual
 	}
 
-	additionalIdent := validateAdditional(parent, child)
-	if !additionalIdent {
-		return TypesNotEqual
-	}
-
 	if requiredIdent == TypesEqual && propsIdent == TypesEqual {
 		return TypesEqual
 	}
@@ -80,17 +75,4 @@ func validateProperties(parent, child types.JsonSchema) TypesIdentity {
 	}
 
 	return TypesSubtype
-}
-
-func validateAdditional(parent, child types.JsonSchema) bool {
-	if parent.AdditionalProperties == nil {
-		return true
-	}
-
-	identity := validateProperties(parent, child)
-
-	if identity == TypesSubtype && *parent.AdditionalProperties == false {
-		return false
-	}
-	return true
 }
