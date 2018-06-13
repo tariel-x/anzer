@@ -55,28 +55,31 @@ func validateRequired(parent, child types.JsonSchema) TypesIdentity {
 }
 
 func validateProperties(parent, child types.JsonSchema) TypesIdentity {
-	var identity TypesIdentity
-	identity = TypesSubtype
+	var subIdentity TypesIdentity
+	subIdentity = TypesEqual
 
 	for name, parentProp := range parent.Properties {
 		childProp, exists := child.Properties[name]
 		if !exists {
 			return TypesNotEqual
 		}
-		//TODO: remember child's subtyping to avoid fail on `TestSubtypeObjectsPropertiesSubtype2` test
 
 		typesIdent := Subtype(parentProp, childProp)
 
 		if typesIdent == TypesNotEqual {
 			return TypesNotEqual
 		}
+
+		if typesIdent == TypesSubtype {
+			subIdentity = TypesSubtype
+		}
 	}
 
-	if len(parent.Properties) == len(child.Properties) {
-		identity = TypesEqual
+	if len(parent.Properties) == len(child.Properties) && subIdentity == TypesEqual {
+		return TypesEqual
 	}
 
-	return identity
+	return TypesSubtype
 }
 
 func validateAdditional(parent, child types.JsonSchema) bool {
