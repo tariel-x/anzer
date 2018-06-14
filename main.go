@@ -27,11 +27,10 @@ func main() {
 
 	fmt.Println("-----------------")
 
-	resolver := types.NewResolver(rawTypes)
-	err = resolver.Resolve()
+	types, err := types.Resolve(rawTypes)
 	die(err)
 
-	for name, td := range resolver.GetTypes() {
+	for name, td := range types {
 		displayType(name, td)
 	}
 }
@@ -48,7 +47,6 @@ func readInput(fileName string) (listener.Types, listener.Funcs, error) {
 	antlr.ParseTreeWalkerDefault.Walk(listener, tree)
 	return listener.Types, listener.Funcs, nil
 }
-
 
 func displayFunc(fd listener.FuncBody) {
 	if fd.Name != nil {

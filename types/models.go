@@ -25,8 +25,8 @@ type JsonSchema struct {
 }
 
 type JSTypeObj struct {
-	Required             []string              `json:"required,omitempty"`
-	Properties           map[string]JsonSchema `json:"properties,omitempty"`
+	Required   []string              `json:"required,omitempty"`
+	Properties map[string]JsonSchema `json:"properties,omitempty"`
 }
 
 type JSTypeString struct {

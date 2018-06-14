@@ -12,11 +12,15 @@ type Resolver struct {
 	Types    Types
 }
 
-func NewResolver(types listener.Types) Resolver {
-	return Resolver{
+func Resolve(types listener.Types) (Types, error) {
+	r := Resolver{
 		RawTypes: types,
 		Types:    Types{},
 	}
+	if err := r.Resolve(); err != nil {
+		return nil, err
+	}
+	return r.GetTypes(), nil
 }
 
 func (c *Resolver) GetTypes() Types {
@@ -103,7 +107,7 @@ func (c *Resolver) makeProdBootstrap() JsonSchema {
 	return JsonSchema{
 		Type: type2point(Object),
 		JSTypeObj: JSTypeObj{
-			Properties:           map[string]JsonSchema{},
+			Properties: map[string]JsonSchema{},
 		},
 	}
 }
