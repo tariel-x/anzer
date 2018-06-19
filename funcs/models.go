@@ -14,7 +14,8 @@ type SystemGraph struct {
 	Dependencies Dependencies
 }
 
-type Services map[string]Service
+type Services map[string]ServiceSet
+type ServiceSet map[int]Service
 type Dependencies []Dependency
 
 type Service struct {
@@ -22,7 +23,8 @@ type Service struct {
 	OutType types.JsonSchema
 	Index   int
 	Type    ServiceType
-	Config struct {
+	Name    string
+	Config  struct {
 		EnvIn  string
 		EnvOut string
 		Envs   map[string]string
