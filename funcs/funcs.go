@@ -34,7 +34,6 @@ func (fr *FuncResolver) ResolveAll() (*SystemGraph, error) {
 }
 
 func (fr *FuncResolver) resolveRaw(name string) error {
-	// get raw func from the list and try to simplify it
 	rawDef, exists := fr.RawFuncs[name]
 	if !exists {
 		return fmt.Errorf("No such func %q in raw funcs list", name)
@@ -43,6 +42,8 @@ func (fr *FuncResolver) resolveRaw(name string) error {
 	if rawDef.Def == nil {
 		fmt.Printf("New empty func found")
 		fr.createLambda(rawDef)
+	} else {
+		// iterate over child services or product child services and recursive add to graph
 	}
 
 	return nil
