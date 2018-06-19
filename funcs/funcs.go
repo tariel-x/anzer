@@ -58,16 +58,24 @@ func (fr *FuncResolver) createLambda(rawDef listener.FuncDef) (*Service, error) 
 		return nil, err
 	}
 
-	servicesSet, exists := fr.Services[rawDef.Name]
+	serviceSet, exists := fr.Services[rawDef.Name]
 	if !exists {
-
+		serviceSet = ServiceSet{}
+		fr.Services[rawDef.Name] = serviceSet
 	}
+
+	num := len(serviceSet)
 
 	s := Service{
 		InType:  *inType,
 		OutType: *outType,
 		Name:    rawDef.Name,
+		Index:   num,
+		Type:    TypeLambda,
 	}
+
+	fr.Services[rawDef.Name][num] = s
+
 	return &s, nil
 }
 
