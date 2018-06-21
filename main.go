@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/antlr/antlr4/runtime/Go/antlr"
+	"github.com/tariel-x/anzer/funcs"
 	"github.com/tariel-x/anzer/listener"
 	"github.com/tariel-x/anzer/parser"
 	"github.com/tariel-x/anzer/types"
@@ -33,6 +34,8 @@ func main() {
 	for name, td := range types {
 		displayType(name, td)
 	}
+
+	funcs.Resolve(rawFuncs, types)
 }
 
 func readInput(fileName string) (listener.Types, listener.Funcs, error) {

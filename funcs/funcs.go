@@ -42,15 +42,18 @@ func (fr *FuncResolver) resolveRaw(name string) ([]Service, error) {
 	services := []Service{}
 
 	if rawDef.Def == nil {
-		fmt.Printf("New empty func found")
+		fmt.Printf("%s: New empty func found, create lambda\n", name)
 		l, err := fr.createLambda(rawDef)
 		if err != nil {
 			return nil, err
 		}
 		services = append(services, *l)
 	} else {
+		// create function here
+
 		// iterate over child services or product child services and recursive add to graph
 		if rawDef.Def.ComposeTo != nil {
+			fmt.Printf("%s: New composing func found\n", name)
 			appended, err := fr.resolveCompose(rawDef.Def.ComposeTo)
 			if err != nil {
 				return nil, err
@@ -70,6 +73,7 @@ func (fr *FuncResolver) resolveCompose(fb *listener.FuncBody) ([]Service, error)
 }
 
 func (fr *FuncResolver) resolveProduction(fb *listener.FuncBody) ([]Service, error) {
+	fmt.Printf("%v: Product func\n", fb.Name)
 	product := []Service{}
 	prodNames := []string{}
 	if fb.ProductEls != nil {
