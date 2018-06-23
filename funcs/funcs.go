@@ -25,7 +25,13 @@ func Resolve(funcs listener.Funcs, types types.Types) (*SystemGraph, error) {
 }
 
 func (fr *FuncResolver) ResolveAll() (*SystemGraph, error) {
-	_, err := fr.resolveRaw("main")
+	rawDef, exists := fr.RawFuncs["main"]
+	if !exists {
+		return nil, fmt.Errorf("No such func %q in raw funcs list", "main")
+	}
+
+	_, err := fr.resolveRaw(*rawDef.Def)
+
 	if err != nil {
 		return nil, err
 	}
@@ -33,17 +39,12 @@ func (fr *FuncResolver) ResolveAll() (*SystemGraph, error) {
 	return nil, nil
 }
 
-func (fr *FuncResolver) resolveRaw(name string) ([]Service, error) {
-	rawDef, exists := fr.RawFuncs[name]
-	if !exists {
-		return nil, fmt.Errorf("No such func %q in raw funcs list", name)
-	}
-
+func (fr *FuncResolver) resolveRaw(body listener.FuncBody) ([]Service, error) {
 	services := []Service{}
 
-	if rawDef.Def == nil {
-		fmt.Printf("%s: New empty func found, create lambda\n", name)
-		l, err := fr.createLambda(rawDef)
+	if fr.isLambda(body) {
+		fmt.Printf("%s: New empty func found, create lambda\n", body.Name)
+		l, err := fr.createLambda(body)
 		if err != nil {
 			return nil, err
 		}
@@ -52,46 +53,63 @@ func (fr *FuncResolver) resolveRaw(name string) ([]Service, error) {
 		// create function here
 
 		// iterate over child services or product child services and recursive add to graph
-		if rawDef.Def.ComposeTo != nil {
-			fmt.Printf("%s: New composing func found\n", name)
-			appended, err := fr.resolveCompose(rawDef.Def.ComposeTo)
-			if err != nil {
-				return nil, err
-			}
-			services = append(services, appended...)
+	}
+
+	if body.ComposeTo != nil {
+		if body.ComposeTo.Name != nil {
+			fmt.Printf("%s: New composing func found\n", *body.ComposeTo.Name)
+		} else {
+			fmt.Printf("New composing func with out name found\n")
 		}
+
+		appended, err := fr.resolveCompose(*body.ComposeTo)
+		if err != nil {
+			return nil, err
+		}
+		services = append(services, appended...)
 	}
 
 	return services, nil
 }
 
-func (fr *FuncResolver) resolveCompose(fb *listener.FuncBody) ([]Service, error) {
-	if fb.Name != nil {
-		return fr.resolveRaw(*fb.Name)
+func (fr *FuncResolver) isLambda(body listener.FuncBody) bool {
+	def, exists := fr.RawFuncs[*body.Name]
+	if !exists {
+		return false
+	}
+	if def.Def == nil {
+		return true
+	}
+	return false
+}
+
+func (fr *FuncResolver) resolveCompose(body listener.FuncBody) ([]Service, error) {
+	if body.Name != nil {
+		return fr.resolveRaw(body)
 	}
 	return nil, nil
 }
 
-func (fr *FuncResolver) resolveProduction(fb *listener.FuncBody) ([]Service, error) {
-	fmt.Printf("%v: Product func\n", fb.Name)
-	product := []Service{}
-	prodNames := []string{}
-	if fb.ProductEls != nil {
-		for _, pFunc := range fb.ProductEls {
-			productItem, err := fr.resolveRaw(*pFunc.Name)
-			prodNames = append(prodNames, *pFunc.Name)
+func (fr *FuncResolver) resolveProduction(body *listener.FuncBody) ([]Service, error) {
+	fmt.Printf("%v: Product func\n", body.Name)
+	services := []Service{}
+	names := []string{}
+	if body.ProductEls != nil {
+		for _, product := range body.ProductEls {
+			productItem, err := fr.resolveRaw(product)
+			names = append(names, *product.Name)
 			if err != nil {
 				return nil, err
 			}
-			product = append(product, productItem...)
+			services = append(services, productItem...)
 		}
 	}
-	prodService, err := fr.createProduction(prodNames)
+	service, err := fr.createProduction(names)
 	if err != nil {
 		return nil, err
 	}
-	product = append(product, *prodService)
-	return product, nil
+	services = append(services, *service)
+	return services, nil
 }
 
 func (fr *FuncResolver) createProduction(names []string) (*Service, error) {
@@ -104,20 +122,25 @@ func (fr *FuncResolver) createProduction(names []string) (*Service, error) {
 	return &s, nil
 }
 
-func (fr *FuncResolver) createLambda(rawDef listener.FuncDef) (*Service, error) {
-	inType, err := fr.getType(rawDef.Arg)
+func (fr *FuncResolver) createLambda(body listener.FuncBody) (*Service, error) {
+	def, err := fr.getDef(*body.Name)
+	if def == nil {
+		return nil, err
+	}
+
+	inType, err := fr.getType(def.Arg)
 	if err != nil {
 		return nil, err
 	}
-	outType, err := fr.getType(rawDef.Ret)
+	outType, err := fr.getType(def.Ret)
 	if err != nil {
 		return nil, err
 	}
 
-	serviceSet, exists := fr.Services[rawDef.Name]
+	serviceSet, exists := fr.Services[def.Name]
 	if !exists {
 		serviceSet = ServiceSet{}
-		fr.Services[rawDef.Name] = serviceSet
+		fr.Services[def.Name] = serviceSet
 	}
 
 	num := len(serviceSet)
@@ -125,14 +148,22 @@ func (fr *FuncResolver) createLambda(rawDef listener.FuncDef) (*Service, error) 
 	s := Service{
 		InType:  *inType,
 		OutType: *outType,
-		Name:    rawDef.Name,
+		Name:    def.Name,
 		Index:   num,
 		Type:    TypeLambda,
 	}
 
-	fr.Services[rawDef.Name][num] = s
+	fr.Services[def.Name][num] = s
 
 	return &s, nil
+}
+
+func (fr *FuncResolver) getDef(name string) (*listener.FuncDef, error) {
+	def, exists := fr.RawFuncs[name]
+	if !exists {
+		return nil, fmt.Errorf("No definition with name %q", name)
+	}
+	return &def, nil
 }
 
 func (fr *FuncResolver) getType(name string) (*types.JsonSchema, error) {
