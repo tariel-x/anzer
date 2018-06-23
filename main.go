@@ -20,8 +20,8 @@ func main() {
 
 	for name, t := range rawFuncs {
 		fmt.Printf("%s :: %s -> %s\n", name, t.Arg, t.Ret)
-		if t.Def != nil {
-			displayFunc(*t.Def)
+		if t.Body != nil {
+			displayFunc(*t.Body)
 		}
 		fmt.Printf("\n")
 	}
@@ -52,8 +52,8 @@ func readInput(fileName string) (listener.Types, listener.Funcs, error) {
 }
 
 func displayFunc(fd listener.FuncBody) {
-	if fd.Name != nil {
-		fmt.Printf(" %s", *fd.Name)
+	if fd.Ref != nil {
+		fmt.Printf(" %s", *fd.Ref)
 		if fd.ComposeTo != nil {
 			displayFunc(*fd.ComposeTo)
 		}

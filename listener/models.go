@@ -26,11 +26,11 @@ type FuncDef struct {
 	Name string
 	Arg  string
 	Ret  string
-	Def  *FuncBody
+	Body *FuncBody
 }
 
 type FuncBody struct {
-	Name       *string
+	Ref        *string
 	ProductEls Production
 	SumEls     Sum
 	ComposeTo  *FuncBody
@@ -61,7 +61,7 @@ func SumFunc(sum Sum) *FuncBody {
 
 func SimpleFunc(name string) *FuncBody {
 	return &FuncBody{
-		Name: &name,
+		Ref: &name,
 	}
 }
 

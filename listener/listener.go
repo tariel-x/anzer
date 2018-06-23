@@ -63,7 +63,7 @@ func (l *Listener) EnterFuncDef(ctx *parser.FuncDefContext) {
 	for _, compose := range composes {
 		childFb = l.processCompose(compose, childFb)
 	}
-	def.Def = fb.ComposeTo
+	def.Body = fb.ComposeTo
 	l.Funcs[name] = def
 }
 
