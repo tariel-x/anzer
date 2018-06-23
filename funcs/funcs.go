@@ -27,7 +27,7 @@ func Resolve(funcs listener.Funcs, types types.Types) (*SystemGraph, error) {
 func (fr *FuncResolver) ResolveAll() (*SystemGraph, error) {
 	rawDef, exists := fr.RawFuncs["main"]
 	if !exists {
-		return nil, fmt.Errorf("No such func %q in raw funcs list", "main")
+		return nil, fmt.Errorf("No main func in raw funcs list")
 	}
 
 	_, err := fr.resolveByDefName(rawDef.Name)
@@ -218,14 +218,6 @@ func (fr *FuncResolver) createProduction(names []string) (*Service, error) {
 		Type:  TypeProduction,
 	}
 	return &s, nil
-}
-
-func (fr *FuncResolver) getDef(name string) (*listener.FuncDef, error) {
-	def, exists := fr.RawFuncs[name]
-	if !exists {
-		return nil, fmt.Errorf("No definition with name %q", name)
-	}
-	return &def, nil
 }
 
 func (fr *FuncResolver) getType(name string) (*types.JsonSchema, error) {
