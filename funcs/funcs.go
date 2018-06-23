@@ -50,6 +50,11 @@ func (fr *FuncResolver) resolveRaw(body listener.FuncBody) ([]Service, error) {
 		}
 		services = append(services, *l)
 	} else {
+		appended, err := fr.resolveCompose(body)
+		if err != nil {
+			return nil, err
+		}
+		services = append(services, appended...)
 		// create function here
 
 		// iterate over child services or product child services and recursive add to graph
@@ -84,10 +89,20 @@ func (fr *FuncResolver) isLambda(body listener.FuncBody) bool {
 }
 
 func (fr *FuncResolver) resolveCompose(body listener.FuncBody) ([]Service, error) {
-	if body.Name != nil {
-		return fr.resolveRaw(body)
+	if body.Name == nil {
+		return nil, fmt.Errorf("Func body has no name")
 	}
-	return nil, nil
+
+	rawDef, exists := fr.RawFuncs[*body.Name]
+	if !exists {
+		return nil, fmt.Errorf("No such func %q in raw funcs list", *body.Name)
+	}
+
+	resolved, err := fr.resolveRaw(*rawDef.Def)
+	if err != nil {
+		return nil, err
+	}
+	return resolved, nil
 }
 
 func (fr *FuncResolver) resolveProduction(body *listener.FuncBody) ([]Service, error) {
