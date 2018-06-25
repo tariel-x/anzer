@@ -13,6 +13,7 @@ type FuncResolver struct {
 	Types        types.Types
 	Services     Services
 	Dependencies Dependencies
+	LastService  *Service
 }
 
 func Resolve(funcs listener.Funcs, types types.Types) (*SystemGraph, error) {
@@ -35,39 +36,65 @@ func (fr *FuncResolver) resolveFunc(name string) error {
 	if !exists {
 		return fmt.Errorf("No main func in raw funcs list")
 	}
-	return fr.resoveDefinition(def, nil)
+	_, err := fr.resoveDefinition(def, nil)
+	return err
 }
 
-func (fr *FuncResolver) resoveDefinition(def listener.FuncDef, objS *Service) error {
+func (fr *FuncResolver) resoveDefinition(def listener.FuncDef, objS *Service) (*Service, error) {
 	if def.Body == nil {
 		subjS, err := fr.createLambda(def.Name)
 		if err != nil {
-			return err
+			return nil, err
 		}
-		//add service to connections
-		// subject depends on object
 		if objS != nil {
 			fr.addDependency(*objS, *subjS)
 		}
-		return nil
+
+		return subjS, err
 	} else {
 		return fr.resolveBody(*def.Body, objS)
 	}
 }
 
-func (fr *FuncResolver) resolveBody(body listener.FuncBody, objS *Service) error {
+func (fr *FuncResolver) resolveBody(body listener.FuncBody, objS *Service) (*Service, error) {
+	var err error
 	if body.ProductEls != nil {
-		fr.resolveProduction(body.ProductEls)
+		// if production
+		objS, err = fr.resolveProduction(body.ProductEls, objS)
+		if err != nil {
+			return nil, err
+		}
+	} else if body.Ref != nil {
+		// if reference to another
+		if def, exists := fr.RawFuncs[*body.Ref]; exists {
+			objS, err = fr.resoveDefinition(def, objS)
+			if err != nil {
+				return nil, err
+			}
+		}
 	}
 
+	// process next composition
 	if body.ComposeTo != nil {
-		fr.resolveBody(*body.ComposeTo, objS)
+		return fr.resolveBody(*body.ComposeTo, objS)
 	}
-	return nil
+	return nil, nil
 }
 
-func (fr *FuncResolver) resolveProduction(body listener.Production) error {
-	return nil
+func (fr *FuncResolver) resolveProduction(body listener.Production, objS *Service) (*Service, error) {
+	services := []Service{}
+	for _, productBody := range body {
+		s, err := fr.resolveBody(productBody, objS)
+		if err != nil {
+			return nil, err
+		}
+		services = append(services, *s)
+	}
+
+	// here is need to create production service and connect it with slice of returned services
+	// return production service struct
+
+	return nil, nil
 }
 
 func (fr *FuncResolver) addDependency(from, to Service) error {
