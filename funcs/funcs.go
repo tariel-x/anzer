@@ -9,9 +9,10 @@ import (
 )
 
 type FuncResolver struct {
-	RawFuncs listener.Funcs
-	Types    types.Types
-	Services Services
+	RawFuncs     listener.Funcs
+	Types        types.Types
+	Services     Services
+	Dependencies Dependencies
 }
 
 func Resolve(funcs listener.Funcs, types types.Types) (*SystemGraph, error) {
@@ -34,30 +35,46 @@ func (fr *FuncResolver) resolveFunc(name string) error {
 	if !exists {
 		return fmt.Errorf("No main func in raw funcs list")
 	}
-	return fr.resoveDefinition(def)
+	return fr.resoveDefinition(def, nil)
 }
 
-func (fr *FuncResolver) resoveDefinition(def listener.FuncDef) error {
+func (fr *FuncResolver) resoveDefinition(def listener.FuncDef, objS *Service) error {
 	if def.Body == nil {
-		fr.createLambda(def.Name)
+		subjS, err := fr.createLambda(def.Name)
+		if err != nil {
+			return err
+		}
+		//add service to connections
+		// subject depends on object
+		if objS != nil {
+			fr.addDependency(*objS, *subjS)
+		}
 		return nil
 	} else {
-		return fr.resolveBody(*def.Body)
+		return fr.resolveBody(*def.Body, objS)
 	}
 }
 
-func (fr *FuncResolver) resolveBody(body listener.FuncBody) error {
+func (fr *FuncResolver) resolveBody(body listener.FuncBody, objS *Service) error {
 	if body.ProductEls != nil {
 		fr.resolveProduction(body.ProductEls)
 	}
 
 	if body.ComposeTo != nil {
-		fr.resolveBody(*body.ComposeTo)
+		fr.resolveBody(*body.ComposeTo, objS)
 	}
 	return nil
 }
 
 func (fr *FuncResolver) resolveProduction(body listener.Production) error {
+	return nil
+}
+
+func (fr *FuncResolver) addDependency(from, to Service) error {
+	fr.Dependencies = append(fr.Dependencies, Dependency{
+		From: from,
+		To:   to,
+	})
 	return nil
 }
 
