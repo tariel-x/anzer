@@ -40,11 +40,24 @@ func (fr *FuncResolver) resolveFunc(name string) error {
 func (fr *FuncResolver) resoveDefinition(def listener.FuncDef) error {
 	if def.Body == nil {
 		fr.createLambda(def.Name)
+		return nil
+	} else {
+		return fr.resolveBody(*def.Body)
+	}
+}
+
+func (fr *FuncResolver) resolveBody(body listener.FuncBody) error {
+	if body.ProductEls != nil {
+		fr.resolveProduction(body.ProductEls)
+	}
+
+	if body.ComposeTo != nil {
+		fr.resolveBody(*body.ComposeTo)
 	}
 	return nil
 }
 
-func (fr *FuncResolver) resolveBody(body listener.FuncBody) error {
+func (fr *FuncResolver) resolveProduction(body listener.Production) error {
 	return nil
 }
 
