@@ -28,6 +28,7 @@ func Resolve(funcs listener.Funcs, types types.Types) (*SystemGraph, error) {
 
 func (fr *FuncResolver) ResolveAll() (*SystemGraph, error) {
 	err := fr.resolveFunc("main")
+	// create from services and dependencies system graph
 	return nil, err
 }
 
