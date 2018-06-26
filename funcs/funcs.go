@@ -85,7 +85,7 @@ func (fr *FuncResolver) resolveBody(body listener.FuncBody, objS *Service) (*Ser
 	if body.ComposeTo != nil {
 		return fr.resolveBody(*body.ComposeTo, objS)
 	}
-	return nil, fmt.Errorf("No candidate to resolve function\n")
+	return objS, nil
 }
 
 func (fr *FuncResolver) resolveProduction(body listener.Production, objS *Service) (*Service, error) {
@@ -151,8 +151,8 @@ func (fr *FuncResolver) createLambda(name string) (*Service, error) {
 		num := len(serviceSet)
 
 		s := Service{
-			InType:  *inType,
-			OutType: *outType,
+			InType:  inType,
+			OutType: outType,
 			Name:    def.Name,
 			Index:   num,
 			Type:    TypeLambda,
@@ -167,9 +167,12 @@ func (fr *FuncResolver) createLambda(name string) (*Service, error) {
 }
 
 func (fr *FuncResolver) getType(name string) (*types.JsonSchema, error) {
+	if name == "_" {
+		return nil, nil
+	}
 	typeDef, exists := fr.Types[name]
 	if !exists {
-		return nil, fmt.Errorf("No such type %q in types list")
+		return nil, fmt.Errorf("No such type %q in types list", name)
 	}
 	return &typeDef, nil
 }
