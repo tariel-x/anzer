@@ -47,34 +47,34 @@ func (fr *FuncResolver) resolveFunc(name string) error {
 	return err
 }
 
-func (fr *FuncResolver) resoveDefinition(def listener.FuncDef, objS *Service) (*Service, error) {
+func (fr *FuncResolver) resoveDefinition(def listener.FuncDef, fromS *Service) (*Service, error) {
 	if def.Body == nil {
-		subjS, err := fr.createLambda(def.Name)
+		toS, err := fr.createLambda(def.Name)
 		if err != nil {
 			return nil, err
 		}
-		if objS != nil {
-			fr.addDependency(*objS, *subjS)
+		if fromS != nil {
+			fr.addDependency(*fromS, *toS)
 		}
 
-		return subjS, err
+		return toS, err
 	} else {
-		return fr.resolveBody(*def.Body, objS)
+		return fr.resolveBody(*def.Body, fromS)
 	}
 }
 
-func (fr *FuncResolver) resolveBody(body listener.FuncBody, objS *Service) (*Service, error) {
+func (fr *FuncResolver) resolveBody(body listener.FuncBody, fromS *Service) (*Service, error) {
 	var err error
 	if body.ProductEls != nil {
 		// if production
-		objS, err = fr.resolveProduction(body.ProductEls, objS)
+		fromS, err = fr.resolveProduction(body.ProductEls, fromS)
 		if err != nil {
 			return nil, err
 		}
 	} else if body.Ref != nil {
 		// if reference to another
 		if def, exists := fr.RawFuncs[*body.Ref]; exists {
-			objS, err = fr.resoveDefinition(def, objS)
+			fromS, err = fr.resoveDefinition(def, fromS)
 			if err != nil {
 				return nil, err
 			}
@@ -83,16 +83,16 @@ func (fr *FuncResolver) resolveBody(body listener.FuncBody, objS *Service) (*Ser
 
 	// process next composition
 	if body.ComposeTo != nil {
-		return fr.resolveBody(*body.ComposeTo, objS)
+		return fr.resolveBody(*body.ComposeTo, fromS)
 	}
-	return objS, nil
+	return fromS, nil
 }
 
-func (fr *FuncResolver) resolveProduction(body listener.Production, objS *Service) (*Service, error) {
+func (fr *FuncResolver) resolveProduction(body listener.Production, fromS *Service) (*Service, error) {
 	services := []Service{}
 	prodName := ""
 	for _, productBody := range body {
-		s, err := fr.resolveBody(productBody, objS)
+		s, err := fr.resolveBody(productBody, fromS)
 		if err != nil {
 			return nil, err
 		}
@@ -123,10 +123,10 @@ func (fr *FuncResolver) resolveProduction(body listener.Production, objS *Servic
 	return &s, nil
 }
 
-func (fr *FuncResolver) addDependency(to, from Service) error {
+func (fr *FuncResolver) addDependency(fromS, toS Service) error {
 	fr.Dependencies = append(fr.Dependencies, Dependency{
-		From: from.UniqueName,
-		To:   to.UniqueName,
+		From: fromS.UniqueName,
+		To:   toS.UniqueName,
 	})
 	return nil
 }
