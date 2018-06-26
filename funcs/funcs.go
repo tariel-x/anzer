@@ -84,18 +84,37 @@ func (fr *FuncResolver) resolveBody(body listener.FuncBody, objS *Service) (*Ser
 
 func (fr *FuncResolver) resolveProduction(body listener.Production, objS *Service) (*Service, error) {
 	services := []Service{}
+	prodName := ""
 	for _, productBody := range body {
 		s, err := fr.resolveBody(productBody, objS)
 		if err != nil {
 			return nil, err
 		}
 		services = append(services, *s)
+		prodName = prodName + "_" + s.Name
+		if objS != nil {
+			fr.addDependency(*objS, *s)
+		}
 	}
 
-	// here is need to create production service and connect it with slice of returned services
-	// return production service struct
+	serviceSet, exists := fr.Services[prodName]
+	if !exists {
+		serviceSet = ServiceSet{}
+		fr.Services[prodName] = serviceSet
+	}
+	num := len(serviceSet)
 
-	return nil, nil
+	s := Service{
+		Name:  prodName,
+		Type:  TypeProduction,
+		Index: num + 1,
+	}
+
+	for _, prodService := range services {
+		fr.addDependency(prodService, s)
+	}
+
+	return &s, nil
 }
 
 func (fr *FuncResolver) addDependency(from, to Service) error {
