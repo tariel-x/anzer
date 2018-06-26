@@ -47,34 +47,34 @@ func (fr *FuncResolver) resolveFunc(name string) error {
 	return err
 }
 
-func (fr *FuncResolver) resoveDefinition(def listener.FuncDef, fromS *Service) (*Service, error) {
+func (fr *FuncResolver) resoveDefinition(def listener.FuncDef, toS *Service) (*Service, error) {
 	if def.Body == nil {
-		toS, err := fr.createLambda(def.Name)
+		fromS, err := fr.createLambda(def.Name)
 		if err != nil {
 			return nil, err
 		}
-		if fromS != nil {
+		if toS != nil {
 			fr.addDependency(*fromS, *toS)
 		}
 
-		return toS, err
+		return fromS, err
 	} else {
-		return fr.resolveBody(*def.Body, fromS)
+		return fr.resolveBody(*def.Body, toS)
 	}
 }
 
-func (fr *FuncResolver) resolveBody(body listener.FuncBody, fromS *Service) (*Service, error) {
+func (fr *FuncResolver) resolveBody(body listener.FuncBody, toS *Service) (*Service, error) {
 	var err error
 	if body.ProductEls != nil {
 		// if production
-		fromS, err = fr.resolveProduction(body.ProductEls, fromS)
+		toS, err = fr.resolveProduction(body.ProductEls, toS)
 		if err != nil {
 			return nil, err
 		}
 	} else if body.Ref != nil {
 		// if reference to another
 		if def, exists := fr.RawFuncs[*body.Ref]; exists {
-			fromS, err = fr.resoveDefinition(def, fromS)
+			toS, err = fr.resoveDefinition(def, toS)
 			if err != nil {
 				return nil, err
 			}
@@ -83,16 +83,16 @@ func (fr *FuncResolver) resolveBody(body listener.FuncBody, fromS *Service) (*Se
 
 	// process next composition
 	if body.ComposeTo != nil {
-		return fr.resolveBody(*body.ComposeTo, fromS)
+		return fr.resolveBody(*body.ComposeTo, toS)
 	}
-	return fromS, nil
+	return toS, nil
 }
 
-func (fr *FuncResolver) resolveProduction(body listener.Production, fromS *Service) (*Service, error) {
+func (fr *FuncResolver) resolveProduction(body listener.Production, toS *Service) (*Service, error) {
 	services := []Service{}
 	prodName := ""
 	for _, productBody := range body {
-		s, err := fr.resolveBody(productBody, fromS)
+		s, err := fr.resolveBody(productBody, toS)
 		if err != nil {
 			return nil, err
 		}
