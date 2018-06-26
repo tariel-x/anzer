@@ -19,12 +19,13 @@ type ServiceSet map[int]Service
 type Dependencies []Dependency
 
 type Service struct {
-	InType  *types.JsonSchema `json:",omitempty"`
-	OutType *types.JsonSchema `json:",omitempty"`
-	Index   int
-	Type    ServiceType
-	Name    string
-	Config  struct {
+	InType     *types.JsonSchema `json:",omitempty"`
+	OutType    *types.JsonSchema `json:",omitempty"`
+	Index      int
+	Type       ServiceType
+	Name       string
+	UniqueName string
+	Config     struct {
 		EnvIn  string
 		EnvOut string
 		Envs   map[string]string
@@ -32,6 +33,6 @@ type Service struct {
 }
 
 type Dependency struct {
-	From Service
-	To   Service
+	From string
+	To   string
 }

@@ -98,9 +98,6 @@ func (fr *FuncResolver) resolveProduction(body listener.Production, objS *Servic
 		}
 		services = append(services, *s)
 		prodName = prodName + "_" + s.Name
-		if objS != nil {
-			fr.addDependency(*objS, *s)
-		}
 	}
 
 	serviceSet, exists := fr.Services[prodName]
@@ -111,10 +108,13 @@ func (fr *FuncResolver) resolveProduction(body listener.Production, objS *Servic
 	num := len(serviceSet)
 
 	s := Service{
-		Name:  prodName,
-		Type:  TypeProduction,
-		Index: num + 1,
+		Name:       prodName,
+		Type:       TypeProduction,
+		Index:      num,
+		UniqueName: fmt.Sprintf("%s.%d", prodName, num),
 	}
+
+	fr.Services[prodName][num] = s
 
 	for _, prodService := range services {
 		fr.addDependency(prodService, s)
@@ -123,10 +123,10 @@ func (fr *FuncResolver) resolveProduction(body listener.Production, objS *Servic
 	return &s, nil
 }
 
-func (fr *FuncResolver) addDependency(from, to Service) error {
+func (fr *FuncResolver) addDependency(to, from Service) error {
 	fr.Dependencies = append(fr.Dependencies, Dependency{
-		From: from,
-		To:   to,
+		From: from.UniqueName,
+		To:   to.UniqueName,
 	})
 	return nil
 }
@@ -151,11 +151,12 @@ func (fr *FuncResolver) createLambda(name string) (*Service, error) {
 		num := len(serviceSet)
 
 		s := Service{
-			InType:  inType,
-			OutType: outType,
-			Name:    def.Name,
-			Index:   num,
-			Type:    TypeLambda,
+			InType:     inType,
+			OutType:    outType,
+			Name:       def.Name,
+			Index:      num,
+			UniqueName: fmt.Sprintf("%s.%d", def.Name, num),
+			Type:       TypeLambda,
 		}
 
 		fr.Services[def.Name][num] = s
