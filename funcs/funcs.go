@@ -41,7 +41,7 @@ func (fr *FuncResolver) ResolveAll() (*SystemGraph, error) {
 func (fr *FuncResolver) resolveFunc(name string) error {
 	def, exists := fr.RawFuncs[name]
 	if !exists {
-		return fmt.Errorf("No main func in raw funcs list")
+		return fmt.Errorf("No func %q in raw funcs list", name)
 	}
 	_, err := fr.resoveDefinition(def, nil)
 	return err
@@ -53,10 +53,6 @@ func (fr *FuncResolver) resoveDefinition(def listener.FuncDef, toS *Service) (*S
 		if err != nil {
 			return nil, err
 		}
-		if toS != nil {
-			fr.addDependency(*fromS, *toS)
-		}
-
 		return fromS, err
 	} else {
 		return fr.resolveBody(*def.Body, toS)
@@ -83,7 +79,13 @@ func (fr *FuncResolver) resolveBody(body listener.FuncBody, toS *Service) (*Serv
 
 	// process next composition
 	if body.ComposeTo != nil {
-		return fr.resolveBody(*body.ComposeTo, toS)
+		fromS, err := fr.resolveBody(*body.ComposeTo, toS)
+		if err != nil {
+			return nil, err
+		}
+		if toS != nil {
+			fr.addDependency(*fromS, *toS)
+		}
 	}
 	return toS, nil
 }
