@@ -39,8 +39,12 @@ func main() {
 	if err != nil {
 		fmt.Printf("funcs resolving error: %s\n", err)
 	}
-	fmt.Printf("services: %v\n", sysgraph.Services)
-	fmt.Printf("dependencies: %v\n", sysgraph.Dependencies)
+
+	jsonServs, _ := json.Marshal(sysgraph.Services)
+	jsonDeps, _ := json.Marshal(sysgraph.Dependencies)
+
+	fmt.Printf("services: %s\n\n", jsonServs)
+	fmt.Printf("dependencies: %s\n", jsonDeps)
 }
 
 func readInput(fileName string) (listener.Types, listener.Funcs, error) {
