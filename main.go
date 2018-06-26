@@ -35,7 +35,12 @@ func main() {
 		displayType(name, td)
 	}
 
-	funcs.Resolve(rawFuncs, types)
+	sysgraph, err := funcs.Resolve(rawFuncs, types)
+	if err != nil {
+		fmt.Printf("funcs resolving error: %s\n", err)
+	}
+	fmt.Printf("services: %v\n", sysgraph.Services)
+	fmt.Printf("dependencies: %v\n", sysgraph.Dependencies)
 }
 
 func readInput(fileName string) (listener.Types, listener.Funcs, error) {

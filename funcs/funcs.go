@@ -27,9 +27,15 @@ func Resolve(funcs listener.Funcs, types types.Types) (*SystemGraph, error) {
 }
 
 func (fr *FuncResolver) ResolveAll() (*SystemGraph, error) {
-	err := fr.resolveFunc("main")
-	// create from services and dependencies system graph
-	return nil, err
+	if err := fr.resolveFunc("main"); err != nil {
+		return nil, err
+	}
+
+	g := SystemGraph{
+		Services:     fr.Services,
+		Dependencies: fr.Dependencies,
+	}
+	return &g, nil
 }
 
 func (fr *FuncResolver) resolveFunc(name string) error {
@@ -79,7 +85,7 @@ func (fr *FuncResolver) resolveBody(body listener.FuncBody, objS *Service) (*Ser
 	if body.ComposeTo != nil {
 		return fr.resolveBody(*body.ComposeTo, objS)
 	}
-	return nil, nil
+	return nil, fmt.Errorf("No candidate to resolve function\n")
 }
 
 func (fr *FuncResolver) resolveProduction(body listener.Production, objS *Service) (*Service, error) {
