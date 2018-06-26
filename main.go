@@ -35,7 +35,12 @@ func main() {
 		displayType(name, td)
 	}
 
-	funcs.Resolve(rawFuncs, types)
+	sysgraph, err := funcs.Resolve(rawFuncs, types)
+	if err != nil {
+		fmt.Printf("funcs resolving error: %s\n", err)
+	}
+
+	printOutput(*sysgraph)
 }
 
 func readInput(fileName string) (listener.Types, listener.Funcs, error) {
@@ -43,7 +48,7 @@ func readInput(fileName string) (listener.Types, listener.Funcs, error) {
 	lexer := parser.NewAnzerLexer(input)
 	stream := antlr.NewCommonTokenStream(lexer, 0)
 	p := parser.NewAnzerParser(stream)
-	p.AddErrorListener(antlr.NewDiagnosticErrorListener(true))
+	//p.AddErrorListener(antlr.NewDiagnosticErrorListener(true))
 	p.BuildParseTrees = true
 	tree := p.System()
 	listener := listener.NewListener()
@@ -71,6 +76,11 @@ func displayType(name string, td types.JsonSchema) {
 	typeStr, err := json.Marshal(td)
 	die(err)
 	fmt.Printf("%s: %s\n\n", name, typeStr)
+}
+
+func printOutput(system funcs.SystemGraph) {
+	jsonSystem, _ := json.Marshal(system)
+	fmt.Printf("System:\n\n%s\n", jsonSystem)
 }
 
 func die(err error) {

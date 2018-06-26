@@ -2,16 +2,18 @@ package funcs
 
 import (
 	"fmt"
-	"strings"
+	_ "strings"
 
 	"github.com/tariel-x/anzer/listener"
 	"github.com/tariel-x/anzer/types"
 )
 
 type FuncResolver struct {
-	RawFuncs listener.Funcs
-	Types    types.Types
-	Services Services
+	RawFuncs     listener.Funcs
+	Types        types.Types
+	Services     Services
+	Dependencies Dependencies
+	LastService  *Service
 }
 
 func Resolve(funcs listener.Funcs, types types.Types) (*SystemGraph, error) {
@@ -25,98 +27,125 @@ func Resolve(funcs listener.Funcs, types types.Types) (*SystemGraph, error) {
 }
 
 func (fr *FuncResolver) ResolveAll() (*SystemGraph, error) {
-	rawDef, exists := fr.RawFuncs["main"]
-	if !exists {
-		return nil, fmt.Errorf("No main func in raw funcs list")
-	}
-
-	_, err := fr.resolveByDefName(rawDef.Name)
-
-	if err != nil {
+	if err := fr.resolveFunc("main"); err != nil {
 		return nil, err
 	}
 
-	return nil, nil
+	g := SystemGraph{
+		Services:     fr.Services,
+		Dependencies: fr.Dependencies,
+	}
+	return &g, nil
 }
 
-func (fr *FuncResolver) resolveByDefName(name string) ([]Service, error) {
+func (fr *FuncResolver) resolveFunc(name string) error {
 	def, exists := fr.RawFuncs[name]
 	if !exists {
-		return nil, fmt.Errorf("No func with name %q", name)
+		return fmt.Errorf("No func %q in raw funcs list", name)
 	}
+	_, err := fr.resoveDefinition(def, nil)
+	return err
+}
 
-	services := []Service{}
-
-	if fr.isLambda(name) {
-		fmt.Printf("%s: New empty func found, create lambda\n", name)
-		l, err := fr.createLambda(name)
+func (fr *FuncResolver) resoveDefinition(def listener.FuncDef, toS *Service) (*Service, error) {
+	if def.Body == nil {
+		fromS, err := fr.createLambda(def.Name)
 		if err != nil {
 			return nil, err
 		}
-		services = append(services, *l)
+		return fromS, err
 	} else {
-		if def.Body.Ref == nil && len(def.Body.ProductEls) == 0 {
-			return nil, fmt.Errorf("Ref func body has no name")
-		}
-
-		if len(def.Body.ProductEls) > 0 {
-			return fr.resolveProduction(*def.Body)
-		}
-
-		refDef, exists := fr.RawFuncs[*def.Body.Ref]
-		if !exists {
-			return nil, fmt.Errorf("No such referenced func %q in raw funcs list", *def.Body.Ref)
-		}
-
-		appended, err := fr.resolveByDefName(refDef.Name)
-		if err != nil {
-			return nil, err
-		}
-
-		services = append(services, appended...)
+		return fr.resolveBody(*def.Body, toS)
 	}
-
-	if def.Body != nil && def.Body.ComposeTo != nil {
-		appended, err := fr.resolveNextComposition(*def.Body.ComposeTo)
-		if err != nil {
-			return nil, err
-		}
-
-		services = append(services, appended...)
-	}
-
-	return services, nil
 }
 
-func (fr *FuncResolver) resolveNextComposition(body listener.FuncBody) ([]Service, error) {
+func (fr *FuncResolver) resolveBody(body listener.FuncBody, toS *Service) (*Service, error) {
 	var err error
-	appended := []Service{}
-	if body.Ref != nil {
-		fmt.Printf("%s: New composing func found\n", *body.Ref)
-		appended, err = fr.resolveComposed(*body.Ref)
+	if body.ProductEls != nil {
+		// if production
+		toS, err = fr.resolveProduction(body.ProductEls, toS)
 		if err != nil {
 			return nil, err
 		}
-	} else if len(body.ProductEls) > 0 {
-		fmt.Printf("New composing product func found\n")
-		appended, err = fr.resolveProduction(body)
-		if err != nil {
-			return nil, err
+	} else if body.Ref != nil {
+		// if reference to another
+		if def, exists := fr.RawFuncs[*body.Ref]; exists {
+			toS, err = fr.resoveDefinition(def, toS)
+			if err != nil {
+				return nil, err
+			}
 		}
 	}
 
-	return appended, nil
+	// process next composition
+	if body.ComposeTo != nil {
+		fromS, err := fr.resolveBody(*body.ComposeTo, toS)
+		if err != nil {
+			return nil, err
+		}
+		if toS != nil {
+			fr.addDependency(*fromS, *toS)
+		}
+	}
+	return toS, nil
 }
 
-func (fr *FuncResolver) isLambda(name string) bool {
-	def, exists := fr.RawFuncs[name]
+func (fr *FuncResolver) resolveProduction(body listener.Production, toS *Service) (*Service, error) {
+	services := []Service{}
+	prodName := ""
+	for _, productBody := range body {
+		s, err := fr.resolveBody(productBody, toS)
+		if err != nil {
+			return nil, err
+		}
+		services = append(services, *s)
+		prodName = prodName + "_" + s.Name
+	}
+
+	serviceSet, exists := fr.Services[prodName]
 	if !exists {
-		return false
+		serviceSet = ServiceSet{}
+		fr.Services[prodName] = serviceSet
 	}
-	if def.Body != nil {
-		return false
+	num := len(serviceSet)
+
+	s := Service{
+		Name:         prodName,
+		Type:         TypeProduction,
+		Index:        num,
+		UniqueName:   fmt.Sprintf("%s.%d", prodName, num),
+		ProductionOf: services,
 	}
-	return true
+
+	fr.Services[prodName][num] = s
+
+	for _, prodService := range services {
+		fr.Dependencies = append(fr.Dependencies, Dependency{
+			From: prodService.UniqueName,
+			To:   s.UniqueName,
+		})
+	}
+
+	return &s, nil
+}
+
+func (fr *FuncResolver) addDependency(fromS, toS Service) error {
+
+	if toS.Type == TypeLambda {
+		fr.Dependencies = append(fr.Dependencies, Dependency{
+			From: fromS.UniqueName,
+			To:   toS.UniqueName,
+		})
+	} else if toS.Type == TypeProduction {
+		for _, prodService := range toS.ProductionOf {
+			fr.Dependencies = append(fr.Dependencies, Dependency{
+				From: fromS.UniqueName,
+				To:   prodService.UniqueName,
+			})
+		}
+	}
+
+	return nil
 }
 
 func (fr *FuncResolver) createLambda(name string) (*Service, error) {
@@ -139,11 +168,12 @@ func (fr *FuncResolver) createLambda(name string) (*Service, error) {
 		num := len(serviceSet)
 
 		s := Service{
-			InType:  *inType,
-			OutType: *outType,
-			Name:    def.Name,
-			Index:   num,
-			Type:    TypeLambda,
+			InType:     inType,
+			OutType:    outType,
+			Name:       def.Name,
+			Index:      num,
+			UniqueName: fmt.Sprintf("%s.%d", def.Name, num),
+			Type:       TypeLambda,
 		}
 
 		fr.Services[def.Name][num] = s
@@ -154,76 +184,13 @@ func (fr *FuncResolver) createLambda(name string) (*Service, error) {
 	return nil, fmt.Errorf("No func with name %q", name)
 }
 
-func (fr *FuncResolver) resolveComposed(name string) ([]Service, error) {
-
-	def, exists := fr.RawFuncs[name]
-	if !exists {
-		return nil, fmt.Errorf("No func with name %q", name)
-	}
-
-	if def.Body == nil {
-		return nil, fmt.Errorf("Func %q might to be lambda, not composed", name)
-	}
-
-	if def.Body.Ref == nil && len(def.Body.ProductEls) == 0 {
-		return nil, fmt.Errorf("Ref func body has no name")
-	}
-
-	if len(def.Body.ProductEls) > 0 {
-		return fr.resolveProduction(*def.Body)
-	}
-
-	refDef, exists := fr.RawFuncs[*def.Body.Ref]
-	if !exists {
-		return nil, fmt.Errorf("No such referenced func %q in raw funcs list", *def.Body.Ref)
-	}
-
-	resolved, err := fr.resolveByDefName(refDef.Name)
-	if err != nil {
-		return nil, err
-	}
-	return resolved, nil
-}
-
-func (fr *FuncResolver) resolveProduction(body listener.FuncBody) ([]Service, error) {
-	fmt.Printf("%v: Product func\n", body.Ref)
-	services := []Service{}
-	names := []string{}
-	if body.ProductEls != nil {
-		for _, product := range body.ProductEls {
-			if product.Ref == nil {
-				return nil, fmt.Errorf("One func of product has no reference name")
-			}
-			productItem, err := fr.resolveByDefName(*product.Ref)
-			names = append(names, *product.Ref)
-			if err != nil {
-				return nil, err
-			}
-			services = append(services, productItem...)
-		}
-	}
-	service, err := fr.createProduction(names)
-	if err != nil {
-		return nil, err
-	}
-	services = append(services, *service)
-	return services, nil
-}
-
-func (fr *FuncResolver) createProduction(names []string) (*Service, error) {
-	name := strings.Join(names, "_")
-	s := Service{
-		Name:  name,
-		Index: 0,
-		Type:  TypeProduction,
-	}
-	return &s, nil
-}
-
 func (fr *FuncResolver) getType(name string) (*types.JsonSchema, error) {
+	if name == "_" {
+		return nil, nil
+	}
 	typeDef, exists := fr.Types[name]
 	if !exists {
-		return nil, fmt.Errorf("No such type %q in types list")
+		return nil, fmt.Errorf("No such type %q in types list", name)
 	}
 	return &typeDef, nil
 }
