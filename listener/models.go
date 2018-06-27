@@ -23,10 +23,17 @@ func NewBaseType(Type string) *BaseType {
 }
 
 type FuncDef struct {
-	Name string
-	Arg  string
-	Ret  string
-	Body *FuncBody
+	Name   string
+	Arg    string
+	Ret    string
+	Body   *FuncBody
+	Params *FuncParams
+}
+
+type FuncParams struct {
+	EnvIn  string
+	EnvOut string
+	Envs   map[string]string
 }
 
 type FuncBody struct {

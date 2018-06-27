@@ -1,6 +1,9 @@
 package listener
 
 import (
+	"encoding/json"
+	"fmt"
+
 	"github.com/antlr/antlr4/runtime/Go/antlr"
 	"github.com/tariel-x/anzer/parser"
 )
@@ -51,7 +54,22 @@ func (l *Listener) EnterFuncSig(ctx *parser.FuncSigContext) {
 	name := ctx.FUNC_NAME_ID().GetText()
 	arg := ctx.DataName(0).GetText()
 	ret := ctx.DataName(1).GetText()
-	l.Funcs[name] = NewFunc(name, arg, ret)
+	function := NewFunc(name, arg, ret)
+	if ctx.FuncParams() != nil {
+		params, err := l.getFuncParams(ctx.FuncParams())
+		if err != nil {
+			fmt.Printf("Cann not parse function %q params: %q", name, err)
+		}
+		function.Params = params
+	}
+	l.Funcs[name] = function
+}
+
+func (l *Listener) getFuncParams(ctx parser.IFuncParamsContext) (*FuncParams, error) {
+	raw := ctx.GetText()
+	params := &FuncParams{}
+	err := json.Unmarshal([]byte(raw), params)
+	return params, err
 }
 
 func (l *Listener) EnterFuncDef(ctx *parser.FuncDefContext) {
