@@ -20,6 +20,7 @@ func main() {
 
 	for name, t := range rawFuncs {
 		fmt.Printf("%s :: %s -> %s\n", name, t.Arg, t.Ret)
+		fmt.Printf("%s params: %v\n", name, t.Params)
 		if t.Body != nil {
 			displayFunc(*t.Body)
 		}

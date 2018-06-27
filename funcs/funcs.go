@@ -174,6 +174,7 @@ func (fr *FuncResolver) createLambda(name string) (*Service, error) {
 			Index:      num,
 			UniqueName: fmt.Sprintf("%s.%d", def.Name, num),
 			Type:       TypeLambda,
+			Config:     *def.Params,
 		}
 
 		fr.Services[def.Name][num] = s
