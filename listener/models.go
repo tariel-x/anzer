@@ -31,9 +31,9 @@ type FuncDef struct {
 }
 
 type FuncParams struct {
-	EnvIn  string
-	EnvOut string
-	Envs   map[string]string
+	EnvIn  string            `json:"env_input"`
+	EnvOut string            `json:"env_output"`
+	Envs   map[string]string `json:"env"`
 }
 
 type FuncBody struct {

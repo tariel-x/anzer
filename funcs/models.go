@@ -26,11 +26,13 @@ type Service struct {
 	Name         string
 	UniqueName   string
 	ProductionOf []Service `json:"-"`
-	Config       struct {
-		EnvIn  string
-		EnvOut string
-		Envs   map[string]string
-	}
+	Config       Config
+}
+
+type Config struct {
+	EnvIn  string
+	EnvOut string
+	Envs   map[string]string
 }
 
 type Dependency struct {

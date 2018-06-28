@@ -58,7 +58,7 @@ func (l *Listener) EnterFuncSig(ctx *parser.FuncSigContext) {
 	if ctx.FuncParams() != nil {
 		params, err := l.getFuncParams(ctx.FuncParams())
 		if err != nil {
-			fmt.Printf("Cann not parse function %q params: %q", name, err)
+			fmt.Printf("Can not parse function %q params: %q", name, err)
 		}
 		function.Params = params
 	}
