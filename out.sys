@@ -1,0 +1,99 @@
+{
+    "Services": {
+        "_fName_lName": {
+            "0": {
+                "Index": 0,
+                "Type": "production",
+                "Name": "_fName_lName",
+                "UniqueName": "_fName_lName.0",
+                "Config": {
+                    "EnvIn": "",
+                    "EnvOut": "",
+                    "Envs": null
+                }
+            }
+        },
+        "fName": {
+            "0": {
+                "Index": 0,
+                "Type": "lambda",
+                "Name": "fName",
+                "UniqueName": "fName.0",
+                "Config": {
+                    "EnvIn": "in",
+                    "EnvOut": "out",
+                    "Envs": {
+                        "abc": "111"
+                    }
+                }
+            }
+        },
+        "init": {
+            "0": {
+                "Index": 0,
+                "Type": "lambda",
+                "Name": "init",
+                "UniqueName": "init.0",
+                "Config": {
+                    "EnvIn": "in",
+                    "EnvOut": "out",
+                    "Envs": {
+                        "abc": "111"
+                    }
+                }
+            }
+        },
+        "lName": {
+            "0": {
+                "Index": 0,
+                "Type": "lambda",
+                "Name": "lName",
+                "UniqueName": "lName.0",
+                "Config": {
+                    "EnvIn": "in",
+                    "EnvOut": "out",
+                    "Envs": {
+                        "abc": "111"
+                    }
+                }
+            }
+        },
+        "userAction": {
+            "0": {
+                "Index": 0,
+                "Type": "lambda",
+                "Name": "userAction",
+                "UniqueName": "userAction.0",
+                "Config": {
+                    "EnvIn": "in",
+                    "EnvOut": "out",
+                    "Envs": {
+                        "abc": "111"
+                    }
+                }
+            }
+        }
+    },
+    "Dependencies": [
+        {
+            "From": "fName.0",
+            "To": "_fName_lName.0"
+        },
+        {
+            "From": "lName.0",
+            "To": "_fName_lName.0"
+        },
+        {
+            "From": "init.0",
+            "To": "fName.0"
+        },
+        {
+            "From": "init.0",
+            "To": "lName.0"
+        },
+        {
+            "From": "_fName_lName.0",
+            "To": "userAction.0"
+        }
+    ]
+}
