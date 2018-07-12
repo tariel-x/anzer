@@ -53,7 +53,7 @@ init :: _ -> SOURCE {
     "env_input": "in",
     "env_output": "out",
     "env": {
-        "abc": 111
+        "abc": "111"
     }
 }
 
@@ -61,7 +61,7 @@ fName :: SOURCE -> TYPE1 {
     "env_input": "in",
     "env_output": "out",
     "env": {
-        "abc": 111
+        "abc": "111"
     }
 }
 
@@ -69,7 +69,7 @@ lName :: SOURCE -> TYPE2 {
     "env_input": "in",
     "env_output": "out",
     "env": {
-        "abc": 111
+        "abc": "111"
     }
 }
 
@@ -77,7 +77,7 @@ userAction :: ALIAS -> RESULT {
     "env_input": "in",
     "env_output": "out",
     "env": {
-        "abc": 111
+        "abc": "111"
     }
 }
 

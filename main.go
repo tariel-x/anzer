@@ -3,37 +3,42 @@ package main
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/antlr/antlr4/runtime/Go/antlr"
+	"os"
+
 	"github.com/tariel-x/anzer/funcs"
 	"github.com/tariel-x/anzer/listener"
 	"github.com/tariel-x/anzer/parser"
 	"github.com/tariel-x/anzer/types"
 
-	"os"
+	"github.com/antlr/antlr4/runtime/Go/antlr"
+	"github.com/fatih/color"
+)
+
+var (
+	Debug = false
 )
 
 func main() {
+	if len(os.Args) < 3 {
+		fmt.Printf("Specify input and output or -d for debug\n")
+		return
+	}
+
+	if os.Args[2] == "-d" {
+		Debug = true
+	}
+
 	rawTypes, rawFuncs, err := readInput(os.Args[1])
 	die(err)
 
-	fmt.Println("-----------------")
-
-	for name, t := range rawFuncs {
-		fmt.Printf("%s :: %s -> %s\n", name, t.Arg, t.Ret)
-		fmt.Printf("%s params: %v\n", name, t.Params)
-		if t.Body != nil {
-			displayFunc(*t.Body)
-		}
-		fmt.Printf("\n")
+	if Debug {
+		displayFuncs(rawFuncs)
 	}
-
-	fmt.Println("-----------------")
-
 	types, err := types.Resolve(rawTypes)
 	die(err)
 
-	for name, td := range types {
-		displayType(name, td)
+	if Debug {
+		displayTypes(types)
 	}
 
 	sysgraph, err := funcs.Resolve(rawFuncs, types)
@@ -41,7 +46,9 @@ func main() {
 		fmt.Printf("funcs resolving error: %s\n", err)
 	}
 
-	printOutput(*sysgraph)
+	if Debug {
+		printOutput(*sysgraph)
+	}
 }
 
 func readInput(fileName string) (listener.Types, listener.Funcs, error) {
@@ -57,20 +64,43 @@ func readInput(fileName string) (listener.Types, listener.Funcs, error) {
 	return listener.Types, listener.Funcs, nil
 }
 
-func displayFunc(fd listener.FuncBody) {
-	if fd.Ref != nil {
-		fmt.Printf(" %s", *fd.Ref)
-		if fd.ComposeTo != nil {
-			displayFunc(*fd.ComposeTo)
+func displayFuncs(fbs listener.Funcs) {
+	color.Green("RAW FUNCS:\n\n")
+
+	for name, t := range fbs {
+		fmt.Printf("%s :: %s -> %s\n", name, t.Arg, t.Ret)
+		fmt.Printf("%s params: %v\n", name, t.Params)
+		if t.Body != nil {
+			displayFunc(*t.Body)
 		}
-	} else if fd.ProductEls != nil {
+		fmt.Printf("\n")
+	}
+
+	color.Green("END RAW FUNCS\n\n\n")
+}
+
+func displayFunc(fb listener.FuncBody) {
+	if fb.Ref != nil {
+		fmt.Printf(" %s", *fb.Ref)
+		if fb.ComposeTo != nil {
+			displayFunc(*fb.ComposeTo)
+		}
+	} else if fb.ProductEls != nil {
 		fmt.Print(" <")
-		for _, childFd := range fd.ProductEls {
+		for _, childFd := range fb.ProductEls {
 			fmt.Print(",")
 			displayFunc(childFd)
 		}
 		fmt.Print(">")
 	}
+}
+
+func displayTypes(types types.Types) {
+	color.Green("TYPES:\n\n")
+	for name, td := range types {
+		displayType(name, td)
+	}
+	color.Green("END TYPES\n\n\n")
 }
 
 func displayType(name string, td types.JsonSchema) {
