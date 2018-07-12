@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"io/ioutil"
 	"os"
 
 	"github.com/tariel-x/anzer/funcs"
@@ -48,6 +49,8 @@ func main() {
 
 	if Debug {
 		printOutput(*sysgraph)
+	} else {
+		writeOutput(*sysgraph, os.Args[2])
 	}
 }
 
@@ -112,6 +115,12 @@ func displayType(name string, td types.JsonSchema) {
 func printOutput(system funcs.SystemGraph) {
 	jsonSystem, _ := json.Marshal(system)
 	fmt.Printf("System:\n\n%s\n", jsonSystem)
+}
+
+func writeOutput(system funcs.SystemGraph, output string) {
+	jsonSystem, _ := json.MarshalIndent(system, "", "    ")
+	err := ioutil.WriteFile(output, jsonSystem, 0644)
+	die(err)
 }
 
 func die(err error) {
