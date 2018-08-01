@@ -4,6 +4,10 @@
             "0": {
                 "Index": 0,
                 "Type": "production",
+                "ProductionTypes": [
+                    "TYPE1",
+                    "TYPE2"
+                ],
                 "Name": "_fName_lName",
                 "UniqueName": "_fName_lName.0",
                 "Config": {

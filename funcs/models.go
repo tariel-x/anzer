@@ -19,13 +19,17 @@ type ServiceSet map[int]Service
 type Dependencies []Dependency
 
 type Service struct {
-	InType       *types.JsonSchema `json:"-"`
-	OutType      *types.JsonSchema `json:"-"`
-	Index        int
-	Type         ServiceType
-	Name         string
-	UniqueName   string
+	InType          *types.JsonSchema `json:"-"`
+	OutType         *types.JsonSchema `json:"-"`
+	Index           int
+	Type            ServiceType
+	ProductionTypes []string `json:",omitempty"`
+	Name            string
+	UniqueName      string
+	//Here is temporary element because type checker and code generator are not ready yet
 	ProductionOf []Service `json:"-"`
+	TypeNameIn   string    `json:"-"`
+	TypeNameOut  string    `json:"-"`
 	Config       Config
 }
 

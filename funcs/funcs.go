@@ -93,12 +93,14 @@ func (fr *FuncResolver) resolveBody(body listener.FuncBody, toS *Service) (*Serv
 func (fr *FuncResolver) resolveProduction(body listener.Production, toS *Service) (*Service, error) {
 	services := []Service{}
 	prodName := ""
+	outTypeNames := []string{}
 	for _, productBody := range body {
 		s, err := fr.resolveBody(productBody, toS)
 		if err != nil {
 			return nil, err
 		}
 		services = append(services, *s)
+		outTypeNames = append(outTypeNames, s.TypeNameOut)
 		prodName = prodName + "_" + s.Name
 	}
 
@@ -110,11 +112,12 @@ func (fr *FuncResolver) resolveProduction(body listener.Production, toS *Service
 	num := len(serviceSet)
 
 	s := Service{
-		Name:         prodName,
-		Type:         TypeProduction,
-		Index:        num,
-		UniqueName:   fmt.Sprintf("%s.%d", prodName, num),
-		ProductionOf: services,
+		Name:            prodName,
+		Type:            TypeProduction,
+		Index:           num,
+		UniqueName:      fmt.Sprintf("%s.%d", prodName, num),
+		ProductionTypes: outTypeNames,
+		ProductionOf:    services,
 	}
 
 	fr.Services[prodName][num] = s
@@ -168,13 +171,15 @@ func (fr *FuncResolver) createLambda(name string) (*Service, error) {
 		num := len(serviceSet)
 
 		s := Service{
-			InType:     inType,
-			OutType:    outType,
-			Name:       def.Name,
-			Index:      num,
-			UniqueName: fmt.Sprintf("%s.%d", def.Name, num),
-			Type:       TypeLambda,
-			Config:     Config(*def.Params),
+			InType:      inType,
+			OutType:     outType,
+			Name:        def.Name,
+			Index:       num,
+			UniqueName:  fmt.Sprintf("%s.%d", def.Name, num),
+			Type:        TypeLambda,
+			TypeNameIn:  def.Arg,
+			TypeNameOut: def.Ret,
+			Config:      Config(*def.Params),
 		}
 
 		fr.Services[def.Name][num] = s
