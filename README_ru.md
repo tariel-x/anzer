@@ -23,7 +23,7 @@
 
 ```
 data SOURCE = {
-    "type": "string"
+  "type": "string"
 }
 ```
 
@@ -35,19 +35,16 @@ data SOURCE = {
 
 ```
 data PERSON = {
-   "title": "Person",
-   "type": "object",
-   "properties": {
-       "firstName": {
-           "type": "string"
-       },
-       "age": {
-           "description": "Age in years",
-           "type": "integer",
-           "minimum": 0
-       }
-   },
-   "required": ["firstName"]
+  "title": "Person",
+  "type": "object",
+  "properties": {
+    "firstName": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "firstName"
+  ]
 }
 ```
 
@@ -59,6 +56,38 @@ data PERSON = {
 data FOO=SOURCE&PERSON
 ```
 
-Такой тип будет эквивалентен описанию...
+Такой тип будет эквивалентен описанию:
+
+```
+data FOO = {
+  "title": "Person",
+  "type": "object",
+  "properties": {
+    "PERSON": {
+      "title": "Person",
+      "type": "object",
+      "properties": {
+        "firstName": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "firstName"
+      ]
+    },
+    "SOURCE": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "PERSON",
+    "SOURCE"
+  ]
+}
+```
+
+В примере видно, что сервису, ждущему произведение `SOURCE` и `PERSON` необходимо сообщение содержащее все данные.
+
+### Anzer и теория категорий
 
 Язык вдохновлён Haskell и так же представляет собой простейшую категорию (см. [теория категорий](https://ru.wikipedia.org/wiki/Теория_категорий)). 
