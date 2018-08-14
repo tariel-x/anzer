@@ -2,6 +2,14 @@
 	"version": 0,
 	"dependencies": [
 		{
+			"importpath": "github.com/antlr/antlr4",
+			"repository": "https://github.com/antlr/antlr4",
+			"vcs": "git",
+			"revision": "7d0787e29ca89b298ecf68db41cdf31f3d9276ab",
+			"branch": "master",
+			"notests": true
+		},
+		{
 			"importpath": "github.com/fatih/color",
 			"repository": "https://github.com/fatih/color",
 			"vcs": "git",
