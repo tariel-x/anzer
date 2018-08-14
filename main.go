@@ -55,7 +55,13 @@ func main() {
 }
 
 func readInput(fileName string) (listener.Types, listener.Funcs, error) {
-	input, _ := antlr.NewFileStream(fileName)
+
+	b, err := ioutil.ReadFile(fileName)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	input := antlr.NewInputStream(string(b))
 	lexer := parser.NewAnzerLexer(input)
 	stream := antlr.NewCommonTokenStream(lexer, 0)
 	p := parser.NewAnzerParser(stream)
