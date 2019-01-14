@@ -1,11 +1,33 @@
 package internal
 
-type Func struct {
-	Name      string
-	SynonymTo Composition
+type Alias struct {
+	Name  string
+	Alias []Composable
 }
 
+func (a Alias) Definiiton() string {
+	return a.Name
+}
 
-type Composition []Func
+type Func struct {
+	Name    string
+	Link    string
+	TypeIn  interface{}
+	TypeOut interface{}
+}
 
-type 
+func (f Func) Definiiton() string {
+	return f.Name
+}
+
+type Application struct {
+	Name string
+}
+
+func (a Application) Definiiton() string {
+	return a.Name
+}
+
+type Composable interface {
+	Definiiton() string
+}
