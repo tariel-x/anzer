@@ -8,14 +8,34 @@ import (
 
 func main() {
 	fmt.Println("Hello")
-	m := internal.Alias{
-		Alias: []internal.Composable{
-			internal.Func{
+	s := internal.Alias{
+		Compose: []internal.Composable{
+			internal.F{
 				Name: "f",
+			},
+			internal.Applied{
+				internal.F{
+					Name: "a",
+				},
+				internal.EitherBind(true),
+				internal.F{
+					Name: "b",
+				},
 			},
 		},
 	}
-	fmt.Printf("%#v\n", m)
+
+	m := internal.Alias{
+		Compose: []internal.Composable{
+			s,
+			internal.F{
+				Name: "abc",
+			},
+		},
+	}
+
+	//fmt.Printf("%#v\n", s)
+	fmt.Println(m.Definition())
 }
 
 func die(err error) {

@@ -1,33 +1,58 @@
 package internal
 
+import (
+	"strings"
+)
+
+type Composable interface {
+	Definition() string
+}
+
+type T interface{}
+
 type Alias struct {
-	Name  string
-	Alias []Composable
+	Name    string
+	Compose []Composable
 }
 
-func (a Alias) Definiiton() string {
-	return a.Name
+func (a Alias) Definition() string {
+	definitions := []string{}
+	l := len(a.Compose) - 1
+	for i := range a.Compose {
+		definitions = append(definitions, a.Compose[l-i].Definition())
+	}
+	return strings.Join(definitions, " . ")
 }
 
-type Func struct {
+type F struct {
 	Name    string
 	Link    string
-	TypeIn  interface{}
-	TypeOut interface{}
+	TypeIn  T
+	TypeOut T
 }
 
-func (f Func) Definiiton() string {
+func (f F) Definition() string {
 	return f.Name
 }
 
-type Application struct {
-	Name string
+type Applied []Composable
+
+func (a Applied) Definition() string {
+	definitions := []string{}
+	for _, f := range a {
+		definitions = append(definitions, f.Definition())
+	}
+	return strings.Join(definitions, " ")
 }
 
-func (a Application) Definiiton() string {
-	return a.Name
+type EitherBind bool
+
+func (e EitherBind) Definition() string {
+	return ">>="
 }
 
-type Composable interface {
-	Definiiton() string
+type EitherReturn bool
+
+func (e EitherReturn) Definition() string {
+	return "return"
 }
