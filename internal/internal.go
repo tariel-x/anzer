@@ -5,6 +5,10 @@ import (
 	"strings"
 )
 
+/*
+return a = b a
+*/
+
 type Composable interface {
 	Definition() string
 	In() T
