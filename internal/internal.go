@@ -5,17 +5,11 @@ import (
 	"strings"
 )
 
-/*
-return a = b a
-*/
-
 type Composable interface {
 	Definition() string
 	In() T
 	Out() T
 }
-
-type T interface{}
 
 type Alias struct {
 	Name    string
@@ -72,6 +66,14 @@ func (a Applied) Definition() string {
 		definitions = append(definitions, f.Definition())
 	}
 	return strings.Join(definitions, " ")
+}
+
+func (a Applied) In() T {
+	return nil
+}
+
+func (a Applied) Out() T {
+	return nil
 }
 
 type EitherBind bool
