@@ -1,14 +1,20 @@
 package internal
 
 import (
+	"errors"
 	"fmt"
 	"strings"
+)
+
+var (
+	errTypeInconsistent = errors.New("types are not consistent")
 )
 
 type Composable interface {
 	Definition() string
 	In() T
 	Out() T
+	Invalid() error
 }
 
 type Alias struct {
@@ -18,9 +24,8 @@ type Alias struct {
 
 func (a Alias) Definition() string {
 	definitions := []string{}
-	l := len(a.Compose) - 1
-	for i := range a.Compose {
-		definitions = append(definitions, a.Compose[l-i].Definition())
+	for _, c := range a.Compose {
+		definitions = append(definitions, c.Definition())
 	}
 	return strings.Join(definitions, " . ")
 }
@@ -37,6 +42,20 @@ func (a Alias) Out() T {
 		panic(fmt.Errorf("Type %s is undefined", a.Name))
 	}
 	return a.Compose[len(a.Compose)-1].Out()
+}
+
+func (a Alias) Invalid() error {
+	if len(a.Compose) <= 1 {
+		return nil
+	}
+	last := a.Compose[0]
+	for _, c := range a.Compose[1:] {
+		if !c.In().Equal(last.Out()) && !c.In().Parent(last.Out()) {
+			return errTypeInconsistent
+		}
+		last = c
+	}
+	return nil
 }
 
 type F struct {
@@ -58,6 +77,10 @@ func (f F) Out() T {
 	return f.TypeOut
 }
 
+func (f F) Invalid() error {
+	return nil
+}
+
 type Applied []Composable
 
 func (a Applied) Definition() string {
@@ -76,6 +99,10 @@ func (a Applied) Out() T {
 	return nil
 }
 
+func (a Applied) Invalid() error {
+	return nil
+}
+
 type EitherBind bool
 
 func (e EitherBind) Definition() string {
@@ -90,6 +117,10 @@ func (e EitherBind) Out() T {
 	return nil
 }
 
+func (e EitherBind) Invalid() error {
+	return nil
+}
+
 type EitherReturn bool
 
 func (e EitherReturn) Definition() string {
@@ -101,5 +132,9 @@ func (e EitherReturn) In() T {
 }
 
 func (e EitherReturn) Out() T {
+	return nil
+}
+
+func (e EitherReturn) Invalid() error {
 	return nil
 }

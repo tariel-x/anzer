@@ -6,7 +6,55 @@ type T interface {
 	Parent(of T) bool
 }
 
+type NothingType struct{}
+
+var (
+	Nothing NothingType = NothingType{}
+)
+
+func (n NothingType) Equal(to T) bool {
+	if _, ok := to.(NothingType); ok {
+		return true
+	}
+	return false
+}
+
+func (n NothingType) Subtype(of T) bool {
+	return false
+}
+
+func (n NothingType) Parent(of T) bool {
+	return false
+}
+
+type AnyType struct{}
+
+var (
+	Any AnyType = AnyType{}
+)
+
+func (a AnyType) Equal(to T) bool {
+	if _, ok := to.(AnyType); ok {
+		return true
+	}
+	return false
+}
+
+func (a AnyType) Subtype(of T) bool {
+	return false
+}
+
+func (a AnyType) Parent(of T) bool {
+	return true
+}
+
 type Basic int
+
+const (
+	TypeString Basic = iota
+	TypeInteger
+	TypeBool
+)
 
 func (b Basic) Equal(to T) bool {
 	switch t := to.(type) {
@@ -24,10 +72,26 @@ func (b Basic) Subtype(of T) bool {
 	return of.Parent(b)
 }
 
+type ConstructorType int
+
+const (
+	ConstructorMaxLength ConstructorType = iota
+	ConstructorMinLength
+	Right
+)
+
 type Constructor struct {
 	Operand  T
-	Type     string
+	Type     ConstructorType
 	Argument interface{}
+}
+
+func Construct(parent T, constructor ConstructorType, argument interface{}) T {
+	return Constructor{
+		Operand:  parent,
+		Type:     constructor,
+		Argument: argument,
+	}
 }
 
 func (c Constructor) Equal(to T) bool {

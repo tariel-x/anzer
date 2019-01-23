@@ -8,14 +8,22 @@ import (
 
 func main() {
 	fmt.Println("Hello")
+
+	fout := internal.TypeString
+	ain := fout
+	aout := internal.Construct(ain, internal.ConstructorMaxLength, 10)
+
 	s := internal.Alias{
 		Compose: []internal.Composable{
 			internal.F{
-				Name: "f",
+				Name:    "f",
+				TypeOut: fout,
 			},
 			internal.Applied{
 				internal.F{
-					Name: "a",
+					Name:    "a",
+					TypeIn:  ain,
+					TypeOut: aout,
 				},
 				internal.EitherBind(true),
 				internal.F{
