@@ -110,11 +110,11 @@ func (e EitherBind) Definition() string {
 }
 
 func (e EitherBind) In() T {
-	return nil
+	return Construct(Any, Right, nil)
 }
 
 func (e EitherBind) Out() T {
-	return nil
+	return Construct(Any, Right, nil)
 }
 
 func (e EitherBind) Invalid() error {
