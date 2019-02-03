@@ -72,6 +72,10 @@ func (b Basic) Subtype(of T) bool {
 	return of.Parent(b)
 }
 
+type Complex struct {
+	Fields map[string]T
+}
+
 type ConstructorType int
 
 const (
@@ -119,8 +123,4 @@ func (c Constructor) Parent(of T) bool {
 
 func (c Constructor) Subtype(of T) bool {
 	return of.Parent(c)
-}
-
-type Complex struct {
-	Fields map[string]T
 }

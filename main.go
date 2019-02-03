@@ -1,7 +1,6 @@
 package main
 
 import (
-	"encoding/json"
 	"fmt"
 
 	"github.com/tariel-x/anzer/internal"
@@ -38,10 +37,6 @@ func main() {
 			s,
 		},
 	}
-
-	out, err := json.MarshalIndent(m, "", "    ")
-	die(err)
-	fmt.Println(string(out))
 
 	//fmt.Printf("%#v\n", s)
 	fmt.Println(m.Definition())
