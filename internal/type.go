@@ -76,6 +76,49 @@ type Complex struct {
 	Fields map[string]T
 }
 
+func (c Complex) Equal(to T) bool {
+	switch t := to.(type) {
+	case Complex:
+		if len(c.Fields) != len(t.Fields) {
+			return false
+		}
+		for n1, f1 := range c.Fields {
+			if f2, ok := t.Fields[n1]; ok {
+				if !f1.Equal(f2) {
+					return false
+				}
+			} else {
+				return false
+			}
+		}
+	default:
+		return false
+	}
+	return true
+}
+
+func (c Complex) Parent(of T) bool {
+	switch t := of.(type) {
+	case Complex:
+		for n1, f1 := range c.Fields {
+			if f2, ok := t.Fields[n1]; ok {
+				if !f1.Parent(f2) && !f1.Equal(f2) {
+					return false
+				}
+			} else {
+				return false
+			}
+		}
+	default:
+		return false
+	}
+	return true
+}
+
+func (c Complex) Subtype(of T) bool {
+	return of.Parent(c)
+}
+
 type ConstructorType int
 
 const (
