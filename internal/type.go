@@ -65,11 +65,11 @@ func (b Basic) Equal(to T) bool {
 }
 
 func (b Basic) Parent(of T) bool {
-	return false
+	return of.Subtype(b)
 }
 
 func (b Basic) Subtype(of T) bool {
-	return of.Parent(b)
+	return false
 }
 
 type Complex struct {
@@ -152,18 +152,23 @@ func (c Constructor) Equal(to T) bool {
 }
 
 func (c Constructor) Parent(of T) bool {
+	return of.Subtype(c)
+}
+
+func (c Constructor) Subtype(of T) bool {
 	switch t := of.(type) {
 	case Constructor:
 		if c.Equal(t) {
 			return false
 		}
+		if c.Equal(t.Operand) || c.Subtype(t.Operand) {
+			return true
+		}
+	default:
+		if c.Operand.Equal(of) {
+			return true
+		}
 	}
-	if c.Operand.Equal(of) {
-		return true
-	}
-	return false
-}
 
-func (c Constructor) Subtype(of T) bool {
-	return of.Parent(c)
+	return false
 }

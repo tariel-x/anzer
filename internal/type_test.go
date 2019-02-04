@@ -108,7 +108,8 @@ func TestComplexSubtype(t *testing.T) {
 		t.Error("t1 <: t2")
 	}
 }
-func TestConstructorEq(t *testing.T) {
+
+func TestConstructorEq1(t *testing.T) {
 	t1 := Construct(TypeString, MaxLength, 10)
 	t2 := Construct(TypeString, MaxLength, 10)
 	if !t1.Equal(t2) {
@@ -116,9 +117,33 @@ func TestConstructorEq(t *testing.T) {
 	}
 }
 
-func TestConstructorNeq(t *testing.T) {
+func TestConstructorEq2(t *testing.T) {
+	t1 := Construct(Construct(TypeString, MaxLength, 10), MinLength, 2)
+	t2 := Construct(Construct(TypeString, MaxLength, 10), MinLength, 2)
+	if !t1.Equal(t2) {
+		t.Error("t1 == t2")
+	}
+}
+
+func TestConstructorNeq1(t *testing.T) {
 	t1 := Construct(TypeString, MaxLength, 10)
 	t2 := Construct(TypeString, MaxLength, 20)
+	if t1.Equal(t2) {
+		t.Error("t1 != t2")
+	}
+}
+
+func TestConstructorNeq2(t *testing.T) {
+	t1 := Construct(Construct(TypeString, MaxLength, 10), MinLength, 2)
+	t2 := Construct(Construct(TypeString, MaxLength, 20), MinLength, 2)
+	if t1.Equal(t2) {
+		t.Error("t1 != t2")
+	}
+}
+
+func TestConstructorNeq3(t *testing.T) {
+	t1 := Construct(Construct(TypeString, MaxLength, 10), MinLength, 2)
+	t2 := Construct(Construct(TypeInteger, MaxLength, 10), MinLength, 2)
 	if t1.Equal(t2) {
 		t.Error("t1 != t2")
 	}
@@ -127,7 +152,7 @@ func TestConstructorNeq(t *testing.T) {
 func TestConstructorParent(t *testing.T) {
 	t1 := TypeString
 	t2 := Construct(TypeString, MaxLength, 20)
-	if t1.Parent(t2) {
+	if !t1.Parent(t2) {
 		t.Error("t1 <: t2")
 	}
 }
@@ -135,7 +160,7 @@ func TestConstructorParent(t *testing.T) {
 func TestConstructorNotparent(t *testing.T) {
 	t1 := Construct(TypeString, MaxLength, 20)
 	t2 := TypeString
-	if !t1.Parent(t2) {
+	if t1.Parent(t2) {
 		t.Error("!(t1 <: t2)")
 	}
 }
