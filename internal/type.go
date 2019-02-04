@@ -65,6 +65,9 @@ func (b Basic) Equal(to T) bool {
 }
 
 func (b Basic) Parent(of T) bool {
+	if of == nil {
+		return false
+	}
 	return of.Subtype(b)
 }
 
@@ -98,6 +101,9 @@ func (c Complex) Equal(to T) bool {
 }
 
 func (c Complex) Parent(of T) bool {
+	if of == nil {
+		return false
+	}
 	return of.Subtype(c)
 }
 
@@ -152,6 +158,9 @@ func (c Constructor) Equal(to T) bool {
 }
 
 func (c Constructor) Parent(of T) bool {
+	if of == nil {
+		return false
+	}
 	return of.Subtype(c)
 }
 

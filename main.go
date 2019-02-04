@@ -1,49 +1,37 @@
 package main
 
 import (
-	"fmt"
+	"log"
+	"os"
 
-	"github.com/tariel-x/anzer/internal"
+	"github.com/tariel-x/anzer/build"
+	"github.com/urfave/cli"
 )
 
 func main() {
-	s := internal.Alias{
-		Name: "composition1",
-		Compose: []internal.Composable{
-			internal.F{
-				Name:    "f",
-				Link:    "github.com/tariel-x/f",
-				TypeIn:  internal.TypeString,
-				TypeOut: internal.Construct(internal.TypeString, internal.MaxLength, 10),
-			},
-			internal.F{
-				Name: "a",
-				Link: "github.com/tariel-x/a",
-			},
-			internal.F{
-				Name: "b",
-				Link: "github.com/tariel-x/b",
+	app := cli.NewApp()
+	app.Name = "Anzer CLI tool"
+	app.Version = "2.0"
+	app.Usage = "generate new functions and build system"
+
+	app.Commands = []cli.Command{
+		{
+			Name:    "build",
+			Aliases: []string{"b"},
+			Usage:   "build anzer project",
+			Action:  build.Build,
+			Flags: []cli.Flag{
+				cli.StringFlag{
+					Name:  "input, i",
+					Usage: "Anzer source file",
+				},
 			},
 		},
 	}
 
-	m := internal.Alias{
-		Name: "compisition2",
-		Compose: []internal.Composable{
-			internal.F{
-				Link: "github.com/tariel-x/abc",
-				Name: "abc",
-			},
-			s,
-		},
-	}
-
-	//fmt.Printf("%#v\n", s)
-	fmt.Println(m.Definition())
-}
-
-func die(err error) {
+	err := app.Run(os.Args)
 	if err != nil {
-		panic(err)
+		log.Fatal(err)
 	}
+
 }
