@@ -14,7 +14,7 @@ func main() {
 				Name:    "f",
 				Link:    "github.com/tariel-x/f",
 				TypeIn:  internal.TypeString,
-				TypeOut: internal.Construct(internal.TypeString, internal.ConstructorMaxLength, 10),
+				TypeOut: internal.Construct(internal.TypeString, internal.MaxLength, 10),
 			},
 			internal.F{
 				Name: "a",
