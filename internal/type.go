@@ -144,7 +144,7 @@ func Construct(parent T, constructor ConstructorType, argument interface{}) T {
 func (c Constructor) Equal(to T) bool {
 	switch t := to.(type) {
 	case Constructor:
-		return c.Operand.Equal(c) &&
+		return c.Operand.Equal(t.Operand) &&
 			c.Argument == t.Argument &&
 			c.Type == t.Type
 	}

@@ -48,12 +48,12 @@ func (a Alias) Invalid() error {
 	if len(a.Compose) <= 1 {
 		return nil
 	}
-	last := a.Compose[0]
+	previous := a.Compose[0]
 	for _, c := range a.Compose[1:] {
-		if !c.In().Equal(last.Out()) && !c.In().Parent(last.Out()) {
+		if !c.In().Equal(previous.Out()) && !c.In().Parent(previous.Out()) {
 			return errTypeInconsistent
 		}
-		last = c
+		previous = c
 	}
 	return nil
 }

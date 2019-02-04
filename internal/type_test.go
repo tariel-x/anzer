@@ -108,3 +108,18 @@ func TestComplexSubtype(t *testing.T) {
 		t.Error("t1 <: t2")
 	}
 }
+func TestConstructorEq(t *testing.T) {
+	t1 := Construct(TypeString, MaxLength, 10)
+	t2 := Construct(TypeString, MaxLength, 10)
+	if !t1.Equal(t2) {
+		t.Error("t1 == t2")
+	}
+}
+
+func TestConstructorNeq(t *testing.T) {
+	t1 := Construct(TypeString, MaxLength, 10)
+	t2 := Construct(TypeString, MaxLength, 20)
+	if t1.Equal(t2) {
+		t.Error("t1 != t2")
+	}
+}
