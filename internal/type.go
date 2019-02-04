@@ -98,6 +98,10 @@ func (c Complex) Equal(to T) bool {
 }
 
 func (c Complex) Parent(of T) bool {
+	return of.Subtype(c)
+}
+
+func (c Complex) Subtype(of T) bool {
 	switch t := of.(type) {
 	case Complex:
 		for n1, f1 := range c.Fields {
@@ -115,15 +119,11 @@ func (c Complex) Parent(of T) bool {
 	return true
 }
 
-func (c Complex) Subtype(of T) bool {
-	return of.Parent(c)
-}
-
 type ConstructorType int
 
 const (
-	ConstructorMaxLength ConstructorType = iota
-	ConstructorMinLength
+	MaxLength ConstructorType = iota
+	MinLength
 	Right
 )
 
