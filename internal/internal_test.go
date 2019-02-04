@@ -73,6 +73,6 @@ func TestAliasInvalid(t *testing.T) {
 	}
 	err := c.Invalid()
 	if err == nil {
-		t.Errorf("c must be invalid, but: %s", err)
+		t.Error("c must be invalid, but err is nil")
 	}
 }

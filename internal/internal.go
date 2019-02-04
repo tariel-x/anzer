@@ -50,6 +50,7 @@ func (a Alias) Invalid() error {
 	}
 	previous := a.Compose[0]
 	for _, c := range a.Compose[1:] {
+		fmt.Printf("Comapre %#v\t%#v\n", previous.Out(), c.In())
 		if !c.In().Equal(previous.Out()) && !c.In().Parent(previous.Out()) {
 			return errTypeInconsistent
 		}

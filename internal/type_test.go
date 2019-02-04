@@ -123,3 +123,19 @@ func TestConstructorNeq(t *testing.T) {
 		t.Error("t1 != t2")
 	}
 }
+
+func TestConstructorParent(t *testing.T) {
+	t1 := TypeString
+	t2 := Construct(TypeString, MaxLength, 20)
+	if t1.Parent(t2) {
+		t.Error("t1 <: t2")
+	}
+}
+
+func TestConstructorNotparent(t *testing.T) {
+	t1 := Construct(TypeString, MaxLength, 20)
+	t2 := TypeString
+	if !t1.Parent(t2) {
+		t.Error("!(t1 <: t2)")
+	}
+}
