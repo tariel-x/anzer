@@ -8,40 +8,40 @@ import (
 )
 
 func Build(c *cli.Context) error {
-	s := internal.Alias{
-		Name: "composition1",
+	compose := internal.Alias{
+		Name: "c",
 		Compose: []internal.Composable{
 			internal.F{
-				Name:    "f",
-				Link:    "github.com/tariel-x/f",
+				Link:    "github.com/tariel-x/anzer-examples/a",
 				TypeIn:  internal.TypeString,
 				TypeOut: internal.Construct(internal.TypeString, internal.MaxLength, 10),
 			},
 			internal.F{
-				Name: "a",
-				Link: "github.com/tariel-x/a",
+				Link:   "github.com/tariel-x/anzer-examples/b",
+				TypeIn: internal.Construct(internal.TypeString, internal.MaxLength, 10),
+				TypeOut: internal.Complex{
+					Fields: map[string]internal.T{
+						"f1": internal.TypeInteger,
+						"f2": internal.TypeString,
+					},
+				},
 			},
 			internal.F{
-				Name: "b",
-				Link: "github.com/tariel-x/b",
+				Link: "github.com/tariel-x/anzer-examples/c",
+				TypeIn: internal.Complex{
+					Fields: map[string]internal.T{
+						"f1": internal.TypeInteger,
+						"f2": internal.TypeString,
+					},
+				},
+				TypeOut: internal.TypeBool,
 			},
 		},
 	}
 
-	m := internal.Alias{
-		Name: "compisition2",
-		Compose: []internal.Composable{
-			internal.F{
-				Link: "github.com/tariel-x/abc",
-				Name: "abc",
-			},
-			s,
-		},
-	}
-
-	if err := m.Invalid(); err != nil {
+	if err := compose.Invalid(); err != nil {
 		return err
 	}
-	fmt.Println(m.Definition())
+	fmt.Println(compose.Definition())
 	return nil
 }

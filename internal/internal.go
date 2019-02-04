@@ -3,6 +3,7 @@ package internal
 import (
 	"errors"
 	"fmt"
+	"path"
 	"strings"
 )
 
@@ -66,7 +67,13 @@ type F struct {
 }
 
 func (f F) Definition() string {
-	return f.Name
+	if f.Name != "" {
+		return f.Name
+	}
+	if f.Link == "" {
+		return ""
+	}
+	return path.Base(f.Link)
 }
 
 func (f F) In() T {
