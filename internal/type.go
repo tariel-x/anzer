@@ -128,31 +128,42 @@ func (c Complex) Subtype(of T) bool {
 type ConstructorType int
 
 const (
-	MaxLength ConstructorType = iota
-	MinLength
-	Right
+	TypeMaxLength ConstructorType = iota
+	TypeMinLength
+	TypeRight
 )
 
 type Constructor struct {
-	Operand  T
-	Type     ConstructorType
-	Argument interface{}
+	Operand   T
+	Type      ConstructorType
+	Arguments []interface{}
 }
 
-func Construct(parent T, constructor ConstructorType, argument interface{}) T {
+func Construct(parent T, constructor ConstructorType, arguments []interface{}) T {
 	return Constructor{
-		Operand:  parent,
-		Type:     constructor,
-		Argument: argument,
+		Operand:   parent,
+		Type:      constructor,
+		Arguments: arguments,
 	}
 }
 
 func (c Constructor) Equal(to T) bool {
 	switch t := to.(type) {
 	case Constructor:
-		return c.Operand.Equal(t.Operand) &&
-			c.Argument == t.Argument &&
-			c.Type == t.Type
+		if !c.Operand.Equal(t.Operand) ||
+			c.Type != t.Type {
+			return false
+		}
+		if len(c.Arguments) != len(t.Arguments) {
+			return false
+		}
+		for i, arg1 := range c.Arguments {
+			if arg1 != t.Arguments[i] {
+				return false
+			}
+		}
+		return true
+
 	}
 	return false
 }
@@ -180,4 +191,16 @@ func (c Constructor) Subtype(of T) bool {
 	}
 
 	return false
+}
+
+func MaxLength(parent T, length int) T {
+	switch t := parent.(type) {
+	case Basic:
+		if t == TypeString {
+			return Construct(parent, TypeMaxLength, []interface{}{length})
+		}
+		return nil
+		//TODO: max length for constructor
+	}
+	return nil
 }
