@@ -194,31 +194,15 @@ func (c Constructor) Subtype(of T) bool {
 }
 
 func MaxLength(parent T, length int) T {
-	switch t := parent.(type) {
-	case Basic:
-		if t == TypeString {
-			return Construct(parent, TypeMaxLength, []interface{}{length})
-		}
-	// TODO: max length for constructor
-	case Constructor:
-		if t.Subtype(TypeString) {
-			return Construct(parent, TypeMaxLength, []interface{}{length})
-		}
+	if parent.Subtype(TypeString) || parent.Equal(TypeString) {
+		return Construct(parent, TypeMaxLength, []interface{}{length})
 	}
 	return nil
 }
 
 func MinLength(parent T, length int) T {
-	switch t := parent.(type) {
-	case Basic:
-		if t == TypeString {
-			return Construct(parent, TypeMinLength, []interface{}{length})
-		}
-	// TODO: max length for constructor
-	case Constructor:
-		if t.Subtype(TypeString) {
-			return Construct(parent, TypeMinLength, []interface{}{length})
-		}
+	if parent.Subtype(TypeString) || parent.Equal(TypeString) {
+		return Construct(parent, TypeMinLength, []interface{}{length})
 	}
 	return nil
 }
