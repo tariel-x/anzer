@@ -3,38 +3,38 @@ package build
 import (
 	"fmt"
 
-	"github.com/tariel-x/anzer/internal"
+	in "github.com/tariel-x/anzer/internal"
 	"github.com/urfave/cli"
 )
 
 func Build(c *cli.Context) error {
-	compose := internal.Alias{
+	compose := in.Alias{
 		Name: "c",
-		Compose: []internal.Composable{
-			internal.F{
+		Compose: []in.Composable{
+			in.F{
 				Link:    "github.com/tariel-x/anzer-examples/a",
-				TypeIn:  internal.TypeString,
-				TypeOut: internal.Construct(internal.TypeString, internal.TypeMaxLength, []interface{}{10}),
+				TypeIn:  in.TypeString,
+				TypeOut: in.MaxLength(in.TypeString, 10),
 			},
-			internal.F{
+			in.F{
 				Link:   "github.com/tariel-x/anzer-examples/b",
-				TypeIn: internal.Construct(internal.TypeString, internal.TypeMaxLength, []interface{}{10}),
-				TypeOut: internal.Complex{
-					Fields: map[string]internal.T{
-						"f1": internal.TypeInteger,
-						"f2": internal.TypeString,
+				TypeIn: in.MaxLength(in.TypeString, 10),
+				TypeOut: in.Complex{
+					Fields: map[string]in.T{
+						"f1": in.TypeInteger,
+						"f2": in.TypeString,
 					},
 				},
 			},
-			internal.F{
+			in.F{
 				Link: "github.com/tariel-x/anzer-examples/c",
-				TypeIn: internal.Complex{
-					Fields: map[string]internal.T{
-						"f1": internal.TypeInteger,
-						"f2": internal.TypeString,
+				TypeIn: in.Complex{
+					Fields: map[string]in.T{
+						"f1": in.TypeInteger,
+						"f2": in.TypeString,
 					},
 				},
-				TypeOut: internal.TypeBool,
+				TypeOut: in.TypeBool,
 			},
 		},
 	}

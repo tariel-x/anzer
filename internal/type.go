@@ -131,6 +131,7 @@ const (
 	TypeMaxLength ConstructorType = iota
 	TypeMinLength
 	TypeRight
+	TypeLeft
 )
 
 type Constructor struct {
@@ -209,4 +210,8 @@ func MinLength(parent T, length int) T {
 
 func Right(parent T) T {
 	return Construct(parent, TypeRight, nil)
+}
+
+func Left(parent T) T {
+	return Construct(parent, TypeLeft, nil)
 }
