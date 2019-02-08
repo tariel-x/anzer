@@ -127,7 +127,7 @@ func TestConstructorEq2(t *testing.T) {
 
 func TestConstructorNeq1(t *testing.T) {
 	t1 := Construct(TypeString, TypeMaxLength, []interface{}{10})
-	t2 := Construct(TypeString, TypeMaxLength, []interface{}{10})
+	t2 := Construct(TypeString, TypeMaxLength, []interface{}{2})
 	if t1.Equal(t2) {
 		t.Error("t1 != t2")
 	}
@@ -135,7 +135,7 @@ func TestConstructorNeq1(t *testing.T) {
 
 func TestConstructorNeq2(t *testing.T) {
 	t1 := Construct(Construct(TypeString, TypeMaxLength, []interface{}{10}), TypeMinLength, []interface{}{2})
-	t2 := Construct(Construct(TypeString, TypeMaxLength, []interface{}{10}), TypeMinLength, []interface{}{2})
+	t2 := Construct(Construct(TypeString, TypeMaxLength, []interface{}{2}), TypeMinLength, []interface{}{2})
 	if t1.Equal(t2) {
 		t.Error("t1 != t2")
 	}
