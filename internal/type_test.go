@@ -100,7 +100,7 @@ func TestComplexSubtype(t *testing.T) {
 	}
 	t2 := Complex{
 		Fields: map[string]T{
-			"a": Construct(TypeString, MaxLength, 10),
+			"a": Construct(TypeString, TypeMaxLength, []interface{}{10}),
 			"b": TypeInteger,
 		},
 	}
@@ -110,40 +110,40 @@ func TestComplexSubtype(t *testing.T) {
 }
 
 func TestConstructorEq1(t *testing.T) {
-	t1 := Construct(TypeString, MaxLength, 10)
-	t2 := Construct(TypeString, MaxLength, 10)
+	t1 := Construct(TypeString, TypeMaxLength, []interface{}{10})
+	t2 := Construct(TypeString, TypeMaxLength, []interface{}{10})
 	if !t1.Equal(t2) {
 		t.Error("t1 == t2")
 	}
 }
 
 func TestConstructorEq2(t *testing.T) {
-	t1 := Construct(Construct(TypeString, MaxLength, 10), MinLength, 2)
-	t2 := Construct(Construct(TypeString, MaxLength, 10), MinLength, 2)
+	t1 := Construct(Construct(TypeString, TypeMaxLength, []interface{}{10}), TypeMinLength, []interface{}{2})
+	t2 := Construct(Construct(TypeString, TypeMaxLength, []interface{}{10}), TypeMinLength, []interface{}{2})
 	if !t1.Equal(t2) {
 		t.Error("t1 == t2")
 	}
 }
 
 func TestConstructorNeq1(t *testing.T) {
-	t1 := Construct(TypeString, MaxLength, 10)
-	t2 := Construct(TypeString, MaxLength, 20)
+	t1 := Construct(TypeString, TypeMaxLength, []interface{}{10})
+	t2 := Construct(TypeString, TypeMaxLength, []interface{}{10})
 	if t1.Equal(t2) {
 		t.Error("t1 != t2")
 	}
 }
 
 func TestConstructorNeq2(t *testing.T) {
-	t1 := Construct(Construct(TypeString, MaxLength, 10), MinLength, 2)
-	t2 := Construct(Construct(TypeString, MaxLength, 20), MinLength, 2)
+	t1 := Construct(Construct(TypeString, TypeMaxLength, []interface{}{10}), TypeMinLength, []interface{}{2})
+	t2 := Construct(Construct(TypeString, TypeMaxLength, []interface{}{10}), TypeMinLength, []interface{}{2})
 	if t1.Equal(t2) {
 		t.Error("t1 != t2")
 	}
 }
 
 func TestConstructorNeq3(t *testing.T) {
-	t1 := Construct(Construct(TypeString, MaxLength, 10), MinLength, 2)
-	t2 := Construct(Construct(TypeInteger, MaxLength, 10), MinLength, 2)
+	t1 := Construct(Construct(TypeString, TypeMaxLength, []interface{}{10}), TypeMinLength, []interface{}{2})
+	t2 := Construct(Construct(TypeInteger, TypeMaxLength, []interface{}{10}), TypeMinLength, []interface{}{2})
 	if t1.Equal(t2) {
 		t.Error("t1 != t2")
 	}
@@ -151,14 +151,14 @@ func TestConstructorNeq3(t *testing.T) {
 
 func TestConstructorParent(t *testing.T) {
 	t1 := TypeString
-	t2 := Construct(TypeString, MaxLength, 20)
+	t2 := Construct(TypeString, TypeMaxLength, []interface{}{10})
 	if !t1.Parent(t2) {
 		t.Error("t1 <: t2")
 	}
 }
 
 func TestConstructorNotparent(t *testing.T) {
-	t1 := Construct(TypeString, MaxLength, 20)
+	t1 := Construct(TypeString, TypeMaxLength, []interface{}{10})
 	t2 := TypeString
 	if t1.Parent(t2) {
 		t.Error("!(t1 <: t2)")

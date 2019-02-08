@@ -14,11 +14,11 @@ func Build(c *cli.Context) error {
 			internal.F{
 				Link:    "github.com/tariel-x/anzer-examples/a",
 				TypeIn:  internal.TypeString,
-				TypeOut: internal.Construct(internal.TypeString, internal.MaxLength, 10),
+				TypeOut: internal.Construct(internal.TypeString, internal.TypeMaxLength, []interface{}{10}),
 			},
 			internal.F{
 				Link:   "github.com/tariel-x/anzer-examples/b",
-				TypeIn: internal.Construct(internal.TypeString, internal.MaxLength, 10),
+				TypeIn: internal.Construct(internal.TypeString, internal.TypeMaxLength, []interface{}{10}),
 				TypeOut: internal.Complex{
 					Fields: map[string]internal.T{
 						"f1": internal.TypeInteger,
