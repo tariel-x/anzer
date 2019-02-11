@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	in "github.com/tariel-x/anzer/internal"
+	"github.com/tariel-x/anzer/generator"
 	"github.com/urfave/cli"
 )
 
@@ -43,5 +44,6 @@ func Build(c *cli.Context) error {
 		return err
 	}
 	fmt.Println(compose.Definition())
+	generator.Generate(in.TypeString, in.TypeInteger, "")
 	return nil
 }
