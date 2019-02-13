@@ -5,11 +5,11 @@ import (
 	"math/rand"
 )
 
-type anzerIn struct {
+type typeIn struct {
 	Language string
 }
 
-type anzerOut struct {
+type typeOut struct {
 	Assegnee string
 }
 
@@ -24,7 +24,7 @@ var (
 	}
 )
 
-func handle(input anzerIn) anzerOut {
+func handle(input typeIn) typeOut {
 	candidates := make([]string, 0, len(humans))
 	if input.Language == "" {
 		for human := range humans {
@@ -44,7 +44,7 @@ func handle(input anzerIn) anzerOut {
 
 	log.Printf("New assegnee %s for language %s", candidates[num], input.Language)
 
-	out := anzerOut{
+	out := typeOut{
 		Assegnee: candidates[num],
 	}
 	return out

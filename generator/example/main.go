@@ -84,7 +84,7 @@ func main() {
 		}
 
 		// process the request
-		result := callHandler(input)
+		result, _ := callHandler(input)
 		// encode the answer
 		output, err := json.Marshal(&result)
 		if err != nil {
@@ -100,22 +100,24 @@ func main() {
 	}
 }
 
-type generatedIn struct {
+type anzerIn struct {
 	Language string
 }
 
-type generaetedOut struct {
+type anzerOut struct {
 	Assegnee string
 }
 
 // Main selects assignee for MR
-func callHandler(input whiskInput) whiskOutput {
-	handlerInput := generatedIn{}
-	json.Unmarshal(input.Value, &handlerInput)
-	anzHandlerOutput := handle(anzerIn(handlerInput))
-	handlerOutput := generaetedOut(anzHandlerOutput)
-	output, _ := json.Marshal(handlerOutput)
+func callHandler(input whiskInput) (whiskOutput, error) {
+	anzHandlerInput := anzerIn{}
+	if err := json.Unmarshal(input.Value, &anzHandlerInput); err != nil {
+		return whiskOutput{}, err
+	}
+	anzHandlerOutput := handle(typeIn(anzHandlerInput))
+	handlerOutput := anzerOut(anzHandlerOutput)
+	output, err := json.Marshal(handlerOutput)
 	return whiskOutput{
 		Value: output,
-	}
+	}, err
 }
