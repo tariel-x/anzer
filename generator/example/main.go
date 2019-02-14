@@ -19,6 +19,8 @@ type whiskOutput struct {
 	Value json.RawMessage `json:"value"`
 }
 
+type rawInput map[string]interface{}
+
 func main() {
 	// debugging
 	var debug = os.Getenv("OW_DEBUG") != ""
@@ -54,42 +56,35 @@ func main() {
 		if debug {
 			log.Printf(">>>'%s'>>>", inbuf)
 		}
+
 		// parse one line
-		var rawInput map[string]interface{}
-		input := whiskInput{}
-		err = json.Unmarshal(inbuf, &rawInput)
-		if err != nil {
-			log.Println(err.Error())
-			fmt.Fprintf(out, "{ error: %q}\n", err.Error())
+		raw := rawInput{}
+		if err := json.Unmarshal(inbuf, &raw); err != nil {
+			printError(out, err)
 			continue
 		}
-		err = json.Unmarshal(inbuf, &input)
-		if err != nil {
-			log.Println(err.Error())
-			fmt.Fprintf(out, "{ error: %q}\n", err.Error())
+		input := whiskInput{}
+		if err := json.Unmarshal(inbuf, &input); err != nil {
+			printError(out, err)
 			continue
 		}
 		if debug {
-			log.Printf("%v\n", rawInput)
-		}
-		// set environment variables
-		err = json.Unmarshal(inbuf, &rawInput)
-		for k, v := range rawInput {
-			if k == "value" {
-				continue
-			}
-			if s, ok := v.(string); ok {
-				os.Setenv("__OW_"+strings.ToUpper(k), s)
-			}
+			log.Printf("%v\n", raw)
 		}
 
+		setEnvironment(raw)
+
 		// process the request
-		result, _ := callHandler(input)
+		result, err := callHandler(input)
+		if err != nil {
+			printError(out, err)
+			continue
+		}
+
 		// encode the answer
 		output, err := json.Marshal(&result)
 		if err != nil {
-			log.Println(err.Error())
-			fmt.Fprintf(out, "{ error: %q}\n", err.Error())
+			printError(out, err)
 			continue
 		}
 		output = bytes.Replace(output, []byte("\n"), []byte(""), -1)
@@ -100,12 +95,20 @@ func main() {
 	}
 }
 
-type anzerIn struct {
-	Language string
+func printError(out io.Writer, err error) {
+	log.Println(err.Error())
+	fmt.Fprintf(out, "{ error: %q}\n", err.Error())
 }
 
-type anzerOut struct {
-	Assegnee string
+func setEnvironment(raw map[string]interface{}) {
+	for k, v := range raw {
+		if k == "value" {
+			continue
+		}
+		if s, ok := v.(string); ok {
+			os.Setenv("__OW_"+strings.ToUpper(k), s)
+		}
+	}
 }
 
 // Main selects assignee for MR
@@ -120,4 +123,12 @@ func callHandler(input whiskInput) (whiskOutput, error) {
 	return whiskOutput{
 		Value: output,
 	}, err
+}
+
+type anzerIn struct {
+	Language string
+}
+
+type anzerOut struct {
+	Assegnee string
 }
