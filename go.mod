@@ -1,6 +1,7 @@
 module github.com/tariel-x/anzer
 
 require (
+	github.com/dave/jennifer v1.3.0
 	github.com/emirpasic/gods v1.12.0 // indirect
 	github.com/fatih/color v1.7.0
 	github.com/kr/pty v1.1.3 // indirect
