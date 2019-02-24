@@ -217,7 +217,7 @@ func callHandler(input whiskInput) (whiskOutput, error) {
 	if err := json.Unmarshal(input.Value, &anzHandlerInput); err != nil {
 		return whiskOutput{}, err
 	}
-	anzHandlerOutput := {{ .Package }}.Handle(typeIn(anzHandlerInput))
+	anzHandlerOutput := {{ .Package }}.Handle(TypeIn(anzHandlerInput))
 	handlerOutput := AnzerOut(anzHandlerOutput)
 	output, err := json.Marshal(handlerOutput)
 	return whiskOutput{

@@ -51,5 +51,11 @@ func Build(c *cli.Context) error {
 		return err
 	}
 	fmt.Println(output)
+
+	funcOutput, err := generator.GenerateFunc(bFunc.In(), bFunc.Out(), bFunc.Link)
+	if err != nil {
+		return err
+	}
+	fmt.Println(funcOutput)
 	return nil
 }
