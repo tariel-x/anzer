@@ -59,7 +59,25 @@ func TestGenTypeStruct(t *testing.T) {
 		},
 	}
 	goT := genType(inT, "inT")
-	expected := `type inT *[]string`
+	expected := "type inT struct {\n\tF1 *int     `json:\"f1\"`\n\tF2 []string `json:\"f2\"`\n}"
+	if goT != expected {
+		t.Errorf("Definition %q != expected %q", goT, expected)
+	}
+}
+
+func TestGenTypeStructListStruct(t *testing.T) {
+	inT := in.Complex{
+		Fields: map[string]in.T{
+			"f1": in.Optional(in.TypeInteger),
+			"f2": in.List(in.Complex{
+				Fields: map[string]in.T{
+					"subfield": in.Optional(in.TypeInteger),
+				},
+			}),
+		},
+	}
+	goT := genType(inT, "inT")
+	expected := "type inT struct {\n\tF1 *int `json:\"f1\"`\n\tF2 []struct {\n\t\tSubfield *int `json:\"subfield\"`\n\t} `json:\"f2\"`\n}"
 	if goT != expected {
 		t.Errorf("Definition %q != expected %q", goT, expected)
 	}
