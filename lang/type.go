@@ -1,4 +1,4 @@
-package internal
+package lang
 
 type T interface {
 	Equal(to T) bool

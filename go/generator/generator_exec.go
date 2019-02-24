@@ -8,7 +8,7 @@ import (
 	"time"
 
 	j "github.com/dave/jennifer/jen"
-	in "github.com/tariel-x/anzer/internal"
+	l "github.com/tariel-x/anzer/lang"
 )
 
 var (
@@ -17,7 +17,7 @@ var (
 
 type CodeGenerator struct{}
 
-func (cg CodeGenerator) Generate(inT, outT in.T, packagePath string) (string, error) {
+func (cg CodeGenerator) Generate(inT, outT l.T, packagePath string) (string, error) {
 	packageElements := strings.Split(packagePath, "/")
 	if len(packageElements) == 0 {
 		return "", errInvalidPackage
@@ -40,46 +40,46 @@ func (cg CodeGenerator) Generate(inT, outT in.T, packagePath string) (string, er
 	return result.String(), err
 }
 
-func genType(t in.T, name string) string {
+func genType(t l.T, name string) string {
 	return j.Type().Id(name).Add(genTypeDef(t)).GoString()
 }
 
-func genTypeDef(t in.T) *j.Statement {
+func genTypeDef(t l.T) *j.Statement {
 	switch tt := t.(type) {
-	case in.Constructor:
+	case l.Constructor:
 		switch tt.Type {
-		case in.TypeList:
+		case l.TypeList:
 			return list(genTypeDef(tt.Operand))
-		case in.TypeOptional:
+		case l.TypeOptional:
 			return pointer(genTypeDef(tt.Operand))
 		default:
 			return genTypeDef(tt.Operand)
 		}
-	case in.Basic:
+	case l.Basic:
 		return basic(tt)
-	case in.Complex:
+	case l.Complex:
 		return complex(tt)
-	case in.AnyType:
+	case l.AnyType:
 		return j.Interface()
 	default:
 		return j.Interface()
 	}
 }
 
-func basic(tt in.Basic) *j.Statement {
+func basic(tt l.Basic) *j.Statement {
 	switch tt {
-	case in.TypeString:
+	case l.TypeString:
 		return j.String()
-	case in.TypeInteger:
+	case l.TypeInteger:
 		return j.Int()
-	case in.TypeBool:
+	case l.TypeBool:
 		return j.Bool()
 	default:
 		return j.Interface()
 	}
 }
 
-func complex(tt in.Complex) *j.Statement {
+func complex(tt l.Complex) *j.Statement {
 	gofields := make([]j.Code, 0, len(tt.Fields))
 	for fn, f := range tt.Fields {
 		goftype := genTypeDef(f).Tag(map[string]string{"json": fn})

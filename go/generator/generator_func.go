@@ -6,10 +6,10 @@ import (
 	"text/template"
 	"time"
 
-	in "github.com/tariel-x/anzer/internal"
+	l "github.com/tariel-x/anzer/lang"
 )
 
-func (cg CodeGenerator) GenerateFunc(inT, outT in.T, packagePath string) (string, error) {
+func (cg CodeGenerator) GenerateFunc(inT, outT l.T, packagePath string) (string, error) {
 	packageElements := strings.Split(packagePath, "/")
 	if len(packageElements) == 0 {
 		return "", errInvalidPackage

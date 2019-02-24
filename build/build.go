@@ -4,12 +4,12 @@ import (
 	"fmt"
 
 	"github.com/tariel-x/anzer/go/generator"
-	in "github.com/tariel-x/anzer/internal"
+	l "github.com/tariel-x/anzer/lang"
 	"github.com/urfave/cli"
 )
 
 type codeGenerator interface {
-	Generate(inT, outT in.T, packagePath string) (string, error)
+	Generate(inT, outT l.T, packagePath string) (string, error)
 }
 
 var (
@@ -17,35 +17,35 @@ var (
 )
 
 func Build(c *cli.Context) error {
-	bFunc := in.F{
+	bFunc := l.F{
 		Link:   "github.com/tariel-x/anzer-examples/b",
-		TypeIn: in.MaxLength(in.TypeString, 10),
-		TypeOut: in.Complex{
-			Fields: map[string]in.T{
-				"f1": in.Optional(in.TypeInteger),
-				"f2": in.List(in.TypeString),
+		TypeIn: l.MaxLength(l.TypeString, 10),
+		TypeOut: l.Complex{
+			Fields: map[string]l.T{
+				"f1": l.Optional(l.TypeInteger),
+				"f2": l.List(l.TypeString),
 			},
 		},
 	}
 
-	compose := in.Alias{
+	compose := l.Alias{
 		Name: "c",
-		Compose: []in.Composable{
-			in.F{
+		Compose: []l.Composable{
+			l.F{
 				Link:    "github.com/tariel-x/anzer-examples/a",
-				TypeIn:  in.TypeString,
-				TypeOut: in.MaxLength(in.TypeString, 10),
+				TypeIn:  l.TypeString,
+				TypeOut: l.MaxLength(l.TypeString, 10),
 			},
 			bFunc,
-			in.F{
+			l.F{
 				Link: "github.com/tariel-x/anzer-examples/c",
-				TypeIn: in.Complex{
-					Fields: map[string]in.T{
-						"f1": in.Optional(in.TypeInteger),
-						"f2": in.List(in.TypeString),
+				TypeIn: l.Complex{
+					Fields: map[string]l.T{
+						"f1": l.Optional(l.TypeInteger),
+						"f2": l.List(l.TypeString),
 					},
 				},
-				TypeOut: in.TypeBool,
+				TypeOut: l.TypeBool,
 			},
 		},
 	}

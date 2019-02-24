@@ -3,11 +3,11 @@ package generator
 import (
 	"testing"
 
-	in "github.com/tariel-x/anzer/internal"
+	l "github.com/tariel-x/anzer/lang"
 )
 
 func TestGenTypeBasic1(t *testing.T) {
-	inT := in.Optional(in.TypeInteger)
+	inT := l.Optional(l.TypeInteger)
 	goT := genType(inT, "inT")
 	expected := `type inT *int`
 	if goT != expected {
@@ -16,7 +16,7 @@ func TestGenTypeBasic1(t *testing.T) {
 }
 
 func TestGenTypeBasic2(t *testing.T) {
-	inT := in.TypeString
+	inT := l.TypeString
 	goT := genType(inT, "inT")
 	expected := `type inT string`
 	if goT != expected {
@@ -25,7 +25,7 @@ func TestGenTypeBasic2(t *testing.T) {
 }
 
 func TestGenTypeList(t *testing.T) {
-	inT := in.List(in.TypeString)
+	inT := l.List(l.TypeString)
 	goT := genType(inT, "inT")
 	expected := `type inT []string`
 	if goT != expected {
@@ -34,7 +34,7 @@ func TestGenTypeList(t *testing.T) {
 }
 
 func TestGenTypeOptionalList(t *testing.T) {
-	inT := in.List(in.Optional(in.TypeString))
+	inT := l.List(l.Optional(l.TypeString))
 	goT := genType(inT, "inT")
 	expected := `type inT []*string`
 	if goT != expected {
@@ -43,7 +43,7 @@ func TestGenTypeOptionalList(t *testing.T) {
 }
 
 func TestGenTypeListOptional(t *testing.T) {
-	inT := in.Optional(in.List(in.TypeString))
+	inT := l.Optional(l.List(l.TypeString))
 	goT := genType(inT, "inT")
 	expected := `type inT *[]string`
 	if goT != expected {
@@ -52,10 +52,10 @@ func TestGenTypeListOptional(t *testing.T) {
 }
 
 func TestGenTypeStruct(t *testing.T) {
-	inT := in.Complex{
-		Fields: map[string]in.T{
-			"f1": in.Optional(in.TypeInteger),
-			"f2": in.List(in.TypeString),
+	inT := l.Complex{
+		Fields: map[string]l.T{
+			"f1": l.Optional(l.TypeInteger),
+			"f2": l.List(l.TypeString),
 		},
 	}
 	goT := genType(inT, "inT")
@@ -66,12 +66,12 @@ func TestGenTypeStruct(t *testing.T) {
 }
 
 /*func TestGenTypeStructListStruct(t *testing.T) {
-	inT := in.Complex{
-		Fields: map[string]in.T{
-			"f1": in.Optional(in.TypeInteger),
-			"f2": in.List(in.Complex{
-				Fields: map[string]in.T{
-					"subfield": in.Optional(in.TypeInteger),
+	inT := l.Complex{
+		Fields: map[string]l.T{
+			"f1": l.Optional(l.TypeInteger),
+			"f2": l.List(l.Complex{
+				Fields: map[string]l.T{
+					"subfield": l.Optional(l.TypeInteger),
 				},
 			}),
 		},
