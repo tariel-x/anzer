@@ -15,7 +15,7 @@ func Build(c *cli.Context) error {
 		TypeOut: in.Complex{
 			Fields: map[string]in.T{
 				"f1": in.Optional(in.TypeInteger),
-				"f2": in.TypeString,
+				"f2": in.List(in.TypeString),
 			},
 		},
 	}
@@ -34,7 +34,7 @@ func Build(c *cli.Context) error {
 				TypeIn: in.Complex{
 					Fields: map[string]in.T{
 						"f1": in.Optional(in.TypeInteger),
-						"f2": in.TypeString,
+						"f2": in.List(in.TypeString),
 					},
 				},
 				TypeOut: in.TypeBool,

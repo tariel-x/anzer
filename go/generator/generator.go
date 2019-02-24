@@ -30,56 +30,69 @@ func Generate(inT, outT in.T, packagePath string) (string, error) {
 		Package     string
 	}{
 		Timestamp:   time.Now(),
-		AnzerIn:     j.Type().Add(genType(inT, "AnzerIn", false)).GoString(),
-		AnzerOut:    j.Type().Add(genType(outT, "AnzerOut", false)).GoString(),
+		AnzerIn:     genType(inT, "AnzerIn"),
+		AnzerOut:    genType(outT, "AnzerOut"),
 		PackagePath: packagePath,
 		Package:     packageElements[len(packageElements)-1],
 	})
 	return result.String(), err
 }
 
-func genType(t in.T, name string, ptr bool) *j.Statement {
+func genType(t in.T, name string) string {
+	return j.Type().Id(name).Add(genTypeDef(t)).GoString()
+}
+
+func genTypeDef(t in.T) *j.Statement {
 	switch tt := t.(type) {
 	case in.Constructor:
 		switch tt.Type {
 		case in.TypeList:
-			return genType(tt.Operand, name, false).Index()
+			return list(genTypeDef(tt.Operand))
 		case in.TypeOptional:
-			return genType(tt.Operand, name, true)
+			return pointer(genTypeDef(tt.Operand))
 		default:
-			return genType(tt.Operand, name, false)
+			return genTypeDef(tt.Operand)
 		}
 	case in.Basic:
-		return j.Id(name).Add(basicType(tt, ptr))
+		return basic(tt)
 	case in.Complex:
-		gofields := make([]j.Code, 0, len(tt.Fields))
-		for fn, f := range tt.Fields {
-			gof := genType(f, strings.Title(fn), false).Tag(map[string]string{"json": fn})
-			gofields = append(gofields, gof)
-		}
-		gostruct := j.Id(name).Struct(gofields...)
-		return gostruct
+		return complex(tt)
+	case in.AnyType:
+		return j.Interface()
 	default:
-		return j.Id(name).Interface()
+		return j.Interface()
 	}
 }
 
-func basicType(tt in.Basic, ptr bool) *j.Statement {
-	var st *j.Statement
+func basic(tt in.Basic) *j.Statement {
 	switch tt {
 	case in.TypeString:
-		st = j.String()
+		return j.String()
 	case in.TypeInteger:
-		st = j.Int()
+		return j.Int()
 	case in.TypeBool:
-		st = j.Bool()
+		return j.Bool()
 	default:
-		st = j.Interface()
+		return j.Interface()
 	}
-	if ptr {
-		return j.Op("*").Add(st)
+}
+
+func complex(tt in.Complex) *j.Statement {
+	gofields := make([]j.Code, 0, len(tt.Fields))
+	for fn, f := range tt.Fields {
+		goftype := genTypeDef(f).Tag(map[string]string{"json": fn})
+		gof := j.Id(strings.Title(fn)).Add(goftype)
+		gofields = append(gofields, gof)
 	}
-	return st
+	return j.Struct(gofields...)
+}
+
+func pointer(st *j.Statement) *j.Statement {
+	return j.Op("*").Add(st)
+}
+
+func list(st *j.Statement) *j.Statement {
+	return j.Index().Add(st)
 }
 
 var execTemplate = template.Must(template.New("").Parse(`
