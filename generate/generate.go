@@ -1,6 +1,7 @@
-package build
+package generate
 
 import (
+	"errors"
 	"fmt"
 
 	"github.com/tariel-x/anzer/go/generator"
@@ -9,14 +10,15 @@ import (
 )
 
 type codeGenerator interface {
-	Generate(inT, outT in.T, packagePath string) (string, error)
+	GenerateFunc(inT, outT in.T, packagePath string) (string, error)
 }
 
-var (
-	cg = generator.CodeGenerator{}
-)
+func Generate(c *cli.Context) error {
+	cg, err := getGenerator(c)
+	if err != nil {
+		return err
+	}
 
-func Build(c *cli.Context) error {
 	bFunc := in.F{
 		Link:   "github.com/tariel-x/anzer-examples/b",
 		TypeIn: in.MaxLength(in.TypeString, 10),
@@ -54,11 +56,19 @@ func Build(c *cli.Context) error {
 		return err
 	}
 
-	output, err := cg.Generate(bFunc.In(), bFunc.Out(), bFunc.Link)
+	funcOutput, err := cg.GenerateFunc(bFunc.In(), bFunc.Out(), bFunc.Link)
 	if err != nil {
 		return err
 	}
-	fmt.Println(output)
-
+	fmt.Println(funcOutput)
 	return nil
+}
+
+func getGenerator(c *cli.Context) (codeGenerator, error) {
+	switch c.String("lang") {
+	case "go":
+		return generator.CodeGenerator{}, nil
+	default:
+		return nil, errors.New("undefined language")
+	}
 }

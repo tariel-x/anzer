@@ -9,9 +9,7 @@ import (
 	in "github.com/tariel-x/anzer/internal"
 )
 
-type GoGenerator struct{}
-
-func (gg GoGenerator) GenerateFunc(inT, outT in.T, packagePath string) (string, error) {
+func (cg CodeGenerator) GenerateFunc(inT, outT in.T, packagePath string) (string, error) {
 	packageElements := strings.Split(packagePath, "/")
 	if len(packageElements) == 0 {
 		return "", errInvalidPackage

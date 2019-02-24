@@ -5,6 +5,7 @@ import (
 	"os"
 
 	"github.com/tariel-x/anzer/build"
+	"github.com/tariel-x/anzer/generate"
 	"github.com/urfave/cli"
 )
 
@@ -24,6 +25,22 @@ func main() {
 				cli.StringFlag{
 					Name:  "input, i",
 					Usage: "Anzer source file",
+				},
+			},
+		},
+		{
+			Name:    "generate",
+			Aliases: []string{"g"},
+			Usage:   "generate base for anzer func",
+			Action:  generate.Generate,
+			Flags: []cli.Flag{
+				cli.StringFlag{
+					Name:  "input, i",
+					Usage: "Anzer source file",
+				},
+				cli.StringFlag{
+					Name:  "lang, l",
+					Usage: "Implementation language",
 				},
 			},
 		},

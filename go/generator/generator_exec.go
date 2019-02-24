@@ -15,7 +15,9 @@ var (
 	errInvalidPackage = errors.New("invalid package")
 )
 
-func (gg GoGenerator) Generate(inT, outT in.T, packagePath string) (string, error) {
+type CodeGenerator struct{}
+
+func (cg CodeGenerator) Generate(inT, outT in.T, packagePath string) (string, error) {
 	packageElements := strings.Split(packagePath, "/")
 	if len(packageElements) == 0 {
 		return "", errInvalidPackage
@@ -123,7 +125,7 @@ type whiskOutput struct {
 type rawInput map[string]interface{}
 
 func main() {
-	// debugging
+	// debucging
 	var debug = os.Getenv("OW_DEBUG") != ""
 
 	if debug {
