@@ -8,6 +8,15 @@ import (
 	"github.com/urfave/cli"
 )
 
+type codeGenerator interface {
+	Generate(inT, outT in.T, packagePath string) (string, error)
+	GenerateFunc(inT, outT in.T, packagePath string) (string, error)
+}
+
+var (
+	cg = generator.GoGenerator{}
+)
+
 func Build(c *cli.Context) error {
 	bFunc := in.F{
 		Link:   "github.com/tariel-x/anzer-examples/b",
@@ -46,13 +55,13 @@ func Build(c *cli.Context) error {
 		return err
 	}
 	fmt.Println(compose.Definition())
-	output, err := generator.Generate(bFunc.In(), bFunc.Out(), bFunc.Link)
+	output, err := cg.Generate(bFunc.In(), bFunc.Out(), bFunc.Link)
 	if err != nil {
 		return err
 	}
 	fmt.Println(output)
 
-	funcOutput, err := generator.GenerateFunc(bFunc.In(), bFunc.Out(), bFunc.Link)
+	funcOutput, err := cg.GenerateFunc(bFunc.In(), bFunc.Out(), bFunc.Link)
 	if err != nil {
 		return err
 	}

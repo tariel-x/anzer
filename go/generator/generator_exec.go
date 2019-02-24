@@ -15,7 +15,7 @@ var (
 	errInvalidPackage = errors.New("invalid package")
 )
 
-func Generate(inT, outT in.T, packagePath string) (string, error) {
+func (gg GoGenerator) Generate(inT, outT in.T, packagePath string) (string, error) {
 	packageElements := strings.Split(packagePath, "/")
 	if len(packageElements) == 0 {
 		return "", errInvalidPackage
