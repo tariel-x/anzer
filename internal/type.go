@@ -6,6 +6,18 @@ type T interface {
 	Parent(of T) bool
 }
 
+const (
+	TypeString Basic = iota
+	TypeInteger
+	TypeBool
+	TypeMaxLength ConstructorType = iota
+	TypeMinLength
+	TypeRight
+	TypeLeft
+	TypeList
+	TypeOptional
+)
+
 type NothingType struct{}
 
 var (
@@ -49,12 +61,6 @@ func (a AnyType) Parent(of T) bool {
 }
 
 type Basic int
-
-const (
-	TypeString Basic = iota
-	TypeInteger
-	TypeBool
-)
 
 func (b Basic) Equal(to T) bool {
 	switch t := to.(type) {
@@ -126,13 +132,6 @@ func (c Complex) Subtype(of T) bool {
 }
 
 type ConstructorType int
-
-const (
-	TypeMaxLength ConstructorType = iota
-	TypeMinLength
-	TypeRight
-	TypeLeft
-)
 
 type Constructor struct {
 	Operand   T
@@ -214,4 +213,12 @@ func Right(parent T) T {
 
 func Left(parent T) T {
 	return Construct(parent, TypeLeft, nil)
+}
+
+func List(parent T) T {
+	return Construct(parent, TypeList, nil)
+}
+
+func Optional(parent T) T {
+	return Construct(parent, TypeOptional, nil)
 }

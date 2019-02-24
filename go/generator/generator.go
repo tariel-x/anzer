@@ -7,7 +7,7 @@ import (
 	"text/template"
 	"time"
 
-	. "github.com/dave/jennifer/jen"
+	j "github.com/dave/jennifer/jen"
 	in "github.com/tariel-x/anzer/internal"
 )
 
@@ -30,20 +30,56 @@ func Generate(inT, outT in.T, packagePath string) (string, error) {
 		Package     string
 	}{
 		Timestamp:   time.Now(),
-		AnzerIn:     generateTypeDefinition(inT, "AnzerIn"),
-		AnzerOut:    generateTypeDefinition(outT, "AnzerOut"),
+		AnzerIn:     j.Type().Add(genType(inT, "AnzerIn", false)).GoString(),
+		AnzerOut:    j.Type().Add(genType(outT, "AnzerOut", false)).GoString(),
 		PackagePath: packagePath,
 		Package:     packageElements[len(packageElements)-1],
 	})
 	return result.String(), err
 }
 
-func generateTypeDefinition(t in.T, name string) string {
-	def := Type().Id(name).Struct(
-		List(Id("x"), Id("y")).Int(),
-		Id("u").Float32(),
-	)
-	return def.GoString()
+func genType(t in.T, name string, ptr bool) *j.Statement {
+	switch tt := t.(type) {
+	case in.Constructor:
+		switch tt.Type {
+		case in.TypeList:
+			return genType(tt.Operand, name, false).Index()
+		case in.TypeOptional:
+			return genType(tt.Operand, name, true)
+		default:
+			return genType(tt.Operand, name, false)
+		}
+	case in.Basic:
+		return j.Id(name).Add(basicType(tt, ptr))
+	case in.Complex:
+		gofields := make([]j.Code, 0, len(tt.Fields))
+		for fn, f := range tt.Fields {
+			gof := genType(f, strings.Title(fn), false).Tag(map[string]string{"json": fn})
+			gofields = append(gofields, gof)
+		}
+		gostruct := j.Id(name).Struct(gofields...)
+		return gostruct
+	default:
+		return j.Id(name).Interface()
+	}
+}
+
+func basicType(tt in.Basic, ptr bool) *j.Statement {
+	var st *j.Statement
+	switch tt {
+	case in.TypeString:
+		st = j.String()
+	case in.TypeInteger:
+		st = j.Int()
+	case in.TypeBool:
+		st = j.Bool()
+	default:
+		st = j.Interface()
+	}
+	if ptr {
+		return j.Op("*").Add(st)
+	}
+	return st
 }
 
 var execTemplate = template.Must(template.New("").Parse(`
@@ -163,7 +199,6 @@ func setEnvironment(raw map[string]interface{}) {
 	}
 }
 
-// Main selects assignee for MR
 func callHandler(input whiskInput) (whiskOutput, error) {
 	anzHandlerInput := AnzerIn{}
 	if err := json.Unmarshal(input.Value, &anzHandlerInput); err != nil {
