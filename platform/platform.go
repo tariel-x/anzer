@@ -2,6 +2,7 @@ package platform
 
 import (
 	"errors"
+	"io"
 
 	l "github.com/tariel-x/anzer/lang"
 	"github.com/tariel-x/anzer/wsk/golang"
@@ -14,7 +15,7 @@ type CodeGenerator interface {
 }
 
 type Builder interface {
-	Build(link string, inT l.T, outT l.T) error
+	Build(link string, inT l.T, outT l.T) (io.Reader, error)
 }
 
 var (

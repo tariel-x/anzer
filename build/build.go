@@ -49,5 +49,9 @@ func Build(c *cli.Context) error {
 	if err != nil {
 		return err
 	}
-	return builder.Build(bFunc.Link, bFunc.In(), bFunc.Out())
+	dockersource, err := builder.Build(bFunc.Link, bFunc.In(), bFunc.Out())
+	if err != nil {
+		return err
+	}
+	return platform.Build(dockersource)
 }

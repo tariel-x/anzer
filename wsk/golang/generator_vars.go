@@ -5,7 +5,7 @@ import (
 )
 
 var dockerfile = `
-FROM go:1.11
+FROM golang:latest
 `
 
 var funcTemplate = template.Must(template.New("").Parse(`
