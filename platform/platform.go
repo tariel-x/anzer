@@ -13,6 +13,10 @@ type CodeGenerator interface {
 	GenerateDocker() string
 }
 
+type Builder interface {
+	Build(link string, inT l.T, outT l.T) error
+}
+
 var (
 	errUndefinedLanguage = errors.New("undefined language")
 )
@@ -21,6 +25,15 @@ func GetGenerator(platform string) (CodeGenerator, error) {
 	switch platform {
 	case "golang":
 		return golang.NewGenerator(), nil
+	default:
+		return nil, errUndefinedLanguage
+	}
+}
+
+func GetBuilder(platform string) (Builder, error) {
+	switch platform {
+	case "golang":
+		return golang.NewBuilder(), nil
 	default:
 		return nil, errUndefinedLanguage
 	}

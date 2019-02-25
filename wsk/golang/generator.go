@@ -20,7 +20,7 @@ func NewGenerator() Generator {
 	return Generator{}
 }
 
-func (cg Generator) Generate(inT, outT l.T, packagePath string) (string, error) {
+func (g Generator) Generate(inT, outT l.T, packagePath string) (string, error) {
 	packageElements := strings.Split(packagePath, "/")
 	if len(packageElements) == 0 {
 		return "", errInvalidPackage
@@ -43,7 +43,7 @@ func (cg Generator) Generate(inT, outT l.T, packagePath string) (string, error) 
 	return result.String(), err
 }
 
-func (cg Generator) GenerateFunc(inT, outT l.T, packagePath string) (string, error) {
+func (g Generator) GenerateFunc(inT, outT l.T, packagePath string) (string, error) {
 	packageElements := strings.Split(packagePath, "/")
 	if len(packageElements) == 0 {
 		return "", errInvalidPackage
@@ -65,7 +65,7 @@ func (cg Generator) GenerateFunc(inT, outT l.T, packagePath string) (string, err
 	return result.String(), err
 }
 
-func (cg Generator) GenerateDocker() string {
+func (g Generator) GenerateDocker() string {
 	return dockerfile
 }
 
