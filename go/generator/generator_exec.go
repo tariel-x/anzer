@@ -17,6 +17,10 @@ var (
 
 type CodeGenerator struct{}
 
+func New() CodeGenerator {
+	return CodeGenerator{}
+}
+
 func (cg CodeGenerator) Generate(inT, outT l.T, packagePath string) (string, error) {
 	packageElements := strings.Split(packagePath, "/")
 	if len(packageElements) == 0 {

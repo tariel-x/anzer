@@ -10,6 +10,7 @@ import (
 type CodeGenerator interface {
 	Generate(inT, outT l.T, packagePath string) (string, error)
 	GenerateFunc(inT, outT l.T, packagePath string) (string, error)
+	GenerateDocker() string
 }
 
 var (
@@ -19,7 +20,7 @@ var (
 func GetGenerator(lang string) (CodeGenerator, error) {
 	switch lang {
 	case "go":
-		return generator.CodeGenerator{}, nil
+		return generator.New(), nil
 	default:
 		return nil, errUndefinedLanguage
 	}

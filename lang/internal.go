@@ -62,6 +62,7 @@ func (a Alias) Invalid() error {
 type F struct {
 	Name    string
 	Link    string
+	Runtime string
 	TypeIn  T
 	TypeOut T
 }

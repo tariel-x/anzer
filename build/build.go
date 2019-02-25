@@ -1,7 +1,8 @@
 package build
 
 import (
-	"fmt"
+	"io/ioutil"
+	"strings"
 
 	l "github.com/tariel-x/anzer/lang"
 	"github.com/tariel-x/anzer/platform"
@@ -9,14 +10,10 @@ import (
 )
 
 func Build(c *cli.Context) error {
-	cg, err := platform.GetGenerator(c.String("lang"))
-	if err != nil {
-		return err
-	}
-
 	bFunc := l.F{
-		Link:   "github.com/tariel-x/anzer-examples/b",
-		TypeIn: l.MaxLength(l.TypeString, 10),
+		Link:    "github.com/tariel-x/anzer-examples/b",
+		Runtime: "go",
+		TypeIn:  l.MaxLength(l.TypeString, 10),
 		TypeOut: l.Complex{
 			Fields: map[string]l.T{
 				"f1": l.Optional(l.TypeInteger),
@@ -51,11 +48,28 @@ func Build(c *cli.Context) error {
 		return err
 	}
 
-	output, err := cg.Generate(bFunc.In(), bFunc.Out(), bFunc.Link)
+	cg, err := platform.GetGenerator(bFunc.Runtime)
 	if err != nil {
 		return err
 	}
-	fmt.Println(output)
+
+	directory := strings.Replace(bFunc.Link, "/", "_", -1)
+	output := "/tmp/" + directory
+	execPath := output + "/exec"
+	dockerfilePath := output + "/Dockerfile"
+
+	generated, err := cg.Generate(bFunc.In(), bFunc.Out(), bFunc.Link)
+	if err != nil {
+		return err
+	}
+	if err := ioutil.WriteFile(execPath, []byte(generated), 0666); err != nil {
+		return err
+	}
+
+	// TODO: write Dockercompose here and build function archive with docker
+	if err := ioutil.WriteFile(dockerfilePath, []byte(cg.GenerateDocker()), 0666); err != nil {
+		return err
+	}
 
 	return nil
 }
