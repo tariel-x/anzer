@@ -3,8 +3,8 @@ package platform
 import (
 	"errors"
 
-	"github.com/tariel-x/anzer/go/generator"
 	l "github.com/tariel-x/anzer/lang"
+	"github.com/tariel-x/anzer/wsk/golang"
 )
 
 type CodeGenerator interface {
@@ -17,10 +17,10 @@ var (
 	errUndefinedLanguage = errors.New("undefined language")
 )
 
-func GetGenerator(lang string) (CodeGenerator, error) {
-	switch lang {
-	case "go":
-		return generator.New(), nil
+func GetGenerator(platform string) (CodeGenerator, error) {
+	switch platform {
+	case "golang":
+		return golang.NewGenerator(), nil
 	default:
 		return nil, errUndefinedLanguage
 	}

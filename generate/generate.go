@@ -14,19 +14,15 @@ var (
 )
 
 func Generate(c *cli.Context) error {
-	cg, err := platform.GetGenerator(c.String("lang"))
-	if err != nil {
-		return err
-	}
-
 	output := c.String("output")
 	if output == "" {
 		return errOutputUndefined
 	}
 
 	bFunc := l.F{
-		Link:   "github.com/tariel-x/anzer-examples/b",
-		TypeIn: l.MaxLength(l.TypeString, 10),
+		Link:    "github.com/tariel-x/anzer-examples/b",
+		Runtime: "golang",
+		TypeIn:  l.MaxLength(l.TypeString, 10),
 		TypeOut: l.Complex{
 			Fields: map[string]l.T{
 				"f1": l.Optional(l.TypeInteger),
@@ -58,6 +54,11 @@ func Generate(c *cli.Context) error {
 	}
 
 	if err := compose.Invalid(); err != nil {
+		return err
+	}
+
+	cg, err := platform.GetGenerator(bFunc.Runtime)
+	if err != nil {
 		return err
 	}
 

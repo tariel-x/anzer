@@ -1,4 +1,4 @@
-package generator
+package golang
 
 import (
 	"bytes"
@@ -9,7 +9,7 @@ import (
 	l "github.com/tariel-x/anzer/lang"
 )
 
-func (cg CodeGenerator) GenerateFunc(inT, outT l.T, packagePath string) (string, error) {
+func (cg Generator) GenerateFunc(inT, outT l.T, packagePath string) (string, error) {
 	packageElements := strings.Split(packagePath, "/")
 	if len(packageElements) == 0 {
 		return "", errInvalidPackage

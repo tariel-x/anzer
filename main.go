@@ -23,10 +23,6 @@ func main() {
 		Name:  "output, o",
 		Usage: "Output for generated files",
 	}
-	langFlag := cli.StringFlag{
-		Name:  "lang, l",
-		Usage: "Implementation language",
-	}
 
 	app.Commands = []cli.Command{
 		{
@@ -46,7 +42,6 @@ func main() {
 			Flags: []cli.Flag{
 				inputFlag,
 				outputFlag,
-				langFlag,
 			},
 		},
 	}

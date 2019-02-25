@@ -1,4 +1,4 @@
-package generator
+package golang
 
 import (
 	"bytes"
@@ -15,13 +15,13 @@ var (
 	errInvalidPackage = errors.New("invalid package")
 )
 
-type CodeGenerator struct{}
+type Generator struct{}
 
-func New() CodeGenerator {
-	return CodeGenerator{}
+func NewGenerator() Generator {
+	return Generator{}
 }
 
-func (cg CodeGenerator) Generate(inT, outT l.T, packagePath string) (string, error) {
+func (cg Generator) Generate(inT, outT l.T, packagePath string) (string, error) {
 	packageElements := strings.Split(packagePath, "/")
 	if len(packageElements) == 0 {
 		return "", errInvalidPackage
