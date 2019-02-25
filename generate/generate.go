@@ -2,21 +2,26 @@ package generate
 
 import (
 	"errors"
-	"fmt"
+	"io/ioutil"
 
-	"github.com/tariel-x/anzer/go/generator"
 	l "github.com/tariel-x/anzer/lang"
+	"github.com/tariel-x/anzer/platform"
 	"github.com/urfave/cli"
 )
 
-type codeGenerator interface {
-	GenerateFunc(inT, outT l.T, packagePath string) (string, error)
-}
+var (
+	errOutputUndefined = errors.New("Output is undefined")
+)
 
 func Generate(c *cli.Context) error {
-	cg, err := getGenerator(c)
+	cg, err := platform.GetGenerator(c.String("lang"))
 	if err != nil {
 		return err
+	}
+
+	output := c.String("output")
+	if output == "" {
+		return errOutputUndefined
 	}
 
 	bFunc := l.F{
@@ -56,19 +61,9 @@ func Generate(c *cli.Context) error {
 		return err
 	}
 
-	funcOutput, err := cg.GenerateFunc(bFunc.In(), bFunc.Out(), bFunc.Link)
+	generated, err := cg.GenerateFunc(bFunc.In(), bFunc.Out(), bFunc.Link)
 	if err != nil {
 		return err
 	}
-	fmt.Println(funcOutput)
-	return nil
-}
-
-func getGenerator(c *cli.Context) (codeGenerator, error) {
-	switch c.String("lang") {
-	case "go":
-		return generator.CodeGenerator{}, nil
-	default:
-		return nil, errors.New("undefined language")
-	}
+	return ioutil.WriteFile(output, []byte(generated), 0666)
 }

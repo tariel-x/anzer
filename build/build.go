@@ -3,20 +3,17 @@ package build
 import (
 	"fmt"
 
-	"github.com/tariel-x/anzer/go/generator"
 	l "github.com/tariel-x/anzer/lang"
+	"github.com/tariel-x/anzer/platform"
 	"github.com/urfave/cli"
 )
 
-type codeGenerator interface {
-	Generate(inT, outT l.T, packagePath string) (string, error)
-}
-
-var (
-	cg = generator.CodeGenerator{}
-)
-
 func Build(c *cli.Context) error {
+	cg, err := platform.GetGenerator(c.String("lang"))
+	if err != nil {
+		return err
+	}
+
 	bFunc := l.F{
 		Link:   "github.com/tariel-x/anzer-examples/b",
 		TypeIn: l.MaxLength(l.TypeString, 10),

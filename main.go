@@ -15,6 +15,19 @@ func main() {
 	app.Version = "2.0"
 	app.Usage = "generate new functions and build system"
 
+	inputFlag := cli.StringFlag{
+		Name:  "input, i",
+		Usage: "Anzer source file",
+	}
+	outputFlag := cli.StringFlag{
+		Name:  "output, o",
+		Usage: "Output for generated files",
+	}
+	langFlag := cli.StringFlag{
+		Name:  "lang, l",
+		Usage: "Implementation language",
+	}
+
 	app.Commands = []cli.Command{
 		{
 			Name:    "build",
@@ -22,10 +35,7 @@ func main() {
 			Usage:   "build anzer project",
 			Action:  build.Build,
 			Flags: []cli.Flag{
-				cli.StringFlag{
-					Name:  "input, i",
-					Usage: "Anzer source file",
-				},
+				inputFlag,
 			},
 		},
 		{
@@ -34,14 +44,9 @@ func main() {
 			Usage:   "generate base for anzer func",
 			Action:  generate.Generate,
 			Flags: []cli.Flag{
-				cli.StringFlag{
-					Name:  "input, i",
-					Usage: "Anzer source file",
-				},
-				cli.StringFlag{
-					Name:  "lang, l",
-					Usage: "Implementation language",
-				},
+				inputFlag,
+				outputFlag,
+				langFlag,
 			},
 		},
 	}
