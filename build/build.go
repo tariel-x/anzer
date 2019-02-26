@@ -7,6 +7,45 @@ import (
 )
 
 func Build(c *cli.Context) error {
+	compose, err := getScheme()
+	if err != nil {
+		return err
+	}
+
+	if err := compose.Invalid(); err != nil {
+		return err
+	}
+
+	return buildComposition(compose)
+}
+
+func buildComposition(f l.Composable) error {
+	switch ft := f.(type) {
+	case l.Alias:
+		for _, sf := range ft.Compose {
+			if err := buildComposition(sf); err != nil {
+				return err
+			}
+		}
+	case l.F:
+		return buildFunc(ft)
+	}
+	return nil
+}
+
+func buildFunc(f l.F) error {
+	builder, err := platform.GetBuilder(f.Runtime)
+	if err != nil {
+		return err
+	}
+	dockersource, err := builder.Build(f.Link, f.In(), f.Out())
+	if err != nil {
+		return err
+	}
+	return platform.Build(dockersource)
+}
+
+func getScheme() (l.Composable, error) {
 	bFunc := l.F{
 		Link:    "github.com/tariel-x/anzer-examples/b",
 		Runtime: "golang",
@@ -40,18 +79,5 @@ func Build(c *cli.Context) error {
 			},
 		},
 	}
-
-	if err := compose.Invalid(); err != nil {
-		return err
-	}
-
-	builder, err := platform.GetBuilder(bFunc.Runtime)
-	if err != nil {
-		return err
-	}
-	dockersource, err := builder.Build(bFunc.Link, bFunc.In(), bFunc.Out())
-	if err != nil {
-		return err
-	}
-	return platform.Build(dockersource)
+	return compose, nil
 }
