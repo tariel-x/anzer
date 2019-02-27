@@ -1,6 +1,10 @@
 package build
 
 import (
+	"fmt"
+	"log"
+
+	"github.com/pkg/errors"
 	l "github.com/tariel-x/anzer/lang"
 	"github.com/tariel-x/anzer/platform"
 	"github.com/urfave/cli"
@@ -16,21 +20,36 @@ func Build(c *cli.Context) error {
 		return err
 	}
 
-	return buildComposition(compose)
+	chain, err := toChain(compose)
+	if err != nil {
+		return err
+	}
+
+	for _, el := range chain {
+		log.Printf("build function %s", el.Definition())
+		if err := buildFunc(el); err != nil {
+			return errors.Wrap(err, fmt.Sprintf("build function %s", el.Definition()))
+		}
+	}
+
+	return nil
 }
 
-func buildComposition(f l.Composable) error {
+func toChain(f l.Composable) ([]l.F, error) {
+	chain := []l.F{}
 	switch ft := f.(type) {
 	case l.Alias:
 		for _, sf := range ft.Compose {
-			if err := buildComposition(sf); err != nil {
-				return err
+			subchain, err := toChain(sf)
+			if err != nil {
+				return nil, err
 			}
+			chain = append(chain, subchain...)
 		}
 	case l.F:
-		return buildFunc(ft)
+		chain = append(chain, ft)
 	}
-	return nil
+	return chain, nil
 }
 
 func buildFunc(f l.F) error {
@@ -63,12 +82,14 @@ func getScheme() (l.Composable, error) {
 		Compose: []l.Composable{
 			l.F{
 				Link:    "github.com/tariel-x/anzer-examples/a",
+				Runtime: "golang",
 				TypeIn:  l.TypeString,
 				TypeOut: l.MaxLength(l.TypeString, 10),
 			},
 			bFunc,
 			l.F{
-				Link: "github.com/tariel-x/anzer-examples/c",
+				Link:    "github.com/tariel-x/anzer-examples/c",
+				Runtime: "golang",
 				TypeIn: l.Complex{
 					Fields: map[string]l.T{
 						"f1": l.Optional(l.TypeInteger),
