@@ -6,6 +6,12 @@ import (
 
 var dockerfile = `
 FROM golang:latest
+COPY exec exec
+RUN cp exec main.go
+RUN GO111MODULE=on go mod vendor
+RUN cp ./vendor/* / && rm -rf ./vendor
+RUN rm main.go
+RUN zip action.zip *
 `
 
 var funcTemplate = template.Must(template.New("").Parse(`

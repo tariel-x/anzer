@@ -34,7 +34,6 @@ func Build(source io.Reader) error {
 		fmt.Printf("%s", err.Error())
 	}
 	defer buildResponse.Body.Close()
-	fmt.Printf("********* %s **********\n", buildResponse.OSType)
 	termFd, isTerm := term.GetFdInfo(os.Stderr)
 	return jsonmessage.DisplayJSONMessagesStream(buildResponse.Body, os.Stderr, termFd, isTerm, nil)
 }
