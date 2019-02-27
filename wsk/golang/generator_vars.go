@@ -6,10 +6,13 @@ import (
 
 var dockerfile = `
 FROM golang:latest
+WORKDIR /action
 COPY exec exec
 RUN cp exec main.go
-RUN GO111MODULE=on go mod vendor
-RUN cp ./vendor/* / && rm -rf ./vendor
+RUN go mod init github.com/anzer/func
+RUN go build && rm action
+RUN go mod vendor
+RUN cp vendor/* . && rm -rf vendor
 RUN rm main.go
 RUN zip action.zip *
 `
