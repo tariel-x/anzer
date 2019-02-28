@@ -3,6 +3,7 @@ package golang
 import (
 	"bytes"
 	"errors"
+	"sort"
 	"strings"
 	"time"
 
@@ -109,10 +110,17 @@ func basic(tt l.Basic) *j.Statement {
 }
 
 func complex(tt l.Complex) *j.Statement {
+	keys := make([]string, 0, len(tt.Fields))
+	for key := range tt.Fields {
+		keys = append(keys, key)
+	}
+	sort.Strings(keys)
+
 	gofields := make([]j.Code, 0, len(tt.Fields))
-	for fn, f := range tt.Fields {
-		goftype := genTypeDef(f).Tag(map[string]string{"json": fn})
-		gof := j.Id(strings.Title(fn)).Add(goftype)
+	for _, key := range keys {
+		f := tt.Fields[key]
+		goftype := genTypeDef(f).Tag(map[string]string{"json": key})
+		gof := j.Id(strings.Title(key)).Add(goftype)
 		gofields = append(gofields, gof)
 	}
 	return j.Struct(gofields...)
