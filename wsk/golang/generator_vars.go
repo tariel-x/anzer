@@ -6,15 +6,12 @@ import (
 
 var dockerfile = `
 FROM golang:latest
-WORKDIR /action
-COPY exec exec
-RUN cp exec main.go
+WORKDIR /exec
+COPY exec main.go
 RUN go mod init github.com/anzer/func
-RUN go build && rm action
-RUN go mod vendor
-RUN cp vendor/* . && rm -rf vendor
-RUN rm main.go
-RUN zip action.zip *
+RUN cat main.go
+RUN go build
+RUN zip action.zip exec
 `
 
 var funcTemplate = template.Must(template.New("").Parse(`
@@ -25,8 +22,9 @@ package {{ .Package }}
 
 {{ .TypeOut}}
 
-func handle(input TypeIn) TypeOut {
-	return TypeOut{}
+func Handle(input TypeIn) TypeOut {
+	var out TypeOut
+	return out
 }
 `))
 
@@ -148,11 +146,11 @@ func setEnvironment(raw map[string]interface{}) {
 }
 
 func callHandler(input whiskInput) (whiskOutput, error) {
-	anzHandlerInput := AnzerIn{}
+	var anzHandlerInput AnzerIn
 	if err := json.Unmarshal(input.Value, &anzHandlerInput); err != nil {
 		return whiskOutput{}, err
 	}
-	anzHandlerOutput := {{ .Package }}.Handle(TypeIn(anzHandlerInput))
+	anzHandlerOutput := {{ .Package }}.Handle({{ .Package }}.TypeIn(anzHandlerInput))
 	handlerOutput := AnzerOut(anzHandlerOutput)
 	output, err := json.Marshal(handlerOutput)
 	return whiskOutput{

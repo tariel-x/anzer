@@ -65,14 +65,27 @@ func buildFunc(f l.F) error {
 }
 
 func getScheme() (l.Composable, error) {
-	bFunc := l.F{
-		Link:    "github.com/tariel-x/anzer-examples/b",
+	loadImages := l.F{
+		Link:    "github.com/tariel-x/anzer-example/load_images",
 		Runtime: "golang",
-		TypeIn:  l.MaxLength(l.TypeString, 10),
+		TypeIn: l.Complex{
+			Fields: map[string]l.T{
+				"name":        l.TypeString,
+				"description": l.TypeString,
+				"price":       l.TypeInteger,
+				"rawImages":   l.List(l.TypeString),
+				"phone":       l.TypeString,
+				"year":        l.Optional(l.TypeInteger),
+			},
+		},
 		TypeOut: l.Complex{
 			Fields: map[string]l.T{
-				"f1": l.Optional(l.TypeInteger),
-				"f2": l.List(l.TypeString),
+				"name":        l.TypeString,
+				"description": l.TypeString,
+				"price":       l.TypeInteger,
+				"photos":      l.List(l.TypeString),
+				"phone":       l.TypeString,
+				"year":        l.Optional(l.TypeInteger),
 			},
 		},
 	}
@@ -81,22 +94,35 @@ func getScheme() (l.Composable, error) {
 		Name: "c",
 		Compose: []l.Composable{
 			l.F{
-				Link:    "github.com/tariel-x/anzer-examples/a",
+				Link:    "github.com/tariel-x/anzer-example/transform",
 				Runtime: "golang",
 				TypeIn:  l.TypeString,
-				TypeOut: l.MaxLength(l.TypeString, 10),
+				TypeOut: l.Complex{
+					Fields: map[string]l.T{
+						"name":        l.TypeString,
+						"description": l.TypeString,
+						"price":       l.TypeInteger,
+						"rawImages":   l.List(l.TypeString),
+						"phone":       l.TypeString,
+						"year":        l.Optional(l.TypeInteger),
+					},
+				},
 			},
-			bFunc,
+			loadImages,
 			l.F{
-				Link:    "github.com/tariel-x/anzer-examples/c",
+				Link:    "github.com/tariel-x/anzer-example/create",
 				Runtime: "golang",
 				TypeIn: l.Complex{
 					Fields: map[string]l.T{
-						"f1": l.Optional(l.TypeInteger),
-						"f2": l.List(l.TypeString),
+						"name":        l.TypeString,
+						"description": l.TypeString,
+						"price":       l.TypeInteger,
+						"photos":      l.List(l.TypeString),
+						"phone":       l.TypeString,
+						"year":        l.Optional(l.TypeInteger),
 					},
 				},
-				TypeOut: l.TypeBool,
+				TypeOut: l.TypeInteger,
 			},
 		},
 	}
