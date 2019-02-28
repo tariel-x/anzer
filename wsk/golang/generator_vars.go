@@ -7,10 +7,12 @@ import (
 var dockerfile = `
 FROM golang:latest
 WORKDIR /exec
+RUN apt update && apt install -y zip
 COPY exec main.go
-RUN go mod init github.com/anzer/func
+RUN go mod init github.com/anzer/exec
 RUN cat main.go
 RUN go build
+RUN ls -alF
 RUN zip action.zip exec
 `
 
