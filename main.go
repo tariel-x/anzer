@@ -42,6 +42,10 @@ func main() {
 			Flags: []cli.Flag{
 				inputFlag,
 				outputFlag,
+				cli.StringFlag{
+					Name:  "function, f",
+					Usage: "Function to generate",
+				},
 			},
 		},
 	}
