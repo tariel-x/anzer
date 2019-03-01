@@ -12,7 +12,7 @@ import (
 	"github.com/docker/docker/pkg/term"
 )
 
-func Build(source io.Reader) error {
+func Build(source io.Reader, name string) error {
 	dockerCli, err := client.NewEnvClient()
 	if err != nil {
 		return err
@@ -24,7 +24,7 @@ func Build(source io.Reader) error {
 		Remove:         true,
 		ForceRemove:    true,
 		PullParent:     true,
-		Tags:           []string{"tst"},
+		Tags:           []string{name},
 		Dockerfile:     "Dockerfile",
 		BuildArgs:      args,
 	}

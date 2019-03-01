@@ -19,6 +19,11 @@ func main() {
 		Name:  "input, i",
 		Usage: "Anzer source file",
 	}
+	platformFlag := cli.StringFlag{
+		Name:  "platform, p",
+		Usage: "Target FaaS platform",
+	}
+
 	outputFlag := cli.StringFlag{
 		Name:  "output, o",
 		Usage: "Output for generated files",
@@ -32,6 +37,7 @@ func main() {
 			Action:  build.Build,
 			Flags: []cli.Flag{
 				inputFlag,
+				platformFlag,
 			},
 		},
 		{
