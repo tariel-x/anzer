@@ -70,6 +70,10 @@ func (g Generator) GenerateDocker() string {
 	return dockerfile
 }
 
+func (g Generator) GenerateMakefile() string {
+	return makefile
+}
+
 func genType(t l.T, name string) string {
 	return j.Type().Id(name).Add(genTypeDef(t)).GoString()
 }

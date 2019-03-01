@@ -15,9 +15,7 @@ var (
 )
 
 type CodeGenerator interface {
-	Generate(inT, outT l.T, packagePath string) (string, error)
 	GenerateFunc(inT, outT l.T, packagePath string) (string, error)
-	GenerateDocker() string
 }
 
 type Builder interface {

@@ -27,7 +27,7 @@ func (b Builder) Build(link string, inT l.T, outT l.T) (io.Reader, error) {
 	if err != nil {
 		return nil, err
 	}
-	dockercontent := b.generator.GenerateDocker()
+	makefile := b.generator.GenerateMakefile()
 
 	var buf bytes.Buffer
 	tw := tar.NewWriter(&buf)
@@ -37,7 +37,7 @@ func (b Builder) Build(link string, inT l.T, outT l.T) (io.Reader, error) {
 	if err := writeTar("exec", []byte(generated), tw); err != nil {
 		return nil, err
 	}
-	if err := writeTar("Dockerfile", []byte(dockercontent), tw); err != nil {
+	if err := writeTar("Makefile", []byte(makefile), tw); err != nil {
 		return nil, err
 	}
 	return bytes.NewBuffer(buf.Bytes()), nil
