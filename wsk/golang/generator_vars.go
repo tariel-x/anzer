@@ -5,7 +5,7 @@ import (
 )
 
 var dockerfile = `
-FROM golang:latest
+FROM golang:1.11
 WORKDIR /exec
 RUN apt update && apt install -y zip
 COPY exec main.go
