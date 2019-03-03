@@ -117,7 +117,7 @@ func findFunc(name string, f l.Composable) *l.F {
 			}
 		}
 	case l.F:
-		if ft.Link == name {
+		if string(ft.Link) == name {
 			return &ft
 		}
 	}

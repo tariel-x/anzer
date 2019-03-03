@@ -53,15 +53,21 @@ func toChain(f l.Composable) ([]l.F, error) {
 }
 
 func buildFunc(f l.F) error {
-	builder, err := platform.GetBuilder(f.Runtime)
+	dockerGenerator, err := platform.GetDockerGenerator(f.Runtime)
 	if err != nil {
 		return err
 	}
-	dockersource, err := builder.Build(f.Link, f.In(), f.Out())
+	opts, err := dockerGenerator.GetBuildOptions(f.Link, f.In(), f.Out())
 	if err != nil {
 		return err
 	}
-	return platform.Build(dockersource)
+
+	builder, err := platform.NewBuilder()
+	if err != nil {
+		return err
+	}
+
+	return builder.BuildWithImage(opts, f.Link)
 }
 
 func getScheme() (l.Composable, error) {

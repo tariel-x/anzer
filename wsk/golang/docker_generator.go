@@ -3,44 +3,47 @@ package golang
 import (
 	"archive/tar"
 	"bytes"
-	"io"
 
 	l "github.com/tariel-x/anzer/lang"
+	"github.com/tariel-x/anzer/platform/models"
 )
 
 const (
 	permissionMode int64 = 0666
 )
 
-type Builder struct {
+type DockerGenerator struct {
 	generator Generator
 }
 
-func NewBuilder() Builder {
-	return Builder{
+func NewDockerGenerator() DockerGenerator {
+	return DockerGenerator{
 		generator: NewGenerator(),
 	}
 }
 
-func (b Builder) Build(link string, inT l.T, outT l.T) (io.Reader, error) {
-	generated, err := b.generator.Generate(inT, outT, link)
+func (dg DockerGenerator) GetBuildOptions(link l.FunctionLink, inT l.T, outT l.T) (*models.BuildWithImageOpts, error) {
+	generated, err := dg.generator.Generate(inT, outT, link)
 	if err != nil {
 		return nil, err
 	}
-	dockercontent := b.generator.GenerateDocker()
+	dockerfile := dg.generator.GenerateDocker()
 
 	var buf bytes.Buffer
 	tw := tar.NewWriter(&buf)
 	defer tw.Close()
 	// TODO: handler error
 
-	if err := writeTar("exec", []byte(generated), tw); err != nil {
+	if err := writeTar("main.go", []byte(generated), tw); err != nil {
 		return nil, err
 	}
-	if err := writeTar("Dockerfile", []byte(dockercontent), tw); err != nil {
+	if err := writeTar("Dockerfile", []byte(dockerfile), tw); err != nil {
 		return nil, err
 	}
-	return bytes.NewBuffer(buf.Bytes()), nil
+	return &models.BuildWithImageOpts{
+		Source:     bytes.NewBuffer(buf.Bytes()),
+		ActionPath: "/exec/action.zip",
+	}, nil
 }
 
 func writeTar(name string, file []byte, tw *tar.Writer) error {

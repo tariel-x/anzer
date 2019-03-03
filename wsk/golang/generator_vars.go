@@ -5,15 +5,25 @@ import (
 )
 
 var dockerfile = `
-FROM golang:1.11
+FROM tarielx/anzer:latest
 WORKDIR /exec
-RUN apt update && apt install -y zip
-COPY exec main.go
+COPY main.go main.go
 RUN go mod init github.com/anzer/exec
-RUN cat main.go
 RUN go build
-RUN ls -alF
 RUN zip action.zip exec
+`
+
+var makefile = `
+all: init build zip
+
+init:
+	go mod init github.com/anzer/exec
+
+build:
+	go build
+
+zip:
+	zip action.zip exec
 `
 
 var funcTemplate = template.Must(template.New("").Parse(`
