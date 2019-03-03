@@ -21,7 +21,8 @@ func NewGenerator() Generator {
 	return Generator{}
 }
 
-func (g Generator) Generate(inT, outT l.T, packagePath string) (string, error) {
+func (g Generator) Generate(inT, outT l.T, link l.FunctionLink) (string, error) {
+	packagePath := string(link)
 	packageElements := strings.Split(packagePath, "/")
 	if len(packageElements) == 0 {
 		return "", errInvalidPackage
@@ -44,7 +45,8 @@ func (g Generator) Generate(inT, outT l.T, packagePath string) (string, error) {
 	return result.String(), err
 }
 
-func (g Generator) GenerateFunc(inT, outT l.T, packagePath string) (string, error) {
+func (g Generator) GenerateFunc(inT, outT l.T, link l.FunctionLink) (string, error) {
+	packagePath := string(link)
 	packageElements := strings.Split(packagePath, "/")
 	if len(packageElements) == 0 {
 		return "", errInvalidPackage

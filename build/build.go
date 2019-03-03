@@ -57,11 +57,11 @@ func buildFunc(f l.F) error {
 	if err != nil {
 		return err
 	}
-	dockersource, err := builder.Build(f.Link, f.In(), f.Out())
+	opts, err := builder.GetBuildOptions(f.Link, f.In(), f.Out())
 	if err != nil {
 		return err
 	}
-	return platform.Build(dockersource)
+	return platform.Build(opts, f.Link)
 }
 
 func getScheme() (l.Composable, error) {

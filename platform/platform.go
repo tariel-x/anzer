@@ -2,10 +2,10 @@ package platform
 
 import (
 	"errors"
-	"github.com/tariel-x/anzer/wsk"
 	"io"
 
 	l "github.com/tariel-x/anzer/lang"
+	"github.com/tariel-x/anzer/wsk"
 	"github.com/tariel-x/anzer/wsk/golang"
 )
 
@@ -15,26 +15,13 @@ var (
 )
 
 type CodeGenerator interface {
-	GenerateFunc(inT, outT l.T, packagePath string) (string, error)
-}
-
-type Builder interface {
-	Build(link string, inT l.T, outT l.T) (io.Reader, error)
+	GenerateFunc(inT, outT l.T, link l.FunctionLink) (string, error)
 }
 
 func GetGenerator(runtime string) (CodeGenerator, error) {
 	switch runtime {
 	case "golang":
 		return golang.NewGenerator(), nil
-	default:
-		return nil, errUndefinedLanguage
-	}
-}
-
-func GetBuilder(runtime string) (Builder, error) {
-	switch runtime {
-	case "golang":
-		return golang.NewBuilder(), nil
 	default:
 		return nil, errUndefinedLanguage
 	}

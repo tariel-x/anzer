@@ -3,9 +3,9 @@ package golang
 import (
 	"archive/tar"
 	"bytes"
-	"io"
 
 	l "github.com/tariel-x/anzer/lang"
+	"github.com/tariel-x/anzer/platform/models"
 )
 
 const (
@@ -22,7 +22,7 @@ func NewBuilder() Builder {
 	}
 }
 
-func (b Builder) Build(link string, inT l.T, outT l.T) (io.Reader, error) {
+func (b Builder) GetBuildOptions(link l.FunctionLink, inT l.T, outT l.T) (*models.BuildWithImageOpts, error) {
 	generated, err := b.generator.Generate(inT, outT, link)
 	if err != nil {
 		return nil, err
@@ -34,13 +34,16 @@ func (b Builder) Build(link string, inT l.T, outT l.T) (io.Reader, error) {
 	defer tw.Close()
 	// TODO: handler error
 
-	if err := writeTar("exec", []byte(generated), tw); err != nil {
+	if err := writeTar("main.go", []byte(generated), tw); err != nil {
 		return nil, err
 	}
 	if err := writeTar("Makefile", []byte(makefile), tw); err != nil {
 		return nil, err
 	}
-	return bytes.NewBuffer(buf.Bytes()), nil
+	return &models.BuildWithImageOpts{
+		Source:     bytes.NewBuffer(buf.Bytes()),
+		ActionPath: "",
+	}, nil
 }
 
 func writeTar(name string, file []byte, tw *tar.Writer) error {

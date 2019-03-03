@@ -59,9 +59,11 @@ func (a Alias) Invalid() error {
 	return nil
 }
 
+type FunctionLink string
+
 type F struct {
 	Name    string
-	Link    string
+	Link    FunctionLink
 	Runtime string
 	TypeIn  T
 	TypeOut T
@@ -74,7 +76,7 @@ func (f F) Definition() string {
 	if f.Link == "" {
 		return ""
 	}
-	return path.Base(f.Link)
+	return path.Base(string(f.Link))
 }
 
 func (f F) In() T {

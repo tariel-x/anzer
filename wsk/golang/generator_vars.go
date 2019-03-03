@@ -5,10 +5,8 @@ import (
 )
 
 var dockerfile = `
-FROM golang:1.11
+FROM tarielx/anzer:latest
 WORKDIR /exec
-RUN apt update && apt install -y zip
-COPY exec main.go
 RUN go mod init github.com/anzer/exec
 RUN cat main.go
 RUN go build
