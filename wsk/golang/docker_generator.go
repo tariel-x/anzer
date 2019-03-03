@@ -12,22 +12,22 @@ const (
 	permissionMode int64 = 0666
 )
 
-type Builder struct {
+type DockerGenerator struct {
 	generator Generator
 }
 
-func NewBuilder() Builder {
-	return Builder{
+func NewDockerGenerator() DockerGenerator {
+	return DockerGenerator{
 		generator: NewGenerator(),
 	}
 }
 
-func (b Builder) GetBuildOptions(link l.FunctionLink, inT l.T, outT l.T) (*models.BuildWithImageOpts, error) {
-	generated, err := b.generator.Generate(inT, outT, link)
+func (dg DockerGenerator) GetBuildOptions(link l.FunctionLink, inT l.T, outT l.T) (*models.BuildWithImageOpts, error) {
+	generated, err := dg.generator.Generate(inT, outT, link)
 	if err != nil {
 		return nil, err
 	}
-	makefile := b.generator.GenerateMakefile()
+	dockerfile := dg.generator.GenerateDocker()
 
 	var buf bytes.Buffer
 	tw := tar.NewWriter(&buf)
@@ -37,12 +37,12 @@ func (b Builder) GetBuildOptions(link l.FunctionLink, inT l.T, outT l.T) (*model
 	if err := writeTar("main.go", []byte(generated), tw); err != nil {
 		return nil, err
 	}
-	if err := writeTar("Makefile", []byte(makefile), tw); err != nil {
+	if err := writeTar("Dockerfile", []byte(dockerfile), tw); err != nil {
 		return nil, err
 	}
 	return &models.BuildWithImageOpts{
 		Source:     bytes.NewBuffer(buf.Bytes()),
-		ActionPath: "",
+		ActionPath: "/exec/action.zip",
 	}, nil
 }
 

@@ -7,10 +7,9 @@ import (
 var dockerfile = `
 FROM tarielx/anzer:latest
 WORKDIR /exec
+COPY main.go main.go
 RUN go mod init github.com/anzer/exec
-RUN cat main.go
 RUN go build
-RUN ls -alF
 RUN zip action.zip exec
 `
 
