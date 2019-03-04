@@ -36,7 +36,7 @@ type Platform interface {
 func GetPlatform(platform string) (Platform, error) {
 	switch platform {
 	case "golang":
-		return wsk.New(), nil
+		return wsk.New()
 	default:
 		return nil, errUndefinedPlatform
 	}

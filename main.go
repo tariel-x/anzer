@@ -54,6 +54,11 @@ func main() {
 				},
 			},
 		},
+		{
+			Name:   "tst",
+			Usage:  "test",
+			Action: build.Tst,
+		},
 	}
 
 	err := app.Run(os.Args)

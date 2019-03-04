@@ -3,12 +3,22 @@ package build
 import (
 	"fmt"
 	"log"
+	"strings"
 
 	"github.com/pkg/errors"
 	l "github.com/tariel-x/anzer/lang"
 	"github.com/tariel-x/anzer/platform"
+	"github.com/tariel-x/anzer/wsk"
 	"github.com/urfave/cli"
 )
+
+func Tst(c *cli.Context) error {
+	w, err := wsk.New()
+	if err != nil {
+		return err
+	}
+	return w.List()
+}
 
 func Build(c *cli.Context) error {
 	compose, err := getScheme()
@@ -67,7 +77,18 @@ func buildFunc(f l.F) error {
 		return err
 	}
 
-	return builder.BuildWithImage(opts, f.Link)
+	action, err := builder.BuildWithImage(opts, f.Link)
+	if err != nil {
+		return err
+	}
+
+	w, err := wsk.New()
+	if err != nil {
+		return err
+	}
+
+	name := strings.Replace(string(f.Link), "/", "_", -1)
+	return w.Create(action, name, "go:1.11")
 }
 
 func getScheme() (l.Composable, error) {

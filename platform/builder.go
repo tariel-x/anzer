@@ -2,11 +2,13 @@ package platform
 
 import (
 	"archive/tar"
+	"bufio"
 	"context"
-	"github.com/docker/docker/api/types/container"
 	"io"
 	"os"
 	"strings"
+
+	"github.com/docker/docker/api/types/container"
 
 	"github.com/docker/docker/api/types"
 	"github.com/docker/docker/client"
@@ -50,24 +52,25 @@ func NewBuilder() (Builder, error) {
 	}, nil
 }
 
-func (b Builder) BuildWithImage(opts *models.BuildWithImageOpts, link l.FunctionLink) error {
+func (b Builder) BuildWithImage(opts *models.BuildWithImageOpts, link l.FunctionLink) (io.Reader, error) {
 	if opts == nil {
-		return errEmptyOptions
+		return nil, errEmptyOptions
 	}
 	name := strings.Replace(string(link), "/", "_", -1)
 	tag := name + ":latest"
 	tags := []string{tag}
 	if err := b.buildImage(opts.Source, tags); err != nil {
-		return err
+		return nil, err
 	}
 	containerID, err := b.runImage(tag, nil)
 	if err != nil {
-		return err
+		return nil, err
 	}
 	data, err := b.copyFromContainer(containerID, opts.ActionPath)
 	if err != nil {
-		return err
+		return nil, err
 	}
+
 	reader := tar.NewReader(data)
 	for {
 		h, err := reader.Next()
@@ -75,22 +78,12 @@ func (b Builder) BuildWithImage(opts *models.BuildWithImageOpts, link l.Function
 			break
 		}
 		if err != nil {
-			return errors.Wrap(err, "reading next header from tar")
+			return nil, errors.Wrap(err, "reading next header from tar")
 		}
-		f, err := os.Create(name + ".zip")
-		if err != nil {
-			return err
-		}
-		defer f.Close()
-		_, err = io.CopyN(f, reader, h.Size)
-		if err == io.EOF {
-			break
-		}
-		if err != nil {
-			return errors.Wrap(err, "coping contents of tar")
-		}
+
+		return bufio.NewReaderSize(reader, int(h.Size)), nil
 	}
-	return nil
+	return nil, nil
 }
 
 func (b Builder) buildImage(source io.Reader, tags []string) error {
