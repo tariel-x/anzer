@@ -35,9 +35,14 @@ func Build(c *cli.Context) error {
 		return err
 	}
 
+	plat, err := platform.GetPlatform("wsk")
+	if err != nil {
+		return err
+	}
+
 	for _, el := range chain {
 		log.Printf("build function %s", el.Definition())
-		if err := buildFunc(el); err != nil {
+		if err := buildFunc(el, plat); err != nil {
 			return errors.Wrap(err, fmt.Sprintf("build function %s", el.Definition()))
 		}
 	}
@@ -62,7 +67,7 @@ func toChain(f l.Composable) ([]l.F, error) {
 	return chain, nil
 }
 
-func buildFunc(f l.F) error {
+func buildFunc(f l.F, plat platform.Platform) error {
 	dockerGenerator, err := platform.GetDockerGenerator(f.Runtime)
 	if err != nil {
 		return err
@@ -82,19 +87,14 @@ func buildFunc(f l.F) error {
 		return err
 	}
 
-	w, err := wsk.New()
-	if err != nil {
-		return err
-	}
-
 	name := strings.Replace(string(f.Link), "/", "_", -1)
-	return w.Create(action, name, "go:1.11")
+	return plat.Create(action, name, f.Runtime)
 }
 
 func getScheme() (l.Composable, error) {
 	loadImages := l.F{
 		Link:    "github.com/tariel-x/anzer-example/load_images",
-		Runtime: "golang",
+		Runtime: "go",
 		TypeIn: l.Complex{
 			Fields: map[string]l.T{
 				"name":        l.TypeString,
@@ -122,7 +122,7 @@ func getScheme() (l.Composable, error) {
 		Compose: []l.Composable{
 			l.F{
 				Link:    "github.com/tariel-x/anzer-example/transform",
-				Runtime: "golang",
+				Runtime: "go",
 				TypeIn:  l.TypeString,
 				TypeOut: l.Complex{
 					Fields: map[string]l.T{
@@ -138,7 +138,7 @@ func getScheme() (l.Composable, error) {
 			loadImages,
 			l.F{
 				Link:    "github.com/tariel-x/anzer-example/create",
-				Runtime: "golang",
+				Runtime: "go",
 				TypeIn: l.Complex{
 					Fields: map[string]l.T{
 						"name":        l.TypeString,

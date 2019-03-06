@@ -27,7 +27,7 @@ func Generate(c *cli.Context) error {
 
 	loadImages := l.F{
 		Link:    "github.com/tariel-x/anzer-example/load_images",
-		Runtime: "golang",
+		Runtime: "go",
 		TypeIn: l.Complex{
 			Fields: map[string]l.T{
 				"name":        l.TypeString,
@@ -55,7 +55,7 @@ func Generate(c *cli.Context) error {
 		Compose: []l.Composable{
 			l.F{
 				Link:    "github.com/tariel-x/anzer-example/transform",
-				Runtime: "golang",
+				Runtime: "go",
 				TypeIn:  l.TypeString,
 				TypeOut: l.Complex{
 					Fields: map[string]l.T{
@@ -71,7 +71,7 @@ func Generate(c *cli.Context) error {
 			loadImages,
 			l.F{
 				Link:    "github.com/tariel-x/anzer-example/create",
-				Runtime: "golang",
+				Runtime: "go",
 				TypeIn: l.Complex{
 					Fields: map[string]l.T{
 						"name":        l.TypeString,
