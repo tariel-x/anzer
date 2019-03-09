@@ -25,12 +25,12 @@ var (
 )
 
 type DockerGenerator interface {
-	GetBuildOptions(link l.FunctionLink, inT l.T, outT l.T) (*models.BuildWithImageOpts, error)
+	GetBuildOptions(link l.FunctionLink, inT, outT l.T, debug bool) (*models.BuildWithImageOpts, error)
 }
 
 func GetDockerGenerator(runtime string) (DockerGenerator, error) {
 	switch runtime {
-	case "golang":
+	case "go":
 		p := golang.NewDockerGenerator()
 		return p, nil
 	default:

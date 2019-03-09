@@ -5,6 +5,7 @@ import (
 	"os"
 
 	"github.com/tariel-x/anzer/build"
+	"github.com/tariel-x/anzer/export"
 	"github.com/tariel-x/anzer/generate"
 	"github.com/urfave/cli"
 )
@@ -23,7 +24,10 @@ func main() {
 		Name:  "platform, p",
 		Usage: "Target FaaS platform",
 	}
-
+	debugFlag := cli.StringFlag{
+		Name:  "debug, d",
+		Usage: "Debug mode, specific for platform and language",
+	}
 	outputFlag := cli.StringFlag{
 		Name:  "output, o",
 		Usage: "Output for generated files",
@@ -55,9 +59,15 @@ func main() {
 			},
 		},
 		{
-			Name:   "tst",
-			Usage:  "test",
-			Action: build.Tst,
+			Name:    "export",
+			Aliases: []string{"e"},
+			Usage:   "build functions and export to zip files",
+			Action:  export.Export,
+			Flags: []cli.Flag{
+				inputFlag,
+				platformFlag,
+				debugFlag,
+			},
 		},
 	}
 

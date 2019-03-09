@@ -68,7 +68,10 @@ func (g Generator) GenerateFunc(inT, outT l.T, link l.FunctionLink) (string, err
 	return result.String(), err
 }
 
-func (g Generator) GenerateDocker() string {
+func (g Generator) GenerateDocker(debug bool) string {
+	if debug {
+		return dockerfileDebug
+	}
 	return dockerfile
 }
 

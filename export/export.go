@@ -1,26 +1,20 @@
-package build
+package export
 
 import (
 	"fmt"
+	"io/ioutil"
 	"log"
 	"strings"
 
 	"github.com/pkg/errors"
 	l "github.com/tariel-x/anzer/lang"
 	"github.com/tariel-x/anzer/platform"
-	"github.com/tariel-x/anzer/wsk"
 	"github.com/urfave/cli"
 )
 
-func Tst(c *cli.Context) error {
-	w, err := wsk.New()
-	if err != nil {
-		return err
-	}
-	return w.List()
-}
+func Export(c *cli.Context) error {
+	debug := c.Bool("debug")
 
-func Build(c *cli.Context) error {
 	compose, err := getScheme()
 	if err != nil {
 		return err
@@ -35,14 +29,9 @@ func Build(c *cli.Context) error {
 		return err
 	}
 
-	plat, err := platform.GetPlatform("wsk")
-	if err != nil {
-		return err
-	}
-
 	for _, el := range chain {
 		log.Printf("build function %s", el.Definition())
-		if err := buildFunc(el, plat); err != nil {
+		if err := buildFunc(el, debug); err != nil {
 			return errors.Wrap(err, fmt.Sprintf("build function %s", el.Definition()))
 		}
 	}
@@ -67,12 +56,12 @@ func toChain(f l.Composable) ([]l.F, error) {
 	return chain, nil
 }
 
-func buildFunc(f l.F, plat platform.Platform) error {
+func buildFunc(f l.F, debug bool) error {
 	dockerGenerator, err := platform.GetDockerGenerator(f.Runtime)
 	if err != nil {
 		return err
 	}
-	opts, err := dockerGenerator.GetBuildOptions(f.Link, f.In(), f.Out(), false)
+	opts, err := dockerGenerator.GetBuildOptions(f.Link, f.In(), f.Out(), debug)
 	if err != nil {
 		return err
 	}
@@ -86,9 +75,14 @@ func buildFunc(f l.F, plat platform.Platform) error {
 	if err != nil {
 		return err
 	}
+	zipFile, err := ioutil.ReadAll(action)
+	if err != nil {
+		return err
+	}
 
 	name := strings.Replace(string(f.Link), "/", "_", -1)
-	return plat.Create(action, name, f.Runtime)
+
+	return ioutil.WriteFile(name+".zip", zipFile, 0666)
 }
 
 func getScheme() (l.Composable, error) {

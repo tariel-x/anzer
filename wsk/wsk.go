@@ -6,6 +6,7 @@ import (
 	"io"
 	"io/ioutil"
 	"net/http"
+	"strings"
 
 	"github.com/apache/incubator-openwhisk-client-go/whisk"
 )
@@ -37,6 +38,10 @@ func (w Wsk) Update(action io.Reader, name, runtime string) error {
 }
 
 func (w Wsk) Create(action io.Reader, name, runtime string) error {
+	if len(strings.Split(runtime, ":")) == 1 {
+		runtime = runtime + ":default"
+	}
+
 	exec, err := w.makeExec(action, runtime)
 	if err != nil {
 		return err

@@ -22,17 +22,17 @@ func NewDockerGenerator() DockerGenerator {
 	}
 }
 
-func (dg DockerGenerator) GetBuildOptions(link l.FunctionLink, inT l.T, outT l.T) (*models.BuildWithImageOpts, error) {
+func (dg DockerGenerator) GetBuildOptions(link l.FunctionLink, inT, outT l.T, debug bool) (*models.BuildWithImageOpts, error) {
 	generated, err := dg.generator.Generate(inT, outT, link)
 	if err != nil {
 		return nil, err
 	}
-	dockerfile := dg.generator.GenerateDocker()
+	dockerfile := dg.generator.GenerateDocker(debug)
 
 	var buf bytes.Buffer
 	tw := tar.NewWriter(&buf)
 	defer tw.Close()
-	// TODO: handler error
+	// TODO: handle error
 
 	if err := writeTar("main.go", []byte(generated), tw); err != nil {
 		return nil, err
@@ -43,6 +43,7 @@ func (dg DockerGenerator) GetBuildOptions(link l.FunctionLink, inT l.T, outT l.T
 	return &models.BuildWithImageOpts{
 		Source:     bytes.NewBuffer(buf.Bytes()),
 		ActionPath: "/exec/action.zip",
+		Debug:      debug,
 	}, nil
 }
 

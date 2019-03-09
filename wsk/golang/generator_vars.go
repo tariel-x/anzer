@@ -13,6 +13,15 @@ RUN go build
 RUN zip action.zip exec
 `
 
+var dockerfileDebug = `
+FROM tarielx/anzer:latest
+WORKDIR /exec
+COPY main.go main.go
+RUN go mod init github.com/anzer/exec
+RUN go build
+RUN zip action.zip *
+`
+
 var makefile = `
 all: init build zip
 
