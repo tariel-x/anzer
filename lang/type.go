@@ -9,6 +9,7 @@ type T interface {
 const (
 	TypeString Basic = iota
 	TypeInteger
+	TypeFloat
 	TypeBool
 	TypeMaxLength ConstructorType = iota
 	TypeMinLength

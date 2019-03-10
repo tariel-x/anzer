@@ -111,6 +111,8 @@ func basic(tt l.Basic) *j.Statement {
 		return j.String()
 	case l.TypeInteger:
 		return j.Int()
+	case l.TypeFloat:
+		return j.Float64()
 	case l.TypeBool:
 		return j.Bool()
 	default:
