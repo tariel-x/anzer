@@ -19,7 +19,8 @@ WORKDIR /exec
 COPY main.go main.go
 RUN go mod init github.com/anzer/exec
 RUN go build
-RUN zip action.zip *
+RUN go mod vendor
+RUN zip -r action.zip *
 `
 
 var makefile = `

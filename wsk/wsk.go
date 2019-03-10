@@ -53,6 +53,10 @@ func (w Wsk) Create(action io.Reader, name, runtime string) error {
 		Namespace: "",
 		Publish:   &publish,
 	}
+	wskaction.Annotations.AddOrReplace(&whisk.KeyValue{
+		Key:   "web-export",
+		Value: true,
+	})
 	readyAction, _, err := w.client.Actions.Insert(&wskaction, true)
 	fmt.Println(readyAction)
 	return err

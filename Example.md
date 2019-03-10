@@ -25,10 +25,42 @@ type Car = {
 tr github.com/tariel-x/anzer-examples/transform[go] :: Req -> Car
 ```
 
-Example curl to run transform:
+## Create POST api:
+
+1. Build `wsk -i action update github.com_tariel-x_anzer-example_transform --web true`.
+2. Create api endpoint `wsk -i api create /transform /post post github.com_tariel-x_anzer-example_transform --response-type json` and get endpoint url.
+3. Make the following request
 
 ```bash
-curl -X GET \
-  'http://wsk.tariel.space:9001/api/23bc46b1-71f6-4ed5-8c54-816aa4f8c502/create?brand=Opel&model=Astra%20J&price=700&year=2014&body=%D1%85%D1%8D%D1%82%D1%87%D0%B1%D1%8D%D0%BA%203%20%D0%B4%D0%B2&phone=795400005500' \
+curl -X POST \
+  http://wsk.tariel.space:9001/api/23bc46b1-71f6-4ed5-8c54-816aa4f8c502/transform/post \
+  -H 'Content-Type: application/json' \
+  -d '{
+    "brand": "Opel",
+    "model": "Astra J",
+    "phone": "79095544445",
+    "price": 500.50,
+    "photos": [
+    	"http://origin.org/path/image.jpeg"	
+    ],
+    "year": 2014
+}'
+```
 
+The expected response is:
+```json
+{
+    "value": {
+        "body": null,
+        "brand": "Opel",
+        "generation": "J",
+        "model": "Astra",
+        "phone": "79095544445",
+        "price": 500,
+        "rawImages": [
+            "http://origin.org/path/image.jpeg"
+        ],
+        "year": 2014
+    }
+}
 ```
