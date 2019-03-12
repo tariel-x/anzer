@@ -2,30 +2,33 @@ grammar Anzer;
 
 forms : form+ EOF;
 
-form : (typeDeclaration | functionDeclaration) ;
+form : typeDeclaration
+    | functionDeclaration
+    ;
 
 typeDeclaration : 'type' typeName '=' typeDefinition;
 
-typeName: Ident;
+typeName: UpperIdent;
 
-typeDefinition:  '{' ( typeField )* '}' ;
+typeDefinition:  '{' typeField * '}' ;
 
-typeField : fieldName '::' type* ;
+typeField : fieldName '::' type * ;
 
-fieldName : Field;
+fieldName : LowIdent | UpperIdent;
 
-type : Ident;
-
-WS : [ \t\r\n]+ -> skip ;
+type : LowIdent | UpperIdent;
 
 functionDeclaration: 'func';
 
 // Identifiers
 
-fragment Letter : [A-Za-z_];
-fragment LowLetter : [a-z];
-fragment DecimalDigit: [0-9];
+fragment Letter : [A-Za-z_] ;
+fragment LowLetter : [a-z] ;
+fragment UpperLetter : [A-Z] ;
+fragment DecimalDigit: [0-9] ;
 
-Ident : Letter (Letter | DecimalDigit)*;
+LowIdent : LowLetter (Letter | DecimalDigit)* ;
 
-Field : LowLetter (Letter | DecimalDigit)*;
+UpperIdent : UpperLetter (Letter | DecimalDigit)* ;
+
+WS : [ \t\r\n]+ -> skip ;
