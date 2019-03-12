@@ -34,11 +34,12 @@ fragment Letter : [A-Za-z_] ;
 fragment LowLetter : [a-z] ;
 fragment UpperLetter : [A-Z] ;
 fragment DecimalDigit: [0-9] ;
+fragment Urlpart : ('-' | Letter | DecimalDigit ) ;
 
 LowIdent : LowLetter (Letter | DecimalDigit)* ;
 
 UpperIdent : UpperLetter (Letter | DecimalDigit)* ;
 
-URL : ('a' .. 'z')+ '.' ('a' .. 'z')+ '/' ( ('0' .. '9') | ('a' .. 'z') | '-' | '_' | '/' )+ ;
+URL : ( Urlpart | '.' )+ '.' Letter+ '/' ( Urlpart | '/' )+ ;
 
 WS : [ \t\r\n]+ -> skip ;
