@@ -4,13 +4,15 @@ forms : form+ EOF;
 
 form : typeDeclaration
     | funcDeclaration
+    | localFuncDeclaration
+    | invokeCmd
     ;
 
 typeDeclaration : 'type' typeName '=' typeDefinition;
 
-typeName: UpperIdent;
+typeName : UpperIdent;
 
-typeDefinition:  '{' typeField * '}' ;
+typeDefinition :  '{' typeField * '}' ;
 
 typeField : fieldName '::' type * ;
 
@@ -20,13 +22,21 @@ type : LowIdent | UpperIdent;
 
 // Func
 
-funcDeclaration: funcName? url '[' runtime ']' '::' typeName '->' typeName;
+funcDeclaration : funcName? url '[' runtime ']' '::' typeName '->' typeName;
 
 funcName : LowIdent ;
 
 runtime : LowIdent ;
 
 url : URL ;
+
+// Local func
+
+localFuncDeclaration : funcName '=' (funcName | '.')+ ;
+
+// Invoke
+
+invokeCmd : 'invoke' '(' funcName+ ')' ;
 
 // Identifiers
 
