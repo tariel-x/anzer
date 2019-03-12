@@ -3,7 +3,7 @@ grammar Anzer;
 forms : form+ EOF;
 
 form : typeDeclaration
-    | functionDeclaration
+    | funcDeclaration
     ;
 
 typeDeclaration : 'type' typeName '=' typeDefinition;
@@ -18,7 +18,15 @@ fieldName : LowIdent | UpperIdent;
 
 type : LowIdent | UpperIdent;
 
-functionDeclaration: 'func';
+// Func
+
+funcDeclaration: funcName? url '[' runtime ']' '::' typeName '->' typeName;
+
+funcName : LowIdent ;
+
+runtime : LowIdent ;
+
+url : URL ;
 
 // Identifiers
 
@@ -30,5 +38,7 @@ fragment DecimalDigit: [0-9] ;
 LowIdent : LowLetter (Letter | DecimalDigit)* ;
 
 UpperIdent : UpperLetter (Letter | DecimalDigit)* ;
+
+URL : ('a' .. 'z')+ '.' ('a' .. 'z')+ '/' ( ('0' .. '9') | ('a' .. 'z') | '-' | '_' | '/' )+ ;
 
 WS : [ \t\r\n]+ -> skip ;
