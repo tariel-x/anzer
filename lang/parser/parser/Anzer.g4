@@ -14,15 +14,15 @@ typeName : UpperIdent;
 
 typeDefinition :  '{' typeField * '}' ;
 
-typeField : fieldName '::' type * ;
+typeField : fieldName '::' typeId * ;
 
 fieldName : LowIdent | UpperIdent;
 
-type : LowIdent | UpperIdent;
+typeId : LowIdent | UpperIdent;
 
 // Func
 
-funcDeclaration : funcName? url '[' runtime ']' '::' typeName '->' typeName;
+funcDeclaration : funcName? url '[' runtime ']' '::' typeName+ '->' typeName+;
 
 funcName : LowIdent ;
 

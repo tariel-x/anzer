@@ -69,6 +69,13 @@ func main() {
 				debugFlag,
 			},
 		},
+		{
+			Name:    "tst",
+			Action:  build.Tst,
+			Flags: []cli.Flag{
+				inputFlag,
+			},
+		},
 	}
 
 	err := app.Run(os.Args)

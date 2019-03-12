@@ -3,21 +3,26 @@ package build
 import (
 	"fmt"
 	"log"
+	"os"
 	"strings"
 
 	"github.com/pkg/errors"
 	l "github.com/tariel-x/anzer/lang"
 	"github.com/tariel-x/anzer/platform"
-	"github.com/tariel-x/anzer/wsk"
 	"github.com/urfave/cli"
 )
 
 func Tst(c *cli.Context) error {
-	w, err := wsk.New()
+	input := c.String("input")
+	if input == "" {
+		return fmt.Errorf("no input")
+	}
+	f, err := os.Open(input)
 	if err != nil {
 		return err
 	}
-	return w.List()
+	_, err = platform.Parse(f)
+	return err
 }
 
 func Build(c *cli.Context) error {

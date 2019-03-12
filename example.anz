@@ -1,0 +1,11 @@
+type Status = {
+    gift :: Gift
+    sent :: Bool
+}
+github.com/test/deliver[go] :: Gift -> Either Error Status
+
+makegift = deliver . prepare . parse
+
+invoke (
+    makegift
+)
