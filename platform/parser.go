@@ -1,6 +1,7 @@
 package platform
 
 import (
+	"fmt"
 	l "github.com/tariel-x/anzer/lang"
 	"github.com/tariel-x/anzer/lang/parser"
 	"io"
@@ -14,7 +15,9 @@ func Parse(sourceStream io.Reader) ([]l.F, error) {
 	}
 
 	p := parser.New(string(source))
-	p.Parse()
+	result := p.Parse()
+
+	fmt.Printf("%#v\n\n", result.Types)
 
 	return nil, nil
 }

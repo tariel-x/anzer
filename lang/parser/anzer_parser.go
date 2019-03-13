@@ -16,69 +16,104 @@ var _ = reflect.Copy
 var _ = strconv.Itoa
 
 var parserATN = []uint16{
-	3, 24715, 42794, 33075, 47597, 16764, 15335, 30598, 22884, 3, 18, 114,
+	3, 24715, 42794, 33075, 47597, 16764, 15335, 30598, 22884, 3, 29, 191,
 	4, 2, 9, 2, 4, 3, 9, 3, 4, 4, 9, 4, 4, 5, 9, 5, 4, 6, 9, 6, 4, 7, 9, 7,
 	4, 8, 9, 8, 4, 9, 9, 9, 4, 10, 9, 10, 4, 11, 9, 11, 4, 12, 9, 12, 4, 13,
-	9, 13, 4, 14, 9, 14, 4, 15, 9, 15, 3, 2, 6, 2, 32, 10, 2, 13, 2, 14, 2,
-	33, 3, 2, 3, 2, 3, 3, 3, 3, 3, 3, 3, 3, 5, 3, 42, 10, 3, 3, 4, 3, 4, 3,
-	4, 3, 4, 3, 4, 3, 5, 3, 5, 3, 6, 3, 6, 7, 6, 53, 10, 6, 12, 6, 14, 6, 56,
-	11, 6, 3, 6, 3, 6, 3, 7, 3, 7, 3, 7, 7, 7, 63, 10, 7, 12, 7, 14, 7, 66,
-	11, 7, 3, 8, 3, 8, 3, 9, 3, 9, 3, 10, 5, 10, 73, 10, 10, 3, 10, 3, 10,
-	3, 10, 3, 10, 3, 10, 3, 10, 6, 10, 81, 10, 10, 13, 10, 14, 10, 82, 3, 10,
-	3, 10, 6, 10, 87, 10, 10, 13, 10, 14, 10, 88, 3, 11, 3, 11, 3, 12, 3, 12,
-	3, 13, 3, 13, 3, 14, 3, 14, 3, 14, 3, 14, 6, 14, 101, 10, 14, 13, 14, 14,
-	14, 102, 3, 15, 3, 15, 3, 15, 6, 15, 108, 10, 15, 13, 15, 14, 15, 109,
-	3, 15, 3, 15, 3, 15, 2, 2, 16, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22,
-	24, 26, 28, 2, 3, 3, 2, 15, 16, 2, 111, 2, 31, 3, 2, 2, 2, 4, 41, 3, 2,
-	2, 2, 6, 43, 3, 2, 2, 2, 8, 48, 3, 2, 2, 2, 10, 50, 3, 2, 2, 2, 12, 59,
-	3, 2, 2, 2, 14, 67, 3, 2, 2, 2, 16, 69, 3, 2, 2, 2, 18, 72, 3, 2, 2, 2,
-	20, 90, 3, 2, 2, 2, 22, 92, 3, 2, 2, 2, 24, 94, 3, 2, 2, 2, 26, 96, 3,
-	2, 2, 2, 28, 104, 3, 2, 2, 2, 30, 32, 5, 4, 3, 2, 31, 30, 3, 2, 2, 2, 32,
-	33, 3, 2, 2, 2, 33, 31, 3, 2, 2, 2, 33, 34, 3, 2, 2, 2, 34, 35, 3, 2, 2,
-	2, 35, 36, 7, 2, 2, 3, 36, 3, 3, 2, 2, 2, 37, 42, 5, 6, 4, 2, 38, 42, 5,
-	18, 10, 2, 39, 42, 5, 26, 14, 2, 40, 42, 5, 28, 15, 2, 41, 37, 3, 2, 2,
-	2, 41, 38, 3, 2, 2, 2, 41, 39, 3, 2, 2, 2, 41, 40, 3, 2, 2, 2, 42, 5, 3,
-	2, 2, 2, 43, 44, 7, 3, 2, 2, 44, 45, 5, 8, 5, 2, 45, 46, 7, 4, 2, 2, 46,
-	47, 5, 10, 6, 2, 47, 7, 3, 2, 2, 2, 48, 49, 7, 16, 2, 2, 49, 9, 3, 2, 2,
-	2, 50, 54, 7, 5, 2, 2, 51, 53, 5, 12, 7, 2, 52, 51, 3, 2, 2, 2, 53, 56,
-	3, 2, 2, 2, 54, 52, 3, 2, 2, 2, 54, 55, 3, 2, 2, 2, 55, 57, 3, 2, 2, 2,
-	56, 54, 3, 2, 2, 2, 57, 58, 7, 6, 2, 2, 58, 11, 3, 2, 2, 2, 59, 60, 5,
-	14, 8, 2, 60, 64, 7, 7, 2, 2, 61, 63, 5, 16, 9, 2, 62, 61, 3, 2, 2, 2,
-	63, 66, 3, 2, 2, 2, 64, 62, 3, 2, 2, 2, 64, 65, 3, 2, 2, 2, 65, 13, 3,
-	2, 2, 2, 66, 64, 3, 2, 2, 2, 67, 68, 9, 2, 2, 2, 68, 15, 3, 2, 2, 2, 69,
-	70, 9, 2, 2, 2, 70, 17, 3, 2, 2, 2, 71, 73, 5, 20, 11, 2, 72, 71, 3, 2,
-	2, 2, 72, 73, 3, 2, 2, 2, 73, 74, 3, 2, 2, 2, 74, 75, 5, 24, 13, 2, 75,
-	76, 7, 8, 2, 2, 76, 77, 5, 22, 12, 2, 77, 78, 7, 9, 2, 2, 78, 80, 7, 7,
-	2, 2, 79, 81, 5, 8, 5, 2, 80, 79, 3, 2, 2, 2, 81, 82, 3, 2, 2, 2, 82, 80,
-	3, 2, 2, 2, 82, 83, 3, 2, 2, 2, 83, 84, 3, 2, 2, 2, 84, 86, 7, 10, 2, 2,
-	85, 87, 5, 8, 5, 2, 86, 85, 3, 2, 2, 2, 87, 88, 3, 2, 2, 2, 88, 86, 3,
-	2, 2, 2, 88, 89, 3, 2, 2, 2, 89, 19, 3, 2, 2, 2, 90, 91, 7, 15, 2, 2, 91,
-	21, 3, 2, 2, 2, 92, 93, 7, 15, 2, 2, 93, 23, 3, 2, 2, 2, 94, 95, 7, 17,
-	2, 2, 95, 25, 3, 2, 2, 2, 96, 97, 5, 20, 11, 2, 97, 100, 7, 4, 2, 2, 98,
-	101, 5, 20, 11, 2, 99, 101, 7, 11, 2, 2, 100, 98, 3, 2, 2, 2, 100, 99,
-	3, 2, 2, 2, 101, 102, 3, 2, 2, 2, 102, 100, 3, 2, 2, 2, 102, 103, 3, 2,
-	2, 2, 103, 27, 3, 2, 2, 2, 104, 105, 7, 12, 2, 2, 105, 107, 7, 13, 2, 2,
-	106, 108, 5, 20, 11, 2, 107, 106, 3, 2, 2, 2, 108, 109, 3, 2, 2, 2, 109,
-	107, 3, 2, 2, 2, 109, 110, 3, 2, 2, 2, 110, 111, 3, 2, 2, 2, 111, 112,
-	7, 14, 2, 2, 112, 29, 3, 2, 2, 2, 12, 33, 41, 54, 64, 72, 82, 88, 100,
-	102, 109,
+	9, 13, 4, 14, 9, 14, 4, 15, 9, 15, 4, 16, 9, 16, 4, 17, 9, 17, 4, 18, 9,
+	18, 4, 19, 9, 19, 4, 20, 9, 20, 4, 21, 9, 21, 4, 22, 9, 22, 4, 23, 9, 23,
+	4, 24, 9, 24, 4, 25, 9, 25, 4, 26, 9, 26, 4, 27, 9, 27, 4, 28, 9, 28, 4,
+	29, 9, 29, 4, 30, 9, 30, 4, 31, 9, 31, 4, 32, 9, 32, 3, 2, 6, 2, 66, 10,
+	2, 13, 2, 14, 2, 67, 3, 2, 3, 2, 3, 3, 3, 3, 3, 3, 3, 3, 5, 3, 76, 10,
+	3, 3, 4, 3, 4, 3, 4, 3, 4, 3, 4, 3, 5, 3, 5, 3, 6, 3, 6, 5, 6, 87, 10,
+	6, 3, 7, 3, 7, 7, 7, 91, 10, 7, 12, 7, 14, 7, 94, 11, 7, 3, 7, 3, 7, 3,
+	8, 6, 8, 99, 10, 8, 13, 8, 14, 8, 100, 3, 9, 3, 9, 3, 9, 3, 9, 3, 10, 3,
+	10, 3, 11, 3, 11, 3, 11, 5, 11, 112, 10, 11, 3, 12, 3, 12, 3, 12, 3, 12,
+	3, 12, 3, 12, 5, 12, 120, 10, 12, 3, 13, 3, 13, 3, 13, 3, 14, 3, 14, 3,
+	14, 3, 15, 3, 15, 3, 16, 3, 16, 3, 17, 3, 17, 3, 18, 3, 18, 3, 19, 3, 19,
+	3, 19, 3, 19, 5, 19, 140, 10, 19, 3, 20, 3, 20, 3, 21, 3, 21, 3, 22, 3,
+	22, 3, 23, 3, 23, 3, 24, 3, 24, 3, 25, 5, 25, 153, 10, 25, 3, 25, 3, 25,
+	3, 25, 3, 25, 3, 25, 3, 25, 3, 25, 3, 25, 3, 25, 3, 26, 3, 26, 3, 27, 3,
+	27, 3, 28, 3, 28, 3, 29, 3, 29, 3, 30, 3, 30, 3, 31, 3, 31, 3, 31, 3, 31,
+	6, 31, 178, 10, 31, 13, 31, 14, 31, 179, 3, 32, 3, 32, 3, 32, 6, 32, 185,
+	10, 32, 13, 32, 14, 32, 186, 3, 32, 3, 32, 3, 32, 2, 2, 33, 2, 4, 6, 8,
+	10, 12, 14, 16, 18, 20, 22, 24, 26, 28, 30, 32, 34, 36, 38, 40, 42, 44,
+	46, 48, 50, 52, 54, 56, 58, 60, 62, 2, 3, 3, 2, 25, 26, 2, 180, 2, 65,
+	3, 2, 2, 2, 4, 75, 3, 2, 2, 2, 6, 77, 3, 2, 2, 2, 8, 82, 3, 2, 2, 2, 10,
+	86, 3, 2, 2, 2, 12, 88, 3, 2, 2, 2, 14, 98, 3, 2, 2, 2, 16, 102, 3, 2,
+	2, 2, 18, 106, 3, 2, 2, 2, 20, 111, 3, 2, 2, 2, 22, 119, 3, 2, 2, 2, 24,
+	121, 3, 2, 2, 2, 26, 124, 3, 2, 2, 2, 28, 127, 3, 2, 2, 2, 30, 129, 3,
+	2, 2, 2, 32, 131, 3, 2, 2, 2, 34, 133, 3, 2, 2, 2, 36, 139, 3, 2, 2, 2,
+	38, 141, 3, 2, 2, 2, 40, 143, 3, 2, 2, 2, 42, 145, 3, 2, 2, 2, 44, 147,
+	3, 2, 2, 2, 46, 149, 3, 2, 2, 2, 48, 152, 3, 2, 2, 2, 50, 163, 3, 2, 2,
+	2, 52, 165, 3, 2, 2, 2, 54, 167, 3, 2, 2, 2, 56, 169, 3, 2, 2, 2, 58, 171,
+	3, 2, 2, 2, 60, 173, 3, 2, 2, 2, 62, 181, 3, 2, 2, 2, 64, 66, 5, 4, 3,
+	2, 65, 64, 3, 2, 2, 2, 66, 67, 3, 2, 2, 2, 67, 65, 3, 2, 2, 2, 67, 68,
+	3, 2, 2, 2, 68, 69, 3, 2, 2, 2, 69, 70, 7, 2, 2, 3, 70, 3, 3, 2, 2, 2,
+	71, 76, 5, 6, 4, 2, 72, 76, 5, 48, 25, 2, 73, 76, 5, 60, 31, 2, 74, 76,
+	5, 62, 32, 2, 75, 71, 3, 2, 2, 2, 75, 72, 3, 2, 2, 2, 75, 73, 3, 2, 2,
+	2, 75, 74, 3, 2, 2, 2, 76, 5, 3, 2, 2, 2, 77, 78, 7, 3, 2, 2, 78, 79, 5,
+	8, 5, 2, 79, 80, 7, 4, 2, 2, 80, 81, 5, 10, 6, 2, 81, 7, 3, 2, 2, 2, 82,
+	83, 7, 26, 2, 2, 83, 9, 3, 2, 2, 2, 84, 87, 5, 12, 7, 2, 85, 87, 5, 14,
+	8, 2, 86, 84, 3, 2, 2, 2, 86, 85, 3, 2, 2, 2, 87, 11, 3, 2, 2, 2, 88, 92,
+	7, 5, 2, 2, 89, 91, 5, 16, 9, 2, 90, 89, 3, 2, 2, 2, 91, 94, 3, 2, 2, 2,
+	92, 90, 3, 2, 2, 2, 92, 93, 3, 2, 2, 2, 93, 95, 3, 2, 2, 2, 94, 92, 3,
+	2, 2, 2, 95, 96, 7, 6, 2, 2, 96, 13, 3, 2, 2, 2, 97, 99, 5, 20, 11, 2,
+	98, 97, 3, 2, 2, 2, 99, 100, 3, 2, 2, 2, 100, 98, 3, 2, 2, 2, 100, 101,
+	3, 2, 2, 2, 101, 15, 3, 2, 2, 2, 102, 103, 5, 18, 10, 2, 103, 104, 7, 7,
+	2, 2, 104, 105, 5, 10, 6, 2, 105, 17, 3, 2, 2, 2, 106, 107, 9, 2, 2, 2,
+	107, 19, 3, 2, 2, 2, 108, 112, 5, 22, 12, 2, 109, 112, 5, 36, 19, 2, 110,
+	112, 5, 46, 24, 2, 111, 108, 3, 2, 2, 2, 111, 109, 3, 2, 2, 2, 111, 110,
+	3, 2, 2, 2, 112, 21, 3, 2, 2, 2, 113, 120, 5, 24, 13, 2, 114, 120, 5, 26,
+	14, 2, 115, 120, 5, 28, 15, 2, 116, 120, 5, 30, 16, 2, 117, 120, 5, 32,
+	17, 2, 118, 120, 5, 34, 18, 2, 119, 113, 3, 2, 2, 2, 119, 114, 3, 2, 2,
+	2, 119, 115, 3, 2, 2, 2, 119, 116, 3, 2, 2, 2, 119, 117, 3, 2, 2, 2, 119,
+	118, 3, 2, 2, 2, 120, 23, 3, 2, 2, 2, 121, 122, 7, 8, 2, 2, 122, 123, 7,
+	27, 2, 2, 123, 25, 3, 2, 2, 2, 124, 125, 7, 9, 2, 2, 125, 126, 7, 27, 2,
+	2, 126, 27, 3, 2, 2, 2, 127, 128, 7, 10, 2, 2, 128, 29, 3, 2, 2, 2, 129,
+	130, 7, 11, 2, 2, 130, 31, 3, 2, 2, 2, 131, 132, 7, 12, 2, 2, 132, 33,
+	3, 2, 2, 2, 133, 134, 7, 13, 2, 2, 134, 35, 3, 2, 2, 2, 135, 140, 5, 38,
+	20, 2, 136, 140, 5, 40, 21, 2, 137, 140, 5, 42, 22, 2, 138, 140, 5, 44,
+	23, 2, 139, 135, 3, 2, 2, 2, 139, 136, 3, 2, 2, 2, 139, 137, 3, 2, 2, 2,
+	139, 138, 3, 2, 2, 2, 140, 37, 3, 2, 2, 2, 141, 142, 7, 14, 2, 2, 142,
+	39, 3, 2, 2, 2, 143, 144, 7, 15, 2, 2, 144, 41, 3, 2, 2, 2, 145, 146, 7,
+	16, 2, 2, 146, 43, 3, 2, 2, 2, 147, 148, 7, 17, 2, 2, 148, 45, 3, 2, 2,
+	2, 149, 150, 7, 26, 2, 2, 150, 47, 3, 2, 2, 2, 151, 153, 5, 50, 26, 2,
+	152, 151, 3, 2, 2, 2, 152, 153, 3, 2, 2, 2, 153, 154, 3, 2, 2, 2, 154,
+	155, 5, 54, 28, 2, 155, 156, 7, 18, 2, 2, 156, 157, 5, 52, 27, 2, 157,
+	158, 7, 19, 2, 2, 158, 159, 7, 7, 2, 2, 159, 160, 5, 56, 29, 2, 160, 161,
+	7, 20, 2, 2, 161, 162, 5, 58, 30, 2, 162, 49, 3, 2, 2, 2, 163, 164, 7,
+	25, 2, 2, 164, 51, 3, 2, 2, 2, 165, 166, 7, 25, 2, 2, 166, 53, 3, 2, 2,
+	2, 167, 168, 7, 28, 2, 2, 168, 55, 3, 2, 2, 2, 169, 170, 5, 10, 6, 2, 170,
+	57, 3, 2, 2, 2, 171, 172, 5, 10, 6, 2, 172, 59, 3, 2, 2, 2, 173, 174, 5,
+	50, 26, 2, 174, 177, 7, 4, 2, 2, 175, 178, 5, 50, 26, 2, 176, 178, 7, 21,
+	2, 2, 177, 175, 3, 2, 2, 2, 177, 176, 3, 2, 2, 2, 178, 179, 3, 2, 2, 2,
+	179, 177, 3, 2, 2, 2, 179, 180, 3, 2, 2, 2, 180, 61, 3, 2, 2, 2, 181, 182,
+	7, 22, 2, 2, 182, 184, 7, 23, 2, 2, 183, 185, 5, 50, 26, 2, 184, 183, 3,
+	2, 2, 2, 185, 186, 3, 2, 2, 2, 186, 184, 3, 2, 2, 2, 186, 187, 3, 2, 2,
+	2, 187, 188, 3, 2, 2, 2, 188, 189, 7, 24, 2, 2, 189, 63, 3, 2, 2, 2, 14,
+	67, 75, 86, 92, 100, 111, 119, 139, 152, 177, 179, 186,
 }
 var deserializer = antlr.NewATNDeserializer(nil)
 var deserializedATN = deserializer.DeserializeFromUInt16(parserATN)
 
 var literalNames = []string{
-	"", "'type'", "'='", "'{'", "'}'", "'::'", "'['", "']'", "'->'", "'.'",
-	"'invoke'", "'('", "')'",
+	"", "'type'", "'='", "'{'", "'}'", "'::'", "'MinLength'", "'MaxLength'",
+	"'Right'", "'Left'", "'List'", "'Optional'", "'String'", "'Integer'", "'Float'",
+	"'Bool'", "'['", "']'", "'->'", "'.'", "'invoke'", "'('", "')'",
 }
 var symbolicNames = []string{
-	"", "", "", "", "", "", "", "", "", "", "", "", "", "LowIdent", "UpperIdent",
-	"URL", "WS",
+	"", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "",
+	"", "", "", "", "", "LowIdent", "UpperIdent", "ConstructorArg", "URL",
+	"WS",
 }
 
 var ruleNames = []string{
-	"forms", "form", "typeDeclaration", "typeName", "typeDefinition", "typeField",
-	"fieldName", "typeId", "funcDeclaration", "funcName", "runtime", "url",
-	"localFuncDeclaration", "invokeCmd",
+	"forms", "form", "typeDeclaration", "typeName", "typeDefinition", "typeComplexDefinition",
+	"typeSimpleDefinition", "typeField", "fieldName", "typeId", "typeConstructor",
+	"typeMinLength", "typeMaxLength", "typeRight", "typeLeft", "typeList",
+	"typeOptional", "typeScalar", "typeString", "typeInteger", "typeFloat",
+	"typeBool", "typeOther", "funcDeclaration", "funcName", "runtime", "url",
+	"funcArgument", "funcResult", "localFuncDeclaration", "invokeCmd",
 }
 var decisionToDFA = make([]*antlr.DFA, len(deserializedATN.DecisionToState))
 
@@ -108,41 +143,69 @@ func NewAnzerParser(input antlr.TokenStream) *AnzerParser {
 
 // AnzerParser tokens.
 const (
-	AnzerParserEOF        = antlr.TokenEOF
-	AnzerParserT__0       = 1
-	AnzerParserT__1       = 2
-	AnzerParserT__2       = 3
-	AnzerParserT__3       = 4
-	AnzerParserT__4       = 5
-	AnzerParserT__5       = 6
-	AnzerParserT__6       = 7
-	AnzerParserT__7       = 8
-	AnzerParserT__8       = 9
-	AnzerParserT__9       = 10
-	AnzerParserT__10      = 11
-	AnzerParserT__11      = 12
-	AnzerParserLowIdent   = 13
-	AnzerParserUpperIdent = 14
-	AnzerParserURL        = 15
-	AnzerParserWS         = 16
+	AnzerParserEOF            = antlr.TokenEOF
+	AnzerParserT__0           = 1
+	AnzerParserT__1           = 2
+	AnzerParserT__2           = 3
+	AnzerParserT__3           = 4
+	AnzerParserT__4           = 5
+	AnzerParserT__5           = 6
+	AnzerParserT__6           = 7
+	AnzerParserT__7           = 8
+	AnzerParserT__8           = 9
+	AnzerParserT__9           = 10
+	AnzerParserT__10          = 11
+	AnzerParserT__11          = 12
+	AnzerParserT__12          = 13
+	AnzerParserT__13          = 14
+	AnzerParserT__14          = 15
+	AnzerParserT__15          = 16
+	AnzerParserT__16          = 17
+	AnzerParserT__17          = 18
+	AnzerParserT__18          = 19
+	AnzerParserT__19          = 20
+	AnzerParserT__20          = 21
+	AnzerParserT__21          = 22
+	AnzerParserLowIdent       = 23
+	AnzerParserUpperIdent     = 24
+	AnzerParserConstructorArg = 25
+	AnzerParserURL            = 26
+	AnzerParserWS             = 27
 )
 
 // AnzerParser rules.
 const (
-	AnzerParserRULE_forms                = 0
-	AnzerParserRULE_form                 = 1
-	AnzerParserRULE_typeDeclaration      = 2
-	AnzerParserRULE_typeName             = 3
-	AnzerParserRULE_typeDefinition       = 4
-	AnzerParserRULE_typeField            = 5
-	AnzerParserRULE_fieldName            = 6
-	AnzerParserRULE_typeId               = 7
-	AnzerParserRULE_funcDeclaration      = 8
-	AnzerParserRULE_funcName             = 9
-	AnzerParserRULE_runtime              = 10
-	AnzerParserRULE_url                  = 11
-	AnzerParserRULE_localFuncDeclaration = 12
-	AnzerParserRULE_invokeCmd            = 13
+	AnzerParserRULE_forms                 = 0
+	AnzerParserRULE_form                  = 1
+	AnzerParserRULE_typeDeclaration       = 2
+	AnzerParserRULE_typeName              = 3
+	AnzerParserRULE_typeDefinition        = 4
+	AnzerParserRULE_typeComplexDefinition = 5
+	AnzerParserRULE_typeSimpleDefinition  = 6
+	AnzerParserRULE_typeField             = 7
+	AnzerParserRULE_fieldName             = 8
+	AnzerParserRULE_typeId                = 9
+	AnzerParserRULE_typeConstructor       = 10
+	AnzerParserRULE_typeMinLength         = 11
+	AnzerParserRULE_typeMaxLength         = 12
+	AnzerParserRULE_typeRight             = 13
+	AnzerParserRULE_typeLeft              = 14
+	AnzerParserRULE_typeList              = 15
+	AnzerParserRULE_typeOptional          = 16
+	AnzerParserRULE_typeScalar            = 17
+	AnzerParserRULE_typeString            = 18
+	AnzerParserRULE_typeInteger           = 19
+	AnzerParserRULE_typeFloat             = 20
+	AnzerParserRULE_typeBool              = 21
+	AnzerParserRULE_typeOther             = 22
+	AnzerParserRULE_funcDeclaration       = 23
+	AnzerParserRULE_funcName              = 24
+	AnzerParserRULE_runtime               = 25
+	AnzerParserRULE_url                   = 26
+	AnzerParserRULE_funcArgument          = 27
+	AnzerParserRULE_funcResult            = 28
+	AnzerParserRULE_localFuncDeclaration  = 29
+	AnzerParserRULE_invokeCmd             = 30
 )
 
 // IFormsContext is an interface to support dynamic dispatch.
@@ -252,22 +315,22 @@ func (p *AnzerParser) Forms() (localctx IFormsContext) {
 	}()
 
 	p.EnterOuterAlt(localctx, 1)
-	p.SetState(29)
+	p.SetState(63)
 	p.GetErrorHandler().Sync(p)
 	_la = p.GetTokenStream().LA(1)
 
-	for ok := true; ok; ok = (((_la)&-(0x1f+1)) == 0 && ((1<<uint(_la))&((1<<AnzerParserT__0)|(1<<AnzerParserT__9)|(1<<AnzerParserLowIdent)|(1<<AnzerParserURL))) != 0) {
+	for ok := true; ok; ok = (((_la)&-(0x1f+1)) == 0 && ((1<<uint(_la))&((1<<AnzerParserT__0)|(1<<AnzerParserT__19)|(1<<AnzerParserLowIdent)|(1<<AnzerParserURL))) != 0) {
 		{
-			p.SetState(28)
+			p.SetState(62)
 			p.Form()
 		}
 
-		p.SetState(31)
+		p.SetState(65)
 		p.GetErrorHandler().Sync(p)
 		_la = p.GetTokenStream().LA(1)
 	}
 	{
-		p.SetState(33)
+		p.SetState(67)
 		p.Match(AnzerParserEOF)
 	}
 
@@ -392,34 +455,34 @@ func (p *AnzerParser) Form() (localctx IFormContext) {
 		}
 	}()
 
-	p.SetState(39)
+	p.SetState(73)
 	p.GetErrorHandler().Sync(p)
 	switch p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 1, p.GetParserRuleContext()) {
 	case 1:
 		p.EnterOuterAlt(localctx, 1)
 		{
-			p.SetState(35)
+			p.SetState(69)
 			p.TypeDeclaration()
 		}
 
 	case 2:
 		p.EnterOuterAlt(localctx, 2)
 		{
-			p.SetState(36)
+			p.SetState(70)
 			p.FuncDeclaration()
 		}
 
 	case 3:
 		p.EnterOuterAlt(localctx, 3)
 		{
-			p.SetState(37)
+			p.SetState(71)
 			p.LocalFuncDeclaration()
 		}
 
 	case 4:
 		p.EnterOuterAlt(localctx, 4)
 		{
-			p.SetState(38)
+			p.SetState(72)
 			p.InvokeCmd()
 		}
 
@@ -528,19 +591,19 @@ func (p *AnzerParser) TypeDeclaration() (localctx ITypeDeclarationContext) {
 
 	p.EnterOuterAlt(localctx, 1)
 	{
-		p.SetState(41)
+		p.SetState(75)
 		p.Match(AnzerParserT__0)
 	}
 	{
-		p.SetState(42)
+		p.SetState(76)
 		p.TypeName()
 	}
 	{
-		p.SetState(43)
+		p.SetState(77)
 		p.Match(AnzerParserT__1)
 	}
 	{
-		p.SetState(44)
+		p.SetState(78)
 		p.TypeDefinition()
 	}
 
@@ -631,7 +694,7 @@ func (p *AnzerParser) TypeName() (localctx ITypeNameContext) {
 
 	p.EnterOuterAlt(localctx, 1)
 	{
-		p.SetState(46)
+		p.SetState(80)
 		p.Match(AnzerParserUpperIdent)
 	}
 
@@ -676,27 +739,24 @@ func NewTypeDefinitionContext(parser antlr.Parser, parent antlr.ParserRuleContex
 
 func (s *TypeDefinitionContext) GetParser() antlr.Parser { return s.parser }
 
-func (s *TypeDefinitionContext) AllTypeField() []ITypeFieldContext {
-	var ts = s.GetTypedRuleContexts(reflect.TypeOf((*ITypeFieldContext)(nil)).Elem())
-	var tst = make([]ITypeFieldContext, len(ts))
-
-	for i, t := range ts {
-		if t != nil {
-			tst[i] = t.(ITypeFieldContext)
-		}
-	}
-
-	return tst
-}
-
-func (s *TypeDefinitionContext) TypeField(i int) ITypeFieldContext {
-	var t = s.GetTypedRuleContext(reflect.TypeOf((*ITypeFieldContext)(nil)).Elem(), i)
+func (s *TypeDefinitionContext) TypeComplexDefinition() ITypeComplexDefinitionContext {
+	var t = s.GetTypedRuleContext(reflect.TypeOf((*ITypeComplexDefinitionContext)(nil)).Elem(), 0)
 
 	if t == nil {
 		return nil
 	}
 
-	return t.(ITypeFieldContext)
+	return t.(ITypeComplexDefinitionContext)
+}
+
+func (s *TypeDefinitionContext) TypeSimpleDefinition() ITypeSimpleDefinitionContext {
+	var t = s.GetTypedRuleContext(reflect.TypeOf((*ITypeSimpleDefinitionContext)(nil)).Elem(), 0)
+
+	if t == nil {
+		return nil
+	}
+
+	return t.(ITypeSimpleDefinitionContext)
 }
 
 func (s *TypeDefinitionContext) GetRuleContext() antlr.RuleContext {
@@ -722,6 +782,132 @@ func (s *TypeDefinitionContext) ExitRule(listener antlr.ParseTreeListener) {
 func (p *AnzerParser) TypeDefinition() (localctx ITypeDefinitionContext) {
 	localctx = NewTypeDefinitionContext(p, p.GetParserRuleContext(), p.GetState())
 	p.EnterRule(localctx, 8, AnzerParserRULE_typeDefinition)
+
+	defer func() {
+		p.ExitRule()
+	}()
+
+	defer func() {
+		if err := recover(); err != nil {
+			if v, ok := err.(antlr.RecognitionException); ok {
+				localctx.SetException(v)
+				p.GetErrorHandler().ReportError(p, v)
+				p.GetErrorHandler().Recover(p, v)
+			} else {
+				panic(err)
+			}
+		}
+	}()
+
+	p.SetState(84)
+	p.GetErrorHandler().Sync(p)
+
+	switch p.GetTokenStream().LA(1) {
+	case AnzerParserT__2:
+		p.EnterOuterAlt(localctx, 1)
+		{
+			p.SetState(82)
+			p.TypeComplexDefinition()
+		}
+
+	case AnzerParserT__5, AnzerParserT__6, AnzerParserT__7, AnzerParserT__8, AnzerParserT__9, AnzerParserT__10, AnzerParserT__11, AnzerParserT__12, AnzerParserT__13, AnzerParserT__14, AnzerParserUpperIdent:
+		p.EnterOuterAlt(localctx, 2)
+		{
+			p.SetState(83)
+			p.TypeSimpleDefinition()
+		}
+
+	default:
+		panic(antlr.NewNoViableAltException(p, nil, nil, nil, nil, nil))
+	}
+
+	return localctx
+}
+
+// ITypeComplexDefinitionContext is an interface to support dynamic dispatch.
+type ITypeComplexDefinitionContext interface {
+	antlr.ParserRuleContext
+
+	// GetParser returns the parser.
+	GetParser() antlr.Parser
+
+	// IsTypeComplexDefinitionContext differentiates from other interfaces.
+	IsTypeComplexDefinitionContext()
+}
+
+type TypeComplexDefinitionContext struct {
+	*antlr.BaseParserRuleContext
+	parser antlr.Parser
+}
+
+func NewEmptyTypeComplexDefinitionContext() *TypeComplexDefinitionContext {
+	var p = new(TypeComplexDefinitionContext)
+	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(nil, -1)
+	p.RuleIndex = AnzerParserRULE_typeComplexDefinition
+	return p
+}
+
+func (*TypeComplexDefinitionContext) IsTypeComplexDefinitionContext() {}
+
+func NewTypeComplexDefinitionContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *TypeComplexDefinitionContext {
+	var p = new(TypeComplexDefinitionContext)
+
+	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(parent, invokingState)
+
+	p.parser = parser
+	p.RuleIndex = AnzerParserRULE_typeComplexDefinition
+
+	return p
+}
+
+func (s *TypeComplexDefinitionContext) GetParser() antlr.Parser { return s.parser }
+
+func (s *TypeComplexDefinitionContext) AllTypeField() []ITypeFieldContext {
+	var ts = s.GetTypedRuleContexts(reflect.TypeOf((*ITypeFieldContext)(nil)).Elem())
+	var tst = make([]ITypeFieldContext, len(ts))
+
+	for i, t := range ts {
+		if t != nil {
+			tst[i] = t.(ITypeFieldContext)
+		}
+	}
+
+	return tst
+}
+
+func (s *TypeComplexDefinitionContext) TypeField(i int) ITypeFieldContext {
+	var t = s.GetTypedRuleContext(reflect.TypeOf((*ITypeFieldContext)(nil)).Elem(), i)
+
+	if t == nil {
+		return nil
+	}
+
+	return t.(ITypeFieldContext)
+}
+
+func (s *TypeComplexDefinitionContext) GetRuleContext() antlr.RuleContext {
+	return s
+}
+
+func (s *TypeComplexDefinitionContext) ToStringTree(ruleNames []string, recog antlr.Recognizer) string {
+	return antlr.TreesStringTree(s, ruleNames, recog)
+}
+
+func (s *TypeComplexDefinitionContext) EnterRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(AnzerListener); ok {
+		listenerT.EnterTypeComplexDefinition(s)
+	}
+}
+
+func (s *TypeComplexDefinitionContext) ExitRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(AnzerListener); ok {
+		listenerT.ExitTypeComplexDefinition(s)
+	}
+}
+
+func (p *AnzerParser) TypeComplexDefinition() (localctx ITypeComplexDefinitionContext) {
+	localctx = NewTypeComplexDefinitionContext(p, p.GetParserRuleContext(), p.GetState())
+	p.EnterRule(localctx, 10, AnzerParserRULE_typeComplexDefinition)
 	var _la int
 
 	defer func() {
@@ -742,26 +928,153 @@ func (p *AnzerParser) TypeDefinition() (localctx ITypeDefinitionContext) {
 
 	p.EnterOuterAlt(localctx, 1)
 	{
-		p.SetState(48)
+		p.SetState(86)
 		p.Match(AnzerParserT__2)
 	}
-	p.SetState(52)
+	p.SetState(90)
 	p.GetErrorHandler().Sync(p)
 	_la = p.GetTokenStream().LA(1)
 
 	for _la == AnzerParserLowIdent || _la == AnzerParserUpperIdent {
 		{
-			p.SetState(49)
+			p.SetState(87)
 			p.TypeField()
 		}
 
-		p.SetState(54)
+		p.SetState(92)
 		p.GetErrorHandler().Sync(p)
 		_la = p.GetTokenStream().LA(1)
 	}
 	{
-		p.SetState(55)
+		p.SetState(93)
 		p.Match(AnzerParserT__3)
+	}
+
+	return localctx
+}
+
+// ITypeSimpleDefinitionContext is an interface to support dynamic dispatch.
+type ITypeSimpleDefinitionContext interface {
+	antlr.ParserRuleContext
+
+	// GetParser returns the parser.
+	GetParser() antlr.Parser
+
+	// IsTypeSimpleDefinitionContext differentiates from other interfaces.
+	IsTypeSimpleDefinitionContext()
+}
+
+type TypeSimpleDefinitionContext struct {
+	*antlr.BaseParserRuleContext
+	parser antlr.Parser
+}
+
+func NewEmptyTypeSimpleDefinitionContext() *TypeSimpleDefinitionContext {
+	var p = new(TypeSimpleDefinitionContext)
+	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(nil, -1)
+	p.RuleIndex = AnzerParserRULE_typeSimpleDefinition
+	return p
+}
+
+func (*TypeSimpleDefinitionContext) IsTypeSimpleDefinitionContext() {}
+
+func NewTypeSimpleDefinitionContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *TypeSimpleDefinitionContext {
+	var p = new(TypeSimpleDefinitionContext)
+
+	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(parent, invokingState)
+
+	p.parser = parser
+	p.RuleIndex = AnzerParserRULE_typeSimpleDefinition
+
+	return p
+}
+
+func (s *TypeSimpleDefinitionContext) GetParser() antlr.Parser { return s.parser }
+
+func (s *TypeSimpleDefinitionContext) AllTypeId() []ITypeIdContext {
+	var ts = s.GetTypedRuleContexts(reflect.TypeOf((*ITypeIdContext)(nil)).Elem())
+	var tst = make([]ITypeIdContext, len(ts))
+
+	for i, t := range ts {
+		if t != nil {
+			tst[i] = t.(ITypeIdContext)
+		}
+	}
+
+	return tst
+}
+
+func (s *TypeSimpleDefinitionContext) TypeId(i int) ITypeIdContext {
+	var t = s.GetTypedRuleContext(reflect.TypeOf((*ITypeIdContext)(nil)).Elem(), i)
+
+	if t == nil {
+		return nil
+	}
+
+	return t.(ITypeIdContext)
+}
+
+func (s *TypeSimpleDefinitionContext) GetRuleContext() antlr.RuleContext {
+	return s
+}
+
+func (s *TypeSimpleDefinitionContext) ToStringTree(ruleNames []string, recog antlr.Recognizer) string {
+	return antlr.TreesStringTree(s, ruleNames, recog)
+}
+
+func (s *TypeSimpleDefinitionContext) EnterRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(AnzerListener); ok {
+		listenerT.EnterTypeSimpleDefinition(s)
+	}
+}
+
+func (s *TypeSimpleDefinitionContext) ExitRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(AnzerListener); ok {
+		listenerT.ExitTypeSimpleDefinition(s)
+	}
+}
+
+func (p *AnzerParser) TypeSimpleDefinition() (localctx ITypeSimpleDefinitionContext) {
+	localctx = NewTypeSimpleDefinitionContext(p, p.GetParserRuleContext(), p.GetState())
+	p.EnterRule(localctx, 12, AnzerParserRULE_typeSimpleDefinition)
+
+	defer func() {
+		p.ExitRule()
+	}()
+
+	defer func() {
+		if err := recover(); err != nil {
+			if v, ok := err.(antlr.RecognitionException); ok {
+				localctx.SetException(v)
+				p.GetErrorHandler().ReportError(p, v)
+				p.GetErrorHandler().Recover(p, v)
+			} else {
+				panic(err)
+			}
+		}
+	}()
+
+	var _alt int
+
+	p.EnterOuterAlt(localctx, 1)
+	p.SetState(96)
+	p.GetErrorHandler().Sync(p)
+	_alt = 1
+	for ok := true; ok; ok = _alt != 2 && _alt != antlr.ATNInvalidAltNumber {
+		switch _alt {
+		case 1:
+			{
+				p.SetState(95)
+				p.TypeId()
+			}
+
+		default:
+			panic(antlr.NewNoViableAltException(p, nil, nil, nil, nil, nil))
+		}
+
+		p.SetState(98)
+		p.GetErrorHandler().Sync(p)
+		_alt = p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 4, p.GetParserRuleContext())
 	}
 
 	return localctx
@@ -815,27 +1128,14 @@ func (s *TypeFieldContext) FieldName() IFieldNameContext {
 	return t.(IFieldNameContext)
 }
 
-func (s *TypeFieldContext) AllTypeId() []ITypeIdContext {
-	var ts = s.GetTypedRuleContexts(reflect.TypeOf((*ITypeIdContext)(nil)).Elem())
-	var tst = make([]ITypeIdContext, len(ts))
-
-	for i, t := range ts {
-		if t != nil {
-			tst[i] = t.(ITypeIdContext)
-		}
-	}
-
-	return tst
-}
-
-func (s *TypeFieldContext) TypeId(i int) ITypeIdContext {
-	var t = s.GetTypedRuleContext(reflect.TypeOf((*ITypeIdContext)(nil)).Elem(), i)
+func (s *TypeFieldContext) TypeDefinition() ITypeDefinitionContext {
+	var t = s.GetTypedRuleContext(reflect.TypeOf((*ITypeDefinitionContext)(nil)).Elem(), 0)
 
 	if t == nil {
 		return nil
 	}
 
-	return t.(ITypeIdContext)
+	return t.(ITypeDefinitionContext)
 }
 
 func (s *TypeFieldContext) GetRuleContext() antlr.RuleContext {
@@ -860,7 +1160,7 @@ func (s *TypeFieldContext) ExitRule(listener antlr.ParseTreeListener) {
 
 func (p *AnzerParser) TypeField() (localctx ITypeFieldContext) {
 	localctx = NewTypeFieldContext(p, p.GetParserRuleContext(), p.GetState())
-	p.EnterRule(localctx, 10, AnzerParserRULE_typeField)
+	p.EnterRule(localctx, 14, AnzerParserRULE_typeField)
 
 	defer func() {
 		p.ExitRule()
@@ -878,32 +1178,18 @@ func (p *AnzerParser) TypeField() (localctx ITypeFieldContext) {
 		}
 	}()
 
-	var _alt int
-
 	p.EnterOuterAlt(localctx, 1)
 	{
-		p.SetState(57)
+		p.SetState(100)
 		p.FieldName()
 	}
 	{
-		p.SetState(58)
+		p.SetState(101)
 		p.Match(AnzerParserT__4)
 	}
-	p.SetState(62)
-	p.GetErrorHandler().Sync(p)
-	_alt = p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 3, p.GetParserRuleContext())
-
-	for _alt != 2 && _alt != antlr.ATNInvalidAltNumber {
-		if _alt == 1 {
-			{
-				p.SetState(59)
-				p.TypeId()
-			}
-
-		}
-		p.SetState(64)
-		p.GetErrorHandler().Sync(p)
-		_alt = p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 3, p.GetParserRuleContext())
+	{
+		p.SetState(102)
+		p.TypeDefinition()
 	}
 
 	return localctx
@@ -977,7 +1263,7 @@ func (s *FieldNameContext) ExitRule(listener antlr.ParseTreeListener) {
 
 func (p *AnzerParser) FieldName() (localctx IFieldNameContext) {
 	localctx = NewFieldNameContext(p, p.GetParserRuleContext(), p.GetState())
-	p.EnterRule(localctx, 12, AnzerParserRULE_fieldName)
+	p.EnterRule(localctx, 16, AnzerParserRULE_fieldName)
 	var _la int
 
 	defer func() {
@@ -998,7 +1284,7 @@ func (p *AnzerParser) FieldName() (localctx IFieldNameContext) {
 
 	p.EnterOuterAlt(localctx, 1)
 	{
-		p.SetState(65)
+		p.SetState(104)
 		_la = p.GetTokenStream().LA(1)
 
 		if !(_la == AnzerParserLowIdent || _la == AnzerParserUpperIdent) {
@@ -1050,12 +1336,34 @@ func NewTypeIdContext(parser antlr.Parser, parent antlr.ParserRuleContext, invok
 
 func (s *TypeIdContext) GetParser() antlr.Parser { return s.parser }
 
-func (s *TypeIdContext) LowIdent() antlr.TerminalNode {
-	return s.GetToken(AnzerParserLowIdent, 0)
+func (s *TypeIdContext) TypeConstructor() ITypeConstructorContext {
+	var t = s.GetTypedRuleContext(reflect.TypeOf((*ITypeConstructorContext)(nil)).Elem(), 0)
+
+	if t == nil {
+		return nil
+	}
+
+	return t.(ITypeConstructorContext)
 }
 
-func (s *TypeIdContext) UpperIdent() antlr.TerminalNode {
-	return s.GetToken(AnzerParserUpperIdent, 0)
+func (s *TypeIdContext) TypeScalar() ITypeScalarContext {
+	var t = s.GetTypedRuleContext(reflect.TypeOf((*ITypeScalarContext)(nil)).Elem(), 0)
+
+	if t == nil {
+		return nil
+	}
+
+	return t.(ITypeScalarContext)
+}
+
+func (s *TypeIdContext) TypeOther() ITypeOtherContext {
+	var t = s.GetTypedRuleContext(reflect.TypeOf((*ITypeOtherContext)(nil)).Elem(), 0)
+
+	if t == nil {
+		return nil
+	}
+
+	return t.(ITypeOtherContext)
 }
 
 func (s *TypeIdContext) GetRuleContext() antlr.RuleContext {
@@ -1080,8 +1388,312 @@ func (s *TypeIdContext) ExitRule(listener antlr.ParseTreeListener) {
 
 func (p *AnzerParser) TypeId() (localctx ITypeIdContext) {
 	localctx = NewTypeIdContext(p, p.GetParserRuleContext(), p.GetState())
-	p.EnterRule(localctx, 14, AnzerParserRULE_typeId)
-	var _la int
+	p.EnterRule(localctx, 18, AnzerParserRULE_typeId)
+
+	defer func() {
+		p.ExitRule()
+	}()
+
+	defer func() {
+		if err := recover(); err != nil {
+			if v, ok := err.(antlr.RecognitionException); ok {
+				localctx.SetException(v)
+				p.GetErrorHandler().ReportError(p, v)
+				p.GetErrorHandler().Recover(p, v)
+			} else {
+				panic(err)
+			}
+		}
+	}()
+
+	p.SetState(109)
+	p.GetErrorHandler().Sync(p)
+
+	switch p.GetTokenStream().LA(1) {
+	case AnzerParserT__5, AnzerParserT__6, AnzerParserT__7, AnzerParserT__8, AnzerParserT__9, AnzerParserT__10:
+		p.EnterOuterAlt(localctx, 1)
+		{
+			p.SetState(106)
+			p.TypeConstructor()
+		}
+
+	case AnzerParserT__11, AnzerParserT__12, AnzerParserT__13, AnzerParserT__14:
+		p.EnterOuterAlt(localctx, 2)
+		{
+			p.SetState(107)
+			p.TypeScalar()
+		}
+
+	case AnzerParserUpperIdent:
+		p.EnterOuterAlt(localctx, 3)
+		{
+			p.SetState(108)
+			p.TypeOther()
+		}
+
+	default:
+		panic(antlr.NewNoViableAltException(p, nil, nil, nil, nil, nil))
+	}
+
+	return localctx
+}
+
+// ITypeConstructorContext is an interface to support dynamic dispatch.
+type ITypeConstructorContext interface {
+	antlr.ParserRuleContext
+
+	// GetParser returns the parser.
+	GetParser() antlr.Parser
+
+	// IsTypeConstructorContext differentiates from other interfaces.
+	IsTypeConstructorContext()
+}
+
+type TypeConstructorContext struct {
+	*antlr.BaseParserRuleContext
+	parser antlr.Parser
+}
+
+func NewEmptyTypeConstructorContext() *TypeConstructorContext {
+	var p = new(TypeConstructorContext)
+	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(nil, -1)
+	p.RuleIndex = AnzerParserRULE_typeConstructor
+	return p
+}
+
+func (*TypeConstructorContext) IsTypeConstructorContext() {}
+
+func NewTypeConstructorContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *TypeConstructorContext {
+	var p = new(TypeConstructorContext)
+
+	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(parent, invokingState)
+
+	p.parser = parser
+	p.RuleIndex = AnzerParserRULE_typeConstructor
+
+	return p
+}
+
+func (s *TypeConstructorContext) GetParser() antlr.Parser { return s.parser }
+
+func (s *TypeConstructorContext) TypeMinLength() ITypeMinLengthContext {
+	var t = s.GetTypedRuleContext(reflect.TypeOf((*ITypeMinLengthContext)(nil)).Elem(), 0)
+
+	if t == nil {
+		return nil
+	}
+
+	return t.(ITypeMinLengthContext)
+}
+
+func (s *TypeConstructorContext) TypeMaxLength() ITypeMaxLengthContext {
+	var t = s.GetTypedRuleContext(reflect.TypeOf((*ITypeMaxLengthContext)(nil)).Elem(), 0)
+
+	if t == nil {
+		return nil
+	}
+
+	return t.(ITypeMaxLengthContext)
+}
+
+func (s *TypeConstructorContext) TypeRight() ITypeRightContext {
+	var t = s.GetTypedRuleContext(reflect.TypeOf((*ITypeRightContext)(nil)).Elem(), 0)
+
+	if t == nil {
+		return nil
+	}
+
+	return t.(ITypeRightContext)
+}
+
+func (s *TypeConstructorContext) TypeLeft() ITypeLeftContext {
+	var t = s.GetTypedRuleContext(reflect.TypeOf((*ITypeLeftContext)(nil)).Elem(), 0)
+
+	if t == nil {
+		return nil
+	}
+
+	return t.(ITypeLeftContext)
+}
+
+func (s *TypeConstructorContext) TypeList() ITypeListContext {
+	var t = s.GetTypedRuleContext(reflect.TypeOf((*ITypeListContext)(nil)).Elem(), 0)
+
+	if t == nil {
+		return nil
+	}
+
+	return t.(ITypeListContext)
+}
+
+func (s *TypeConstructorContext) TypeOptional() ITypeOptionalContext {
+	var t = s.GetTypedRuleContext(reflect.TypeOf((*ITypeOptionalContext)(nil)).Elem(), 0)
+
+	if t == nil {
+		return nil
+	}
+
+	return t.(ITypeOptionalContext)
+}
+
+func (s *TypeConstructorContext) GetRuleContext() antlr.RuleContext {
+	return s
+}
+
+func (s *TypeConstructorContext) ToStringTree(ruleNames []string, recog antlr.Recognizer) string {
+	return antlr.TreesStringTree(s, ruleNames, recog)
+}
+
+func (s *TypeConstructorContext) EnterRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(AnzerListener); ok {
+		listenerT.EnterTypeConstructor(s)
+	}
+}
+
+func (s *TypeConstructorContext) ExitRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(AnzerListener); ok {
+		listenerT.ExitTypeConstructor(s)
+	}
+}
+
+func (p *AnzerParser) TypeConstructor() (localctx ITypeConstructorContext) {
+	localctx = NewTypeConstructorContext(p, p.GetParserRuleContext(), p.GetState())
+	p.EnterRule(localctx, 20, AnzerParserRULE_typeConstructor)
+
+	defer func() {
+		p.ExitRule()
+	}()
+
+	defer func() {
+		if err := recover(); err != nil {
+			if v, ok := err.(antlr.RecognitionException); ok {
+				localctx.SetException(v)
+				p.GetErrorHandler().ReportError(p, v)
+				p.GetErrorHandler().Recover(p, v)
+			} else {
+				panic(err)
+			}
+		}
+	}()
+
+	p.SetState(117)
+	p.GetErrorHandler().Sync(p)
+
+	switch p.GetTokenStream().LA(1) {
+	case AnzerParserT__5:
+		p.EnterOuterAlt(localctx, 1)
+		{
+			p.SetState(111)
+			p.TypeMinLength()
+		}
+
+	case AnzerParserT__6:
+		p.EnterOuterAlt(localctx, 2)
+		{
+			p.SetState(112)
+			p.TypeMaxLength()
+		}
+
+	case AnzerParserT__7:
+		p.EnterOuterAlt(localctx, 3)
+		{
+			p.SetState(113)
+			p.TypeRight()
+		}
+
+	case AnzerParserT__8:
+		p.EnterOuterAlt(localctx, 4)
+		{
+			p.SetState(114)
+			p.TypeLeft()
+		}
+
+	case AnzerParserT__9:
+		p.EnterOuterAlt(localctx, 5)
+		{
+			p.SetState(115)
+			p.TypeList()
+		}
+
+	case AnzerParserT__10:
+		p.EnterOuterAlt(localctx, 6)
+		{
+			p.SetState(116)
+			p.TypeOptional()
+		}
+
+	default:
+		panic(antlr.NewNoViableAltException(p, nil, nil, nil, nil, nil))
+	}
+
+	return localctx
+}
+
+// ITypeMinLengthContext is an interface to support dynamic dispatch.
+type ITypeMinLengthContext interface {
+	antlr.ParserRuleContext
+
+	// GetParser returns the parser.
+	GetParser() antlr.Parser
+
+	// IsTypeMinLengthContext differentiates from other interfaces.
+	IsTypeMinLengthContext()
+}
+
+type TypeMinLengthContext struct {
+	*antlr.BaseParserRuleContext
+	parser antlr.Parser
+}
+
+func NewEmptyTypeMinLengthContext() *TypeMinLengthContext {
+	var p = new(TypeMinLengthContext)
+	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(nil, -1)
+	p.RuleIndex = AnzerParserRULE_typeMinLength
+	return p
+}
+
+func (*TypeMinLengthContext) IsTypeMinLengthContext() {}
+
+func NewTypeMinLengthContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *TypeMinLengthContext {
+	var p = new(TypeMinLengthContext)
+
+	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(parent, invokingState)
+
+	p.parser = parser
+	p.RuleIndex = AnzerParserRULE_typeMinLength
+
+	return p
+}
+
+func (s *TypeMinLengthContext) GetParser() antlr.Parser { return s.parser }
+
+func (s *TypeMinLengthContext) ConstructorArg() antlr.TerminalNode {
+	return s.GetToken(AnzerParserConstructorArg, 0)
+}
+
+func (s *TypeMinLengthContext) GetRuleContext() antlr.RuleContext {
+	return s
+}
+
+func (s *TypeMinLengthContext) ToStringTree(ruleNames []string, recog antlr.Recognizer) string {
+	return antlr.TreesStringTree(s, ruleNames, recog)
+}
+
+func (s *TypeMinLengthContext) EnterRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(AnzerListener); ok {
+		listenerT.EnterTypeMinLength(s)
+	}
+}
+
+func (s *TypeMinLengthContext) ExitRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(AnzerListener); ok {
+		listenerT.ExitTypeMinLength(s)
+	}
+}
+
+func (p *AnzerParser) TypeMinLength() (localctx ITypeMinLengthContext) {
+	localctx = NewTypeMinLengthContext(p, p.GetParserRuleContext(), p.GetState())
+	p.EnterRule(localctx, 22, AnzerParserRULE_typeMinLength)
 
 	defer func() {
 		p.ExitRule()
@@ -1101,15 +1713,1043 @@ func (p *AnzerParser) TypeId() (localctx ITypeIdContext) {
 
 	p.EnterOuterAlt(localctx, 1)
 	{
-		p.SetState(67)
-		_la = p.GetTokenStream().LA(1)
+		p.SetState(119)
+		p.Match(AnzerParserT__5)
+	}
+	{
+		p.SetState(120)
+		p.Match(AnzerParserConstructorArg)
+	}
 
-		if !(_la == AnzerParserLowIdent || _la == AnzerParserUpperIdent) {
-			p.GetErrorHandler().RecoverInline(p)
-		} else {
-			p.GetErrorHandler().ReportMatch(p)
-			p.Consume()
+	return localctx
+}
+
+// ITypeMaxLengthContext is an interface to support dynamic dispatch.
+type ITypeMaxLengthContext interface {
+	antlr.ParserRuleContext
+
+	// GetParser returns the parser.
+	GetParser() antlr.Parser
+
+	// IsTypeMaxLengthContext differentiates from other interfaces.
+	IsTypeMaxLengthContext()
+}
+
+type TypeMaxLengthContext struct {
+	*antlr.BaseParserRuleContext
+	parser antlr.Parser
+}
+
+func NewEmptyTypeMaxLengthContext() *TypeMaxLengthContext {
+	var p = new(TypeMaxLengthContext)
+	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(nil, -1)
+	p.RuleIndex = AnzerParserRULE_typeMaxLength
+	return p
+}
+
+func (*TypeMaxLengthContext) IsTypeMaxLengthContext() {}
+
+func NewTypeMaxLengthContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *TypeMaxLengthContext {
+	var p = new(TypeMaxLengthContext)
+
+	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(parent, invokingState)
+
+	p.parser = parser
+	p.RuleIndex = AnzerParserRULE_typeMaxLength
+
+	return p
+}
+
+func (s *TypeMaxLengthContext) GetParser() antlr.Parser { return s.parser }
+
+func (s *TypeMaxLengthContext) ConstructorArg() antlr.TerminalNode {
+	return s.GetToken(AnzerParserConstructorArg, 0)
+}
+
+func (s *TypeMaxLengthContext) GetRuleContext() antlr.RuleContext {
+	return s
+}
+
+func (s *TypeMaxLengthContext) ToStringTree(ruleNames []string, recog antlr.Recognizer) string {
+	return antlr.TreesStringTree(s, ruleNames, recog)
+}
+
+func (s *TypeMaxLengthContext) EnterRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(AnzerListener); ok {
+		listenerT.EnterTypeMaxLength(s)
+	}
+}
+
+func (s *TypeMaxLengthContext) ExitRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(AnzerListener); ok {
+		listenerT.ExitTypeMaxLength(s)
+	}
+}
+
+func (p *AnzerParser) TypeMaxLength() (localctx ITypeMaxLengthContext) {
+	localctx = NewTypeMaxLengthContext(p, p.GetParserRuleContext(), p.GetState())
+	p.EnterRule(localctx, 24, AnzerParserRULE_typeMaxLength)
+
+	defer func() {
+		p.ExitRule()
+	}()
+
+	defer func() {
+		if err := recover(); err != nil {
+			if v, ok := err.(antlr.RecognitionException); ok {
+				localctx.SetException(v)
+				p.GetErrorHandler().ReportError(p, v)
+				p.GetErrorHandler().Recover(p, v)
+			} else {
+				panic(err)
+			}
 		}
+	}()
+
+	p.EnterOuterAlt(localctx, 1)
+	{
+		p.SetState(122)
+		p.Match(AnzerParserT__6)
+	}
+	{
+		p.SetState(123)
+		p.Match(AnzerParserConstructorArg)
+	}
+
+	return localctx
+}
+
+// ITypeRightContext is an interface to support dynamic dispatch.
+type ITypeRightContext interface {
+	antlr.ParserRuleContext
+
+	// GetParser returns the parser.
+	GetParser() antlr.Parser
+
+	// IsTypeRightContext differentiates from other interfaces.
+	IsTypeRightContext()
+}
+
+type TypeRightContext struct {
+	*antlr.BaseParserRuleContext
+	parser antlr.Parser
+}
+
+func NewEmptyTypeRightContext() *TypeRightContext {
+	var p = new(TypeRightContext)
+	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(nil, -1)
+	p.RuleIndex = AnzerParserRULE_typeRight
+	return p
+}
+
+func (*TypeRightContext) IsTypeRightContext() {}
+
+func NewTypeRightContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *TypeRightContext {
+	var p = new(TypeRightContext)
+
+	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(parent, invokingState)
+
+	p.parser = parser
+	p.RuleIndex = AnzerParserRULE_typeRight
+
+	return p
+}
+
+func (s *TypeRightContext) GetParser() antlr.Parser { return s.parser }
+func (s *TypeRightContext) GetRuleContext() antlr.RuleContext {
+	return s
+}
+
+func (s *TypeRightContext) ToStringTree(ruleNames []string, recog antlr.Recognizer) string {
+	return antlr.TreesStringTree(s, ruleNames, recog)
+}
+
+func (s *TypeRightContext) EnterRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(AnzerListener); ok {
+		listenerT.EnterTypeRight(s)
+	}
+}
+
+func (s *TypeRightContext) ExitRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(AnzerListener); ok {
+		listenerT.ExitTypeRight(s)
+	}
+}
+
+func (p *AnzerParser) TypeRight() (localctx ITypeRightContext) {
+	localctx = NewTypeRightContext(p, p.GetParserRuleContext(), p.GetState())
+	p.EnterRule(localctx, 26, AnzerParserRULE_typeRight)
+
+	defer func() {
+		p.ExitRule()
+	}()
+
+	defer func() {
+		if err := recover(); err != nil {
+			if v, ok := err.(antlr.RecognitionException); ok {
+				localctx.SetException(v)
+				p.GetErrorHandler().ReportError(p, v)
+				p.GetErrorHandler().Recover(p, v)
+			} else {
+				panic(err)
+			}
+		}
+	}()
+
+	p.EnterOuterAlt(localctx, 1)
+	{
+		p.SetState(125)
+		p.Match(AnzerParserT__7)
+	}
+
+	return localctx
+}
+
+// ITypeLeftContext is an interface to support dynamic dispatch.
+type ITypeLeftContext interface {
+	antlr.ParserRuleContext
+
+	// GetParser returns the parser.
+	GetParser() antlr.Parser
+
+	// IsTypeLeftContext differentiates from other interfaces.
+	IsTypeLeftContext()
+}
+
+type TypeLeftContext struct {
+	*antlr.BaseParserRuleContext
+	parser antlr.Parser
+}
+
+func NewEmptyTypeLeftContext() *TypeLeftContext {
+	var p = new(TypeLeftContext)
+	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(nil, -1)
+	p.RuleIndex = AnzerParserRULE_typeLeft
+	return p
+}
+
+func (*TypeLeftContext) IsTypeLeftContext() {}
+
+func NewTypeLeftContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *TypeLeftContext {
+	var p = new(TypeLeftContext)
+
+	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(parent, invokingState)
+
+	p.parser = parser
+	p.RuleIndex = AnzerParserRULE_typeLeft
+
+	return p
+}
+
+func (s *TypeLeftContext) GetParser() antlr.Parser { return s.parser }
+func (s *TypeLeftContext) GetRuleContext() antlr.RuleContext {
+	return s
+}
+
+func (s *TypeLeftContext) ToStringTree(ruleNames []string, recog antlr.Recognizer) string {
+	return antlr.TreesStringTree(s, ruleNames, recog)
+}
+
+func (s *TypeLeftContext) EnterRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(AnzerListener); ok {
+		listenerT.EnterTypeLeft(s)
+	}
+}
+
+func (s *TypeLeftContext) ExitRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(AnzerListener); ok {
+		listenerT.ExitTypeLeft(s)
+	}
+}
+
+func (p *AnzerParser) TypeLeft() (localctx ITypeLeftContext) {
+	localctx = NewTypeLeftContext(p, p.GetParserRuleContext(), p.GetState())
+	p.EnterRule(localctx, 28, AnzerParserRULE_typeLeft)
+
+	defer func() {
+		p.ExitRule()
+	}()
+
+	defer func() {
+		if err := recover(); err != nil {
+			if v, ok := err.(antlr.RecognitionException); ok {
+				localctx.SetException(v)
+				p.GetErrorHandler().ReportError(p, v)
+				p.GetErrorHandler().Recover(p, v)
+			} else {
+				panic(err)
+			}
+		}
+	}()
+
+	p.EnterOuterAlt(localctx, 1)
+	{
+		p.SetState(127)
+		p.Match(AnzerParserT__8)
+	}
+
+	return localctx
+}
+
+// ITypeListContext is an interface to support dynamic dispatch.
+type ITypeListContext interface {
+	antlr.ParserRuleContext
+
+	// GetParser returns the parser.
+	GetParser() antlr.Parser
+
+	// IsTypeListContext differentiates from other interfaces.
+	IsTypeListContext()
+}
+
+type TypeListContext struct {
+	*antlr.BaseParserRuleContext
+	parser antlr.Parser
+}
+
+func NewEmptyTypeListContext() *TypeListContext {
+	var p = new(TypeListContext)
+	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(nil, -1)
+	p.RuleIndex = AnzerParserRULE_typeList
+	return p
+}
+
+func (*TypeListContext) IsTypeListContext() {}
+
+func NewTypeListContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *TypeListContext {
+	var p = new(TypeListContext)
+
+	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(parent, invokingState)
+
+	p.parser = parser
+	p.RuleIndex = AnzerParserRULE_typeList
+
+	return p
+}
+
+func (s *TypeListContext) GetParser() antlr.Parser { return s.parser }
+func (s *TypeListContext) GetRuleContext() antlr.RuleContext {
+	return s
+}
+
+func (s *TypeListContext) ToStringTree(ruleNames []string, recog antlr.Recognizer) string {
+	return antlr.TreesStringTree(s, ruleNames, recog)
+}
+
+func (s *TypeListContext) EnterRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(AnzerListener); ok {
+		listenerT.EnterTypeList(s)
+	}
+}
+
+func (s *TypeListContext) ExitRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(AnzerListener); ok {
+		listenerT.ExitTypeList(s)
+	}
+}
+
+func (p *AnzerParser) TypeList() (localctx ITypeListContext) {
+	localctx = NewTypeListContext(p, p.GetParserRuleContext(), p.GetState())
+	p.EnterRule(localctx, 30, AnzerParserRULE_typeList)
+
+	defer func() {
+		p.ExitRule()
+	}()
+
+	defer func() {
+		if err := recover(); err != nil {
+			if v, ok := err.(antlr.RecognitionException); ok {
+				localctx.SetException(v)
+				p.GetErrorHandler().ReportError(p, v)
+				p.GetErrorHandler().Recover(p, v)
+			} else {
+				panic(err)
+			}
+		}
+	}()
+
+	p.EnterOuterAlt(localctx, 1)
+	{
+		p.SetState(129)
+		p.Match(AnzerParserT__9)
+	}
+
+	return localctx
+}
+
+// ITypeOptionalContext is an interface to support dynamic dispatch.
+type ITypeOptionalContext interface {
+	antlr.ParserRuleContext
+
+	// GetParser returns the parser.
+	GetParser() antlr.Parser
+
+	// IsTypeOptionalContext differentiates from other interfaces.
+	IsTypeOptionalContext()
+}
+
+type TypeOptionalContext struct {
+	*antlr.BaseParserRuleContext
+	parser antlr.Parser
+}
+
+func NewEmptyTypeOptionalContext() *TypeOptionalContext {
+	var p = new(TypeOptionalContext)
+	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(nil, -1)
+	p.RuleIndex = AnzerParserRULE_typeOptional
+	return p
+}
+
+func (*TypeOptionalContext) IsTypeOptionalContext() {}
+
+func NewTypeOptionalContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *TypeOptionalContext {
+	var p = new(TypeOptionalContext)
+
+	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(parent, invokingState)
+
+	p.parser = parser
+	p.RuleIndex = AnzerParserRULE_typeOptional
+
+	return p
+}
+
+func (s *TypeOptionalContext) GetParser() antlr.Parser { return s.parser }
+func (s *TypeOptionalContext) GetRuleContext() antlr.RuleContext {
+	return s
+}
+
+func (s *TypeOptionalContext) ToStringTree(ruleNames []string, recog antlr.Recognizer) string {
+	return antlr.TreesStringTree(s, ruleNames, recog)
+}
+
+func (s *TypeOptionalContext) EnterRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(AnzerListener); ok {
+		listenerT.EnterTypeOptional(s)
+	}
+}
+
+func (s *TypeOptionalContext) ExitRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(AnzerListener); ok {
+		listenerT.ExitTypeOptional(s)
+	}
+}
+
+func (p *AnzerParser) TypeOptional() (localctx ITypeOptionalContext) {
+	localctx = NewTypeOptionalContext(p, p.GetParserRuleContext(), p.GetState())
+	p.EnterRule(localctx, 32, AnzerParserRULE_typeOptional)
+
+	defer func() {
+		p.ExitRule()
+	}()
+
+	defer func() {
+		if err := recover(); err != nil {
+			if v, ok := err.(antlr.RecognitionException); ok {
+				localctx.SetException(v)
+				p.GetErrorHandler().ReportError(p, v)
+				p.GetErrorHandler().Recover(p, v)
+			} else {
+				panic(err)
+			}
+		}
+	}()
+
+	p.EnterOuterAlt(localctx, 1)
+	{
+		p.SetState(131)
+		p.Match(AnzerParserT__10)
+	}
+
+	return localctx
+}
+
+// ITypeScalarContext is an interface to support dynamic dispatch.
+type ITypeScalarContext interface {
+	antlr.ParserRuleContext
+
+	// GetParser returns the parser.
+	GetParser() antlr.Parser
+
+	// IsTypeScalarContext differentiates from other interfaces.
+	IsTypeScalarContext()
+}
+
+type TypeScalarContext struct {
+	*antlr.BaseParserRuleContext
+	parser antlr.Parser
+}
+
+func NewEmptyTypeScalarContext() *TypeScalarContext {
+	var p = new(TypeScalarContext)
+	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(nil, -1)
+	p.RuleIndex = AnzerParserRULE_typeScalar
+	return p
+}
+
+func (*TypeScalarContext) IsTypeScalarContext() {}
+
+func NewTypeScalarContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *TypeScalarContext {
+	var p = new(TypeScalarContext)
+
+	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(parent, invokingState)
+
+	p.parser = parser
+	p.RuleIndex = AnzerParserRULE_typeScalar
+
+	return p
+}
+
+func (s *TypeScalarContext) GetParser() antlr.Parser { return s.parser }
+
+func (s *TypeScalarContext) TypeString() ITypeStringContext {
+	var t = s.GetTypedRuleContext(reflect.TypeOf((*ITypeStringContext)(nil)).Elem(), 0)
+
+	if t == nil {
+		return nil
+	}
+
+	return t.(ITypeStringContext)
+}
+
+func (s *TypeScalarContext) TypeInteger() ITypeIntegerContext {
+	var t = s.GetTypedRuleContext(reflect.TypeOf((*ITypeIntegerContext)(nil)).Elem(), 0)
+
+	if t == nil {
+		return nil
+	}
+
+	return t.(ITypeIntegerContext)
+}
+
+func (s *TypeScalarContext) TypeFloat() ITypeFloatContext {
+	var t = s.GetTypedRuleContext(reflect.TypeOf((*ITypeFloatContext)(nil)).Elem(), 0)
+
+	if t == nil {
+		return nil
+	}
+
+	return t.(ITypeFloatContext)
+}
+
+func (s *TypeScalarContext) TypeBool() ITypeBoolContext {
+	var t = s.GetTypedRuleContext(reflect.TypeOf((*ITypeBoolContext)(nil)).Elem(), 0)
+
+	if t == nil {
+		return nil
+	}
+
+	return t.(ITypeBoolContext)
+}
+
+func (s *TypeScalarContext) GetRuleContext() antlr.RuleContext {
+	return s
+}
+
+func (s *TypeScalarContext) ToStringTree(ruleNames []string, recog antlr.Recognizer) string {
+	return antlr.TreesStringTree(s, ruleNames, recog)
+}
+
+func (s *TypeScalarContext) EnterRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(AnzerListener); ok {
+		listenerT.EnterTypeScalar(s)
+	}
+}
+
+func (s *TypeScalarContext) ExitRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(AnzerListener); ok {
+		listenerT.ExitTypeScalar(s)
+	}
+}
+
+func (p *AnzerParser) TypeScalar() (localctx ITypeScalarContext) {
+	localctx = NewTypeScalarContext(p, p.GetParserRuleContext(), p.GetState())
+	p.EnterRule(localctx, 34, AnzerParserRULE_typeScalar)
+
+	defer func() {
+		p.ExitRule()
+	}()
+
+	defer func() {
+		if err := recover(); err != nil {
+			if v, ok := err.(antlr.RecognitionException); ok {
+				localctx.SetException(v)
+				p.GetErrorHandler().ReportError(p, v)
+				p.GetErrorHandler().Recover(p, v)
+			} else {
+				panic(err)
+			}
+		}
+	}()
+
+	p.SetState(137)
+	p.GetErrorHandler().Sync(p)
+
+	switch p.GetTokenStream().LA(1) {
+	case AnzerParserT__11:
+		p.EnterOuterAlt(localctx, 1)
+		{
+			p.SetState(133)
+			p.TypeString()
+		}
+
+	case AnzerParserT__12:
+		p.EnterOuterAlt(localctx, 2)
+		{
+			p.SetState(134)
+			p.TypeInteger()
+		}
+
+	case AnzerParserT__13:
+		p.EnterOuterAlt(localctx, 3)
+		{
+			p.SetState(135)
+			p.TypeFloat()
+		}
+
+	case AnzerParserT__14:
+		p.EnterOuterAlt(localctx, 4)
+		{
+			p.SetState(136)
+			p.TypeBool()
+		}
+
+	default:
+		panic(antlr.NewNoViableAltException(p, nil, nil, nil, nil, nil))
+	}
+
+	return localctx
+}
+
+// ITypeStringContext is an interface to support dynamic dispatch.
+type ITypeStringContext interface {
+	antlr.ParserRuleContext
+
+	// GetParser returns the parser.
+	GetParser() antlr.Parser
+
+	// IsTypeStringContext differentiates from other interfaces.
+	IsTypeStringContext()
+}
+
+type TypeStringContext struct {
+	*antlr.BaseParserRuleContext
+	parser antlr.Parser
+}
+
+func NewEmptyTypeStringContext() *TypeStringContext {
+	var p = new(TypeStringContext)
+	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(nil, -1)
+	p.RuleIndex = AnzerParserRULE_typeString
+	return p
+}
+
+func (*TypeStringContext) IsTypeStringContext() {}
+
+func NewTypeStringContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *TypeStringContext {
+	var p = new(TypeStringContext)
+
+	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(parent, invokingState)
+
+	p.parser = parser
+	p.RuleIndex = AnzerParserRULE_typeString
+
+	return p
+}
+
+func (s *TypeStringContext) GetParser() antlr.Parser { return s.parser }
+func (s *TypeStringContext) GetRuleContext() antlr.RuleContext {
+	return s
+}
+
+func (s *TypeStringContext) ToStringTree(ruleNames []string, recog antlr.Recognizer) string {
+	return antlr.TreesStringTree(s, ruleNames, recog)
+}
+
+func (s *TypeStringContext) EnterRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(AnzerListener); ok {
+		listenerT.EnterTypeString(s)
+	}
+}
+
+func (s *TypeStringContext) ExitRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(AnzerListener); ok {
+		listenerT.ExitTypeString(s)
+	}
+}
+
+func (p *AnzerParser) TypeString() (localctx ITypeStringContext) {
+	localctx = NewTypeStringContext(p, p.GetParserRuleContext(), p.GetState())
+	p.EnterRule(localctx, 36, AnzerParserRULE_typeString)
+
+	defer func() {
+		p.ExitRule()
+	}()
+
+	defer func() {
+		if err := recover(); err != nil {
+			if v, ok := err.(antlr.RecognitionException); ok {
+				localctx.SetException(v)
+				p.GetErrorHandler().ReportError(p, v)
+				p.GetErrorHandler().Recover(p, v)
+			} else {
+				panic(err)
+			}
+		}
+	}()
+
+	p.EnterOuterAlt(localctx, 1)
+	{
+		p.SetState(139)
+		p.Match(AnzerParserT__11)
+	}
+
+	return localctx
+}
+
+// ITypeIntegerContext is an interface to support dynamic dispatch.
+type ITypeIntegerContext interface {
+	antlr.ParserRuleContext
+
+	// GetParser returns the parser.
+	GetParser() antlr.Parser
+
+	// IsTypeIntegerContext differentiates from other interfaces.
+	IsTypeIntegerContext()
+}
+
+type TypeIntegerContext struct {
+	*antlr.BaseParserRuleContext
+	parser antlr.Parser
+}
+
+func NewEmptyTypeIntegerContext() *TypeIntegerContext {
+	var p = new(TypeIntegerContext)
+	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(nil, -1)
+	p.RuleIndex = AnzerParserRULE_typeInteger
+	return p
+}
+
+func (*TypeIntegerContext) IsTypeIntegerContext() {}
+
+func NewTypeIntegerContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *TypeIntegerContext {
+	var p = new(TypeIntegerContext)
+
+	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(parent, invokingState)
+
+	p.parser = parser
+	p.RuleIndex = AnzerParserRULE_typeInteger
+
+	return p
+}
+
+func (s *TypeIntegerContext) GetParser() antlr.Parser { return s.parser }
+func (s *TypeIntegerContext) GetRuleContext() antlr.RuleContext {
+	return s
+}
+
+func (s *TypeIntegerContext) ToStringTree(ruleNames []string, recog antlr.Recognizer) string {
+	return antlr.TreesStringTree(s, ruleNames, recog)
+}
+
+func (s *TypeIntegerContext) EnterRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(AnzerListener); ok {
+		listenerT.EnterTypeInteger(s)
+	}
+}
+
+func (s *TypeIntegerContext) ExitRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(AnzerListener); ok {
+		listenerT.ExitTypeInteger(s)
+	}
+}
+
+func (p *AnzerParser) TypeInteger() (localctx ITypeIntegerContext) {
+	localctx = NewTypeIntegerContext(p, p.GetParserRuleContext(), p.GetState())
+	p.EnterRule(localctx, 38, AnzerParserRULE_typeInteger)
+
+	defer func() {
+		p.ExitRule()
+	}()
+
+	defer func() {
+		if err := recover(); err != nil {
+			if v, ok := err.(antlr.RecognitionException); ok {
+				localctx.SetException(v)
+				p.GetErrorHandler().ReportError(p, v)
+				p.GetErrorHandler().Recover(p, v)
+			} else {
+				panic(err)
+			}
+		}
+	}()
+
+	p.EnterOuterAlt(localctx, 1)
+	{
+		p.SetState(141)
+		p.Match(AnzerParserT__12)
+	}
+
+	return localctx
+}
+
+// ITypeFloatContext is an interface to support dynamic dispatch.
+type ITypeFloatContext interface {
+	antlr.ParserRuleContext
+
+	// GetParser returns the parser.
+	GetParser() antlr.Parser
+
+	// IsTypeFloatContext differentiates from other interfaces.
+	IsTypeFloatContext()
+}
+
+type TypeFloatContext struct {
+	*antlr.BaseParserRuleContext
+	parser antlr.Parser
+}
+
+func NewEmptyTypeFloatContext() *TypeFloatContext {
+	var p = new(TypeFloatContext)
+	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(nil, -1)
+	p.RuleIndex = AnzerParserRULE_typeFloat
+	return p
+}
+
+func (*TypeFloatContext) IsTypeFloatContext() {}
+
+func NewTypeFloatContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *TypeFloatContext {
+	var p = new(TypeFloatContext)
+
+	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(parent, invokingState)
+
+	p.parser = parser
+	p.RuleIndex = AnzerParserRULE_typeFloat
+
+	return p
+}
+
+func (s *TypeFloatContext) GetParser() antlr.Parser { return s.parser }
+func (s *TypeFloatContext) GetRuleContext() antlr.RuleContext {
+	return s
+}
+
+func (s *TypeFloatContext) ToStringTree(ruleNames []string, recog antlr.Recognizer) string {
+	return antlr.TreesStringTree(s, ruleNames, recog)
+}
+
+func (s *TypeFloatContext) EnterRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(AnzerListener); ok {
+		listenerT.EnterTypeFloat(s)
+	}
+}
+
+func (s *TypeFloatContext) ExitRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(AnzerListener); ok {
+		listenerT.ExitTypeFloat(s)
+	}
+}
+
+func (p *AnzerParser) TypeFloat() (localctx ITypeFloatContext) {
+	localctx = NewTypeFloatContext(p, p.GetParserRuleContext(), p.GetState())
+	p.EnterRule(localctx, 40, AnzerParserRULE_typeFloat)
+
+	defer func() {
+		p.ExitRule()
+	}()
+
+	defer func() {
+		if err := recover(); err != nil {
+			if v, ok := err.(antlr.RecognitionException); ok {
+				localctx.SetException(v)
+				p.GetErrorHandler().ReportError(p, v)
+				p.GetErrorHandler().Recover(p, v)
+			} else {
+				panic(err)
+			}
+		}
+	}()
+
+	p.EnterOuterAlt(localctx, 1)
+	{
+		p.SetState(143)
+		p.Match(AnzerParserT__13)
+	}
+
+	return localctx
+}
+
+// ITypeBoolContext is an interface to support dynamic dispatch.
+type ITypeBoolContext interface {
+	antlr.ParserRuleContext
+
+	// GetParser returns the parser.
+	GetParser() antlr.Parser
+
+	// IsTypeBoolContext differentiates from other interfaces.
+	IsTypeBoolContext()
+}
+
+type TypeBoolContext struct {
+	*antlr.BaseParserRuleContext
+	parser antlr.Parser
+}
+
+func NewEmptyTypeBoolContext() *TypeBoolContext {
+	var p = new(TypeBoolContext)
+	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(nil, -1)
+	p.RuleIndex = AnzerParserRULE_typeBool
+	return p
+}
+
+func (*TypeBoolContext) IsTypeBoolContext() {}
+
+func NewTypeBoolContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *TypeBoolContext {
+	var p = new(TypeBoolContext)
+
+	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(parent, invokingState)
+
+	p.parser = parser
+	p.RuleIndex = AnzerParserRULE_typeBool
+
+	return p
+}
+
+func (s *TypeBoolContext) GetParser() antlr.Parser { return s.parser }
+func (s *TypeBoolContext) GetRuleContext() antlr.RuleContext {
+	return s
+}
+
+func (s *TypeBoolContext) ToStringTree(ruleNames []string, recog antlr.Recognizer) string {
+	return antlr.TreesStringTree(s, ruleNames, recog)
+}
+
+func (s *TypeBoolContext) EnterRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(AnzerListener); ok {
+		listenerT.EnterTypeBool(s)
+	}
+}
+
+func (s *TypeBoolContext) ExitRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(AnzerListener); ok {
+		listenerT.ExitTypeBool(s)
+	}
+}
+
+func (p *AnzerParser) TypeBool() (localctx ITypeBoolContext) {
+	localctx = NewTypeBoolContext(p, p.GetParserRuleContext(), p.GetState())
+	p.EnterRule(localctx, 42, AnzerParserRULE_typeBool)
+
+	defer func() {
+		p.ExitRule()
+	}()
+
+	defer func() {
+		if err := recover(); err != nil {
+			if v, ok := err.(antlr.RecognitionException); ok {
+				localctx.SetException(v)
+				p.GetErrorHandler().ReportError(p, v)
+				p.GetErrorHandler().Recover(p, v)
+			} else {
+				panic(err)
+			}
+		}
+	}()
+
+	p.EnterOuterAlt(localctx, 1)
+	{
+		p.SetState(145)
+		p.Match(AnzerParserT__14)
+	}
+
+	return localctx
+}
+
+// ITypeOtherContext is an interface to support dynamic dispatch.
+type ITypeOtherContext interface {
+	antlr.ParserRuleContext
+
+	// GetParser returns the parser.
+	GetParser() antlr.Parser
+
+	// IsTypeOtherContext differentiates from other interfaces.
+	IsTypeOtherContext()
+}
+
+type TypeOtherContext struct {
+	*antlr.BaseParserRuleContext
+	parser antlr.Parser
+}
+
+func NewEmptyTypeOtherContext() *TypeOtherContext {
+	var p = new(TypeOtherContext)
+	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(nil, -1)
+	p.RuleIndex = AnzerParserRULE_typeOther
+	return p
+}
+
+func (*TypeOtherContext) IsTypeOtherContext() {}
+
+func NewTypeOtherContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *TypeOtherContext {
+	var p = new(TypeOtherContext)
+
+	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(parent, invokingState)
+
+	p.parser = parser
+	p.RuleIndex = AnzerParserRULE_typeOther
+
+	return p
+}
+
+func (s *TypeOtherContext) GetParser() antlr.Parser { return s.parser }
+
+func (s *TypeOtherContext) UpperIdent() antlr.TerminalNode {
+	return s.GetToken(AnzerParserUpperIdent, 0)
+}
+
+func (s *TypeOtherContext) GetRuleContext() antlr.RuleContext {
+	return s
+}
+
+func (s *TypeOtherContext) ToStringTree(ruleNames []string, recog antlr.Recognizer) string {
+	return antlr.TreesStringTree(s, ruleNames, recog)
+}
+
+func (s *TypeOtherContext) EnterRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(AnzerListener); ok {
+		listenerT.EnterTypeOther(s)
+	}
+}
+
+func (s *TypeOtherContext) ExitRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(AnzerListener); ok {
+		listenerT.ExitTypeOther(s)
+	}
+}
+
+func (p *AnzerParser) TypeOther() (localctx ITypeOtherContext) {
+	localctx = NewTypeOtherContext(p, p.GetParserRuleContext(), p.GetState())
+	p.EnterRule(localctx, 44, AnzerParserRULE_typeOther)
+
+	defer func() {
+		p.ExitRule()
+	}()
+
+	defer func() {
+		if err := recover(); err != nil {
+			if v, ok := err.(antlr.RecognitionException); ok {
+				localctx.SetException(v)
+				p.GetErrorHandler().ReportError(p, v)
+				p.GetErrorHandler().Recover(p, v)
+			} else {
+				panic(err)
+			}
+		}
+	}()
+
+	p.EnterOuterAlt(localctx, 1)
+	{
+		p.SetState(147)
+		p.Match(AnzerParserUpperIdent)
 	}
 
 	return localctx
@@ -1173,6 +2813,26 @@ func (s *FuncDeclarationContext) Runtime() IRuntimeContext {
 	return t.(IRuntimeContext)
 }
 
+func (s *FuncDeclarationContext) FuncArgument() IFuncArgumentContext {
+	var t = s.GetTypedRuleContext(reflect.TypeOf((*IFuncArgumentContext)(nil)).Elem(), 0)
+
+	if t == nil {
+		return nil
+	}
+
+	return t.(IFuncArgumentContext)
+}
+
+func (s *FuncDeclarationContext) FuncResult() IFuncResultContext {
+	var t = s.GetTypedRuleContext(reflect.TypeOf((*IFuncResultContext)(nil)).Elem(), 0)
+
+	if t == nil {
+		return nil
+	}
+
+	return t.(IFuncResultContext)
+}
+
 func (s *FuncDeclarationContext) FuncName() IFuncNameContext {
 	var t = s.GetTypedRuleContext(reflect.TypeOf((*IFuncNameContext)(nil)).Elem(), 0)
 
@@ -1181,29 +2841,6 @@ func (s *FuncDeclarationContext) FuncName() IFuncNameContext {
 	}
 
 	return t.(IFuncNameContext)
-}
-
-func (s *FuncDeclarationContext) AllTypeName() []ITypeNameContext {
-	var ts = s.GetTypedRuleContexts(reflect.TypeOf((*ITypeNameContext)(nil)).Elem())
-	var tst = make([]ITypeNameContext, len(ts))
-
-	for i, t := range ts {
-		if t != nil {
-			tst[i] = t.(ITypeNameContext)
-		}
-	}
-
-	return tst
-}
-
-func (s *FuncDeclarationContext) TypeName(i int) ITypeNameContext {
-	var t = s.GetTypedRuleContext(reflect.TypeOf((*ITypeNameContext)(nil)).Elem(), i)
-
-	if t == nil {
-		return nil
-	}
-
-	return t.(ITypeNameContext)
 }
 
 func (s *FuncDeclarationContext) GetRuleContext() antlr.RuleContext {
@@ -1228,7 +2865,7 @@ func (s *FuncDeclarationContext) ExitRule(listener antlr.ParseTreeListener) {
 
 func (p *AnzerParser) FuncDeclaration() (localctx IFuncDeclarationContext) {
 	localctx = NewFuncDeclarationContext(p, p.GetParserRuleContext(), p.GetState())
-	p.EnterRule(localctx, 16, AnzerParserRULE_funcDeclaration)
+	p.EnterRule(localctx, 46, AnzerParserRULE_funcDeclaration)
 	var _la int
 
 	defer func() {
@@ -1248,68 +2885,48 @@ func (p *AnzerParser) FuncDeclaration() (localctx IFuncDeclarationContext) {
 	}()
 
 	p.EnterOuterAlt(localctx, 1)
-	p.SetState(70)
+	p.SetState(150)
 	p.GetErrorHandler().Sync(p)
 	_la = p.GetTokenStream().LA(1)
 
 	if _la == AnzerParserLowIdent {
 		{
-			p.SetState(69)
+			p.SetState(149)
 			p.FuncName()
 		}
 
 	}
 	{
-		p.SetState(72)
+		p.SetState(152)
 		p.Url()
 	}
 	{
-		p.SetState(73)
-		p.Match(AnzerParserT__5)
+		p.SetState(153)
+		p.Match(AnzerParserT__15)
 	}
 	{
-		p.SetState(74)
+		p.SetState(154)
 		p.Runtime()
 	}
 	{
-		p.SetState(75)
-		p.Match(AnzerParserT__6)
+		p.SetState(155)
+		p.Match(AnzerParserT__16)
 	}
 	{
-		p.SetState(76)
+		p.SetState(156)
 		p.Match(AnzerParserT__4)
 	}
-	p.SetState(78)
-	p.GetErrorHandler().Sync(p)
-	_la = p.GetTokenStream().LA(1)
-
-	for ok := true; ok; ok = _la == AnzerParserUpperIdent {
-		{
-			p.SetState(77)
-			p.TypeName()
-		}
-
-		p.SetState(80)
-		p.GetErrorHandler().Sync(p)
-		_la = p.GetTokenStream().LA(1)
+	{
+		p.SetState(157)
+		p.FuncArgument()
 	}
 	{
-		p.SetState(82)
-		p.Match(AnzerParserT__7)
+		p.SetState(158)
+		p.Match(AnzerParserT__17)
 	}
-	p.SetState(84)
-	p.GetErrorHandler().Sync(p)
-	_la = p.GetTokenStream().LA(1)
-
-	for ok := true; ok; ok = _la == AnzerParserUpperIdent {
-		{
-			p.SetState(83)
-			p.TypeName()
-		}
-
-		p.SetState(86)
-		p.GetErrorHandler().Sync(p)
-		_la = p.GetTokenStream().LA(1)
+	{
+		p.SetState(159)
+		p.FuncResult()
 	}
 
 	return localctx
@@ -1379,7 +2996,7 @@ func (s *FuncNameContext) ExitRule(listener antlr.ParseTreeListener) {
 
 func (p *AnzerParser) FuncName() (localctx IFuncNameContext) {
 	localctx = NewFuncNameContext(p, p.GetParserRuleContext(), p.GetState())
-	p.EnterRule(localctx, 18, AnzerParserRULE_funcName)
+	p.EnterRule(localctx, 48, AnzerParserRULE_funcName)
 
 	defer func() {
 		p.ExitRule()
@@ -1399,7 +3016,7 @@ func (p *AnzerParser) FuncName() (localctx IFuncNameContext) {
 
 	p.EnterOuterAlt(localctx, 1)
 	{
-		p.SetState(88)
+		p.SetState(161)
 		p.Match(AnzerParserLowIdent)
 	}
 
@@ -1470,7 +3087,7 @@ func (s *RuntimeContext) ExitRule(listener antlr.ParseTreeListener) {
 
 func (p *AnzerParser) Runtime() (localctx IRuntimeContext) {
 	localctx = NewRuntimeContext(p, p.GetParserRuleContext(), p.GetState())
-	p.EnterRule(localctx, 20, AnzerParserRULE_runtime)
+	p.EnterRule(localctx, 50, AnzerParserRULE_runtime)
 
 	defer func() {
 		p.ExitRule()
@@ -1490,7 +3107,7 @@ func (p *AnzerParser) Runtime() (localctx IRuntimeContext) {
 
 	p.EnterOuterAlt(localctx, 1)
 	{
-		p.SetState(90)
+		p.SetState(163)
 		p.Match(AnzerParserLowIdent)
 	}
 
@@ -1561,7 +3178,7 @@ func (s *UrlContext) ExitRule(listener antlr.ParseTreeListener) {
 
 func (p *AnzerParser) Url() (localctx IUrlContext) {
 	localctx = NewUrlContext(p, p.GetParserRuleContext(), p.GetState())
-	p.EnterRule(localctx, 22, AnzerParserRULE_url)
+	p.EnterRule(localctx, 52, AnzerParserRULE_url)
 
 	defer func() {
 		p.ExitRule()
@@ -1581,8 +3198,202 @@ func (p *AnzerParser) Url() (localctx IUrlContext) {
 
 	p.EnterOuterAlt(localctx, 1)
 	{
-		p.SetState(92)
+		p.SetState(165)
 		p.Match(AnzerParserURL)
+	}
+
+	return localctx
+}
+
+// IFuncArgumentContext is an interface to support dynamic dispatch.
+type IFuncArgumentContext interface {
+	antlr.ParserRuleContext
+
+	// GetParser returns the parser.
+	GetParser() antlr.Parser
+
+	// IsFuncArgumentContext differentiates from other interfaces.
+	IsFuncArgumentContext()
+}
+
+type FuncArgumentContext struct {
+	*antlr.BaseParserRuleContext
+	parser antlr.Parser
+}
+
+func NewEmptyFuncArgumentContext() *FuncArgumentContext {
+	var p = new(FuncArgumentContext)
+	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(nil, -1)
+	p.RuleIndex = AnzerParserRULE_funcArgument
+	return p
+}
+
+func (*FuncArgumentContext) IsFuncArgumentContext() {}
+
+func NewFuncArgumentContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *FuncArgumentContext {
+	var p = new(FuncArgumentContext)
+
+	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(parent, invokingState)
+
+	p.parser = parser
+	p.RuleIndex = AnzerParserRULE_funcArgument
+
+	return p
+}
+
+func (s *FuncArgumentContext) GetParser() antlr.Parser { return s.parser }
+
+func (s *FuncArgumentContext) TypeDefinition() ITypeDefinitionContext {
+	var t = s.GetTypedRuleContext(reflect.TypeOf((*ITypeDefinitionContext)(nil)).Elem(), 0)
+
+	if t == nil {
+		return nil
+	}
+
+	return t.(ITypeDefinitionContext)
+}
+
+func (s *FuncArgumentContext) GetRuleContext() antlr.RuleContext {
+	return s
+}
+
+func (s *FuncArgumentContext) ToStringTree(ruleNames []string, recog antlr.Recognizer) string {
+	return antlr.TreesStringTree(s, ruleNames, recog)
+}
+
+func (s *FuncArgumentContext) EnterRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(AnzerListener); ok {
+		listenerT.EnterFuncArgument(s)
+	}
+}
+
+func (s *FuncArgumentContext) ExitRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(AnzerListener); ok {
+		listenerT.ExitFuncArgument(s)
+	}
+}
+
+func (p *AnzerParser) FuncArgument() (localctx IFuncArgumentContext) {
+	localctx = NewFuncArgumentContext(p, p.GetParserRuleContext(), p.GetState())
+	p.EnterRule(localctx, 54, AnzerParserRULE_funcArgument)
+
+	defer func() {
+		p.ExitRule()
+	}()
+
+	defer func() {
+		if err := recover(); err != nil {
+			if v, ok := err.(antlr.RecognitionException); ok {
+				localctx.SetException(v)
+				p.GetErrorHandler().ReportError(p, v)
+				p.GetErrorHandler().Recover(p, v)
+			} else {
+				panic(err)
+			}
+		}
+	}()
+
+	p.EnterOuterAlt(localctx, 1)
+	{
+		p.SetState(167)
+		p.TypeDefinition()
+	}
+
+	return localctx
+}
+
+// IFuncResultContext is an interface to support dynamic dispatch.
+type IFuncResultContext interface {
+	antlr.ParserRuleContext
+
+	// GetParser returns the parser.
+	GetParser() antlr.Parser
+
+	// IsFuncResultContext differentiates from other interfaces.
+	IsFuncResultContext()
+}
+
+type FuncResultContext struct {
+	*antlr.BaseParserRuleContext
+	parser antlr.Parser
+}
+
+func NewEmptyFuncResultContext() *FuncResultContext {
+	var p = new(FuncResultContext)
+	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(nil, -1)
+	p.RuleIndex = AnzerParserRULE_funcResult
+	return p
+}
+
+func (*FuncResultContext) IsFuncResultContext() {}
+
+func NewFuncResultContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *FuncResultContext {
+	var p = new(FuncResultContext)
+
+	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(parent, invokingState)
+
+	p.parser = parser
+	p.RuleIndex = AnzerParserRULE_funcResult
+
+	return p
+}
+
+func (s *FuncResultContext) GetParser() antlr.Parser { return s.parser }
+
+func (s *FuncResultContext) TypeDefinition() ITypeDefinitionContext {
+	var t = s.GetTypedRuleContext(reflect.TypeOf((*ITypeDefinitionContext)(nil)).Elem(), 0)
+
+	if t == nil {
+		return nil
+	}
+
+	return t.(ITypeDefinitionContext)
+}
+
+func (s *FuncResultContext) GetRuleContext() antlr.RuleContext {
+	return s
+}
+
+func (s *FuncResultContext) ToStringTree(ruleNames []string, recog antlr.Recognizer) string {
+	return antlr.TreesStringTree(s, ruleNames, recog)
+}
+
+func (s *FuncResultContext) EnterRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(AnzerListener); ok {
+		listenerT.EnterFuncResult(s)
+	}
+}
+
+func (s *FuncResultContext) ExitRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(AnzerListener); ok {
+		listenerT.ExitFuncResult(s)
+	}
+}
+
+func (p *AnzerParser) FuncResult() (localctx IFuncResultContext) {
+	localctx = NewFuncResultContext(p, p.GetParserRuleContext(), p.GetState())
+	p.EnterRule(localctx, 56, AnzerParserRULE_funcResult)
+
+	defer func() {
+		p.ExitRule()
+	}()
+
+	defer func() {
+		if err := recover(); err != nil {
+			if v, ok := err.(antlr.RecognitionException); ok {
+				localctx.SetException(v)
+				p.GetErrorHandler().ReportError(p, v)
+				p.GetErrorHandler().Recover(p, v)
+			} else {
+				panic(err)
+			}
+		}
+	}()
+
+	p.EnterOuterAlt(localctx, 1)
+	{
+		p.SetState(169)
+		p.TypeDefinition()
 	}
 
 	return localctx
@@ -1671,7 +3482,7 @@ func (s *LocalFuncDeclarationContext) ExitRule(listener antlr.ParseTreeListener)
 
 func (p *AnzerParser) LocalFuncDeclaration() (localctx ILocalFuncDeclarationContext) {
 	localctx = NewLocalFuncDeclarationContext(p, p.GetParserRuleContext(), p.GetState())
-	p.EnterRule(localctx, 24, AnzerParserRULE_localFuncDeclaration)
+	p.EnterRule(localctx, 58, AnzerParserRULE_localFuncDeclaration)
 
 	defer func() {
 		p.ExitRule()
@@ -1693,33 +3504,33 @@ func (p *AnzerParser) LocalFuncDeclaration() (localctx ILocalFuncDeclarationCont
 
 	p.EnterOuterAlt(localctx, 1)
 	{
-		p.SetState(94)
+		p.SetState(171)
 		p.FuncName()
 	}
 	{
-		p.SetState(95)
+		p.SetState(172)
 		p.Match(AnzerParserT__1)
 	}
-	p.SetState(98)
+	p.SetState(175)
 	p.GetErrorHandler().Sync(p)
 	_alt = 1
 	for ok := true; ok; ok = _alt != 2 && _alt != antlr.ATNInvalidAltNumber {
 		switch _alt {
 		case 1:
-			p.SetState(98)
+			p.SetState(175)
 			p.GetErrorHandler().Sync(p)
 
 			switch p.GetTokenStream().LA(1) {
 			case AnzerParserLowIdent:
 				{
-					p.SetState(96)
+					p.SetState(173)
 					p.FuncName()
 				}
 
-			case AnzerParserT__8:
+			case AnzerParserT__18:
 				{
-					p.SetState(97)
-					p.Match(AnzerParserT__8)
+					p.SetState(174)
+					p.Match(AnzerParserT__18)
 				}
 
 			default:
@@ -1730,9 +3541,9 @@ func (p *AnzerParser) LocalFuncDeclaration() (localctx ILocalFuncDeclarationCont
 			panic(antlr.NewNoViableAltException(p, nil, nil, nil, nil, nil))
 		}
 
-		p.SetState(100)
+		p.SetState(177)
 		p.GetErrorHandler().Sync(p)
-		_alt = p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 8, p.GetParserRuleContext())
+		_alt = p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 10, p.GetParserRuleContext())
 	}
 
 	return localctx
@@ -1821,7 +3632,7 @@ func (s *InvokeCmdContext) ExitRule(listener antlr.ParseTreeListener) {
 
 func (p *AnzerParser) InvokeCmd() (localctx IInvokeCmdContext) {
 	localctx = NewInvokeCmdContext(p, p.GetParserRuleContext(), p.GetState())
-	p.EnterRule(localctx, 26, AnzerParserRULE_invokeCmd)
+	p.EnterRule(localctx, 60, AnzerParserRULE_invokeCmd)
 	var _la int
 
 	defer func() {
@@ -1842,30 +3653,30 @@ func (p *AnzerParser) InvokeCmd() (localctx IInvokeCmdContext) {
 
 	p.EnterOuterAlt(localctx, 1)
 	{
-		p.SetState(102)
-		p.Match(AnzerParserT__9)
+		p.SetState(179)
+		p.Match(AnzerParserT__19)
 	}
 	{
-		p.SetState(103)
-		p.Match(AnzerParserT__10)
+		p.SetState(180)
+		p.Match(AnzerParserT__20)
 	}
-	p.SetState(105)
+	p.SetState(182)
 	p.GetErrorHandler().Sync(p)
 	_la = p.GetTokenStream().LA(1)
 
 	for ok := true; ok; ok = _la == AnzerParserLowIdent {
 		{
-			p.SetState(104)
+			p.SetState(181)
 			p.FuncName()
 		}
 
-		p.SetState(107)
+		p.SetState(184)
 		p.GetErrorHandler().Sync(p)
 		_la = p.GetTokenStream().LA(1)
 	}
 	{
-		p.SetState(109)
-		p.Match(AnzerParserT__11)
+		p.SetState(186)
+		p.Match(AnzerParserT__21)
 	}
 
 	return localctx

@@ -1,5 +1,5 @@
 type Status = {
-    gift :: Gift
+    gift :: List String
     sent :: Bool
 }
 github.com/test/deliver[go] :: Gift -> Either Error Status

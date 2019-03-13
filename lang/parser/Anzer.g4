@@ -12,23 +12,51 @@ typeDeclaration : 'type' typeName '=' typeDefinition;
 
 typeName : UpperIdent;
 
-typeDefinition :  '{' typeField * '}' ;
+typeDefinition : typeComplexDefinition | typeSimpleDefinition ;
 
-typeField : fieldName '::' typeId * ;
+typeComplexDefinition :  '{' typeField * '}' ;
+
+typeSimpleDefinition : typeId + ;
+
+typeField : fieldName '::' typeDefinition ;
 
 fieldName : LowIdent | UpperIdent;
 
-typeId : LowIdent | UpperIdent;
+typeId : typeConstructor | typeScalar | typeOther ;
+
+// Tokens
+
+typeConstructor : typeMinLength | typeMaxLength | typeRight | typeLeft | typeList | typeOptional ;
+
+typeMinLength : 'MinLength' ConstructorArg ;
+typeMaxLength : 'MaxLength' ConstructorArg ;
+typeRight : 'Right' ;
+typeLeft : 'Left' ;
+typeList : 'List' ;
+typeOptional : 'Optional' ;
+
+typeScalar : typeString | typeInteger | typeFloat | typeBool ;
+
+typeString : 'String' ;
+typeInteger : 'Integer' ;
+typeFloat : 'Float' ;
+typeBool : 'Bool' ;
+
+typeOther : UpperIdent ;
 
 // Func
 
-funcDeclaration : funcName? url '[' runtime ']' '::' typeName+ '->' typeName+;
+funcDeclaration : funcName? url '[' runtime ']' '::' funcArgument '->' funcResult;
 
 funcName : LowIdent ;
 
 runtime : LowIdent ;
 
 url : URL ;
+
+funcArgument : typeDefinition ;
+
+funcResult : typeDefinition ;
 
 // Local func
 
@@ -49,6 +77,8 @@ fragment Urlpart : ('-' | Letter | DecimalDigit ) ;
 LowIdent : LowLetter (Letter | DecimalDigit)* ;
 
 UpperIdent : UpperLetter (Letter | DecimalDigit)* ;
+
+ConstructorArg : DecimalDigit+ ;
 
 URL : ( Urlpart | '.' )+ '.' Letter+ '/' ( Urlpart | '/' )+ ;
 
