@@ -13,8 +13,8 @@ func Parse(sourceStream io.Reader) ([]l.F, error) {
 		return nil, err
 	}
 
-	p := parser.New()
-	p.Parse(string(source))
+	p := parser.New(string(source))
+	p.Parse()
 
 	return nil, nil
 }

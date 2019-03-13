@@ -3,35 +3,67 @@ package parser
 import (
 	"fmt"
 	"github.com/antlr/antlr4/runtime/Go/antlr"
-	"github.com/tariel-x/anzer/lang/parser/parser"
+	l "github.com/tariel-x/anzer/lang"
 )
 
 type Parser struct {
+	source string
+	types []l.T
+	funcs []l.F
+	lastObj *container
 }
 
-func New() Parser {
-	return Parser{}
+const (
+	kindT = iota
+	kindF
+)
+
+type container struct {
+	kind int
+	t l.T
+	f l.F
 }
 
-func (pp Parser) Parse(source string)  {
-	input := antlr.NewInputStream(source)
-	lexer := parser.NewAnzerLexer(input)
+func New(source string) Parser {
+	return Parser{
+		source: source,
+	}
+}
+
+func (parser *Parser) Parse()  {
+	input := antlr.NewInputStream(parser.source)
+	lexer := NewAnzerLexer(input)
 	stream := antlr.NewCommonTokenStream(lexer,0)
-	p := parser.NewAnzerParser(stream)
+	p := NewAnzerParser(stream)
 	p.AddErrorListener(antlr.NewDiagnosticErrorListener(true))
 	p.BuildParseTrees = true
 	tree := p.Forms()
-	antlr.ParseTreeWalkerDefault.Walk(NewTreeShapeListener(), tree)
+	antlr.ParseTreeWalkerDefault.Walk(NewTreeShapeListener(parser), tree)
 }
 
 type TreeShapeListener struct {
-	*parser.BaseAnzerListener
+	*BaseAnzerListener
+	parser *Parser
 }
 
-func NewTreeShapeListener() *TreeShapeListener {
-	return new(TreeShapeListener)
+func NewTreeShapeListener(parser *Parser) *TreeShapeListener {
+	l := new(TreeShapeListener)
+	l.parser = parser
+	return l
 }
 
-func (this *TreeShapeListener) EnterEveryRule(ctx antlr.ParserRuleContext) {
+func (l *TreeShapeListener) EnterEveryRule(ctx antlr.ParserRuleContext) {
 	fmt.Println(ctx.GetText())
+}
+
+func (l *TreeShapeListener) EnterTypeDeclaration(ctx *TypeDeclarationContext) {
+	c := &container{
+		kind: kindT,
+	}
+	l.parser.lastObj = c
+}
+
+func (l *TreeShapeListener) ExitTypeDeclaration(ctx *TypeDeclarationContext) {
+	l.parser.types = append(l.parser.types, l.parser.lastObj.t)
+	l.parser.lastObj = nil
 }
