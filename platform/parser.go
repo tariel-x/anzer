@@ -17,7 +17,7 @@ func Parse(sourceStream io.Reader) ([]l.F, error) {
 	p := parser.New(string(source))
 	result := p.Parse()
 
-	fmt.Printf("%#v\n\n", result.Types)
+	fmt.Printf("%+v\n\n", result.Types)
 
 	return nil, nil
 }

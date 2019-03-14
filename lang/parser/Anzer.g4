@@ -54,9 +54,9 @@ runtime : LowIdent ;
 
 url : URL ;
 
-funcArgument : typeDefinition ;
+funcArgument : typeId + ;
 
-funcResult : typeDefinition ;
+funcResult : typeId + ;
 
 // Local func
 

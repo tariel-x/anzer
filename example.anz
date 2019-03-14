@@ -1,8 +1,8 @@
 type Status = {
-    gift :: List String
+    gift :: MaxLength 10 MinLength 20 String
     sent :: Bool
 }
-github.com/test/deliver[go] :: Gift -> Either Error Status
+github.com/test/deliver[go] :: Gift -> Either Error Optional Status
 
 makegift = deliver . prepare . parse
 

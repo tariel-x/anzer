@@ -21,14 +21,26 @@ type ParseResult struct {
 
 type container struct {
 	t      lang.T
+	tpath  []lang.T
 	parent *container
 }
 
 func (c *container) sub(t lang.T) *container {
 	return &container{
 		t:      t,
+		tpath:  []lang.T{},
 		parent: c,
 	}
+}
+
+func (c *container) appendT(t lang.T) {
+	if c == nil {
+		return
+	}
+	if c.tpath == nil {
+		c.tpath = []lang.T{}
+	}
+	c.tpath = append(c.tpath, t)
 }
 
 func New(source string) Parser {
@@ -66,11 +78,11 @@ func NewTreeShapeListener(parser *Parser) *TreeShapeListener {
 }
 
 func (l *TreeShapeListener) EnterEveryRule(ctx antlr.ParserRuleContext) {
-	fmt.Println("->", ctx.GetText())
+	fmt.Println("->  ", ctx.GetText())
 }
 
 func (l *TreeShapeListener) ExitEveryRule(ctx antlr.ParserRuleContext) {
-	fmt.Println("<-", ctx.GetText())
+	fmt.Println("  <-", ctx.GetText())
 }
 
 func (l *TreeShapeListener) EnterTypeDeclaration(ctx *TypeDeclarationContext) {
@@ -98,30 +110,46 @@ func (l *TreeShapeListener) ExitTypeField(ctx *TypeFieldContext) {
 
 func (l *TreeShapeListener) ExitTypeMinLength(ctx *TypeMinLengthContext) {
 	arg, _ := strconv.Atoi(ctx.ConstructorArg().GetText())
-	// TODO: HOW TO DETECT NEXT TYPE HERE?
-	t := lang.MinLength(l.parser.container.t, arg)
-	l.parser.container = l.parser.container.sub(t)
+	t := lang.Construct(nil, lang.TypeMinLength, []interface{}{arg})
+	l.parser.container.appendT(t)
 }
 
 func (l *TreeShapeListener) ExitTypeMaxLength(ctx *TypeMaxLengthContext) {
 	arg, _ := strconv.Atoi(ctx.ConstructorArg().GetText())
-	l.parser.container.t = lang.MaxLength(l.parser.container.t, arg)
+	t := lang.Construct(nil, lang.TypeMaxLength, []interface{}{arg})
+	l.parser.container.appendT(t)
 }
 
 func (l *TreeShapeListener) ExitTypeOptional(ctx *TypeOptionalContext) {
-	l.parser.container.t = lang.Optional(l.parser.container.t)
+	t := lang.Construct(nil, lang.TypeOptional, nil)
+	l.parser.container.appendT(t)
 }
 
 func (l *TreeShapeListener) ExitTypeString(ctx *TypeStringContext) {
-	l.parser.container.t = lang.TypeString
+	l.parser.container.appendT(lang.TypeString)
 }
 
 func (l *TreeShapeListener) ExitTypeBool(ctx *TypeBoolContext) {
-	l.parser.container.t = lang.TypeBool
+	l.parser.container.appendT(lang.TypeBool)
 }
 
 func (l *TreeShapeListener) ExitTypeInteger(ctx *TypeIntegerContext) {
-	l.parser.container.t = lang.TypeInteger
+	l.parser.container.appendT(lang.TypeInteger)
+}
+
+func (l *TreeShapeListener) ExitTypeSimpleDefinition(ctx *TypeSimpleDefinitionContext) {
+	var finalT lang.T
+	for i := len(l.parser.container.tpath) - 1; i >= 0; i-- {
+		if finalT == nil {
+			finalT = l.parser.container.tpath[i]
+			continue
+		}
+		if constructor, ok := l.parser.container.tpath[i].(lang.Constructor); ok {
+			constructor.Operand = finalT
+			finalT = constructor
+		}
+	}
+	l.parser.container.t = finalT
 }
 
 func (l *TreeShapeListener) ExitTypeDeclaration(ctx *TypeDeclarationContext) {
