@@ -8,32 +8,39 @@ import (
 )
 
 type Parser struct {
-	source    string
-	types     map[string]lang.T
-	funcs     map[string]lang.F
-	container *container
+	source  string
+	types   map[string]lang.T
+	funcs   map[string]lang.Composable
+	invokes []lang.F
+	tc      *tContainer
+	fc      *fContainer
 }
 
 type ParseResult struct {
-	Types map[string]lang.T
-	Funcs map[string]lang.F
+	Types   map[string]lang.T
+	Funcs   map[string]lang.Composable
+	Invokes []lang.F
 }
 
-type container struct {
+type fContainer struct {
+	f lang.F
+}
+
+type tContainer struct {
 	t      lang.T
 	tpath  []lang.T
-	parent *container
+	parent *tContainer
 }
 
-func (c *container) sub(t lang.T) *container {
-	return &container{
+func (c *tContainer) sub(t lang.T) *tContainer {
+	return &tContainer{
 		t:      t,
 		tpath:  []lang.T{},
 		parent: c,
 	}
 }
 
-func (c *container) appendT(t lang.T) {
+func (c *tContainer) appendT(t lang.T) {
 	if c == nil {
 		return
 	}
@@ -58,7 +65,7 @@ func (parser *Parser) Parse() ParseResult {
 	p.AddErrorListener(antlr.NewDiagnosticErrorListener(true))
 	p.BuildParseTrees = true
 	tree := p.Forms()
-	antlr.ParseTreeWalkerDefault.Walk(NewTreeShapeListener(parser), tree)
+	antlr.ParseTreeWalkerDefault.Walk(Newlistener(parser), tree)
 
 	return ParseResult{
 		Types: parser.types,
@@ -66,93 +73,109 @@ func (parser *Parser) Parse() ParseResult {
 	}
 }
 
-type TreeShapeListener struct {
+type listener struct {
 	*BaseAnzerListener
 	parser *Parser
 }
 
-func NewTreeShapeListener(parser *Parser) *TreeShapeListener {
-	l := new(TreeShapeListener)
+func Newlistener(parser *Parser) *listener {
+	l := new(listener)
 	l.parser = parser
 	return l
 }
 
-func (l *TreeShapeListener) EnterEveryRule(ctx antlr.ParserRuleContext) {
+func (l *listener) EnterEveryRule(ctx antlr.ParserRuleContext) {
 	fmt.Println("->  ", ctx.GetText())
 }
 
-func (l *TreeShapeListener) ExitEveryRule(ctx antlr.ParserRuleContext) {
+func (l *listener) ExitEveryRule(ctx antlr.ParserRuleContext) {
 	fmt.Println("  <-", ctx.GetText())
 }
 
-func (l *TreeShapeListener) EnterTypeDeclaration(ctx *TypeDeclarationContext) {
-	l.parser.container = &container{}
+func (l *listener) EnterTypeDeclaration(ctx *TypeDeclarationContext) {
+	l.parser.tc = &tContainer{}
 }
 
-func (l *TreeShapeListener) EnterTypeComplexDefinition(ctx *TypeComplexDefinitionContext) {
-	l.parser.container.t = lang.Complex{
+func (l *listener) EnterTypeComplexDefinition(ctx *TypeComplexDefinitionContext) {
+	l.parser.tc.t = lang.Complex{
 		Fields: map[string]lang.T{},
 	}
 }
 
-func (l *TreeShapeListener) EnterFieldName(ctx *FieldNameContext) {
-	l.parser.container = l.parser.container.sub(nil)
+func (l *listener) EnterFieldName(ctx *FieldNameContext) {
+	l.parser.tc = l.parser.tc.sub(nil)
 }
 
-func (l *TreeShapeListener) ExitTypeField(ctx *TypeFieldContext) {
-	parentc := l.parser.container.parent
+func (l *listener) ExitTypeField(ctx *TypeFieldContext) {
+	parentc := l.parser.tc.parent
 	if complext, ok := parentc.t.(lang.Complex); ok {
 		fieldName := ctx.FieldName().GetText()
-		complext.Fields[fieldName] = l.parser.container.t
+		complext.Fields[fieldName] = l.parser.tc.t
 	}
-	l.parser.container = parentc
+	l.parser.tc = parentc
 }
 
-func (l *TreeShapeListener) ExitTypeMinLength(ctx *TypeMinLengthContext) {
+func (l *listener) ExitTypeMinLength(ctx *TypeMinLengthContext) {
 	arg, _ := strconv.Atoi(ctx.ConstructorArg().GetText())
 	t := lang.Construct(nil, lang.TypeMinLength, []interface{}{arg})
-	l.parser.container.appendT(t)
+	l.parser.tc.appendT(t)
 }
 
-func (l *TreeShapeListener) ExitTypeMaxLength(ctx *TypeMaxLengthContext) {
+func (l *listener) ExitTypeMaxLength(ctx *TypeMaxLengthContext) {
 	arg, _ := strconv.Atoi(ctx.ConstructorArg().GetText())
 	t := lang.Construct(nil, lang.TypeMaxLength, []interface{}{arg})
-	l.parser.container.appendT(t)
+	l.parser.tc.appendT(t)
 }
 
-func (l *TreeShapeListener) ExitTypeOptional(ctx *TypeOptionalContext) {
+func (l *listener) ExitTypeOptional(ctx *TypeOptionalContext) {
 	t := lang.Construct(nil, lang.TypeOptional, nil)
-	l.parser.container.appendT(t)
+	l.parser.tc.appendT(t)
 }
 
-func (l *TreeShapeListener) ExitTypeString(ctx *TypeStringContext) {
-	l.parser.container.appendT(lang.TypeString)
+func (l *listener) ExitTypeString(ctx *TypeStringContext) {
+	l.parser.tc.appendT(lang.TypeString)
 }
 
-func (l *TreeShapeListener) ExitTypeBool(ctx *TypeBoolContext) {
-	l.parser.container.appendT(lang.TypeBool)
+func (l *listener) ExitTypeBool(ctx *TypeBoolContext) {
+	l.parser.tc.appendT(lang.TypeBool)
 }
 
-func (l *TreeShapeListener) ExitTypeInteger(ctx *TypeIntegerContext) {
-	l.parser.container.appendT(lang.TypeInteger)
+func (l *listener) ExitTypeInteger(ctx *TypeIntegerContext) {
+	l.parser.tc.appendT(lang.TypeInteger)
 }
 
-func (l *TreeShapeListener) ExitTypeSimpleDefinition(ctx *TypeSimpleDefinitionContext) {
+func (l *listener) ExitTypeSimpleDefinition(ctx *TypeSimpleDefinitionContext) {
 	var finalT lang.T
-	for i := len(l.parser.container.tpath) - 1; i >= 0; i-- {
+	for i := len(l.parser.tc.tpath) - 1; i >= 0; i-- {
 		if finalT == nil {
-			finalT = l.parser.container.tpath[i]
+			finalT = l.parser.tc.tpath[i]
 			continue
 		}
-		if constructor, ok := l.parser.container.tpath[i].(lang.Constructor); ok {
+		if constructor, ok := l.parser.tc.tpath[i].(lang.Constructor); ok {
 			constructor.Operand = finalT
 			finalT = constructor
 		}
 	}
-	l.parser.container.t = finalT
+	l.parser.tc.t = finalT
 }
 
-func (l *TreeShapeListener) ExitTypeDeclaration(ctx *TypeDeclarationContext) {
-	l.parser.types[ctx.TypeName().GetText()] = l.parser.container.t
-	l.parser.container = nil
+func (l *listener) ExitTypeDeclaration(ctx *TypeDeclarationContext) {
+	l.parser.types[ctx.TypeName().GetText()] = l.parser.tc.t
+	l.parser.tc = nil
+}
+
+// Link functions
+
+func (l *listener) EnterFuncDeclaration(ctx *FuncDeclarationContext) {
+	l.parser.fc = &fContainer{
+		f: lang.F{},
+	}
+}
+
+func (l *listener) EnterFuncName(ctx *FuncNameContext) {
+	l.parser.fc.f.Name = ctx.GetText()
+}
+
+func (l *listener) EnterUrl(ctx *UrlContext) {
+	l.parser.fc.f.Link = lang.FunctionLink(ctx.GetText())
 }
