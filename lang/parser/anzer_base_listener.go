@@ -201,6 +201,12 @@ func (s *BaseAnzerListener) EnterLocalFuncDeclaration(ctx *LocalFuncDeclarationC
 // ExitLocalFuncDeclaration is called when production localFuncDeclaration is exited.
 func (s *BaseAnzerListener) ExitLocalFuncDeclaration(ctx *LocalFuncDeclarationContext) {}
 
+// EnterFuncRef is called when production funcRef is entered.
+func (s *BaseAnzerListener) EnterFuncRef(ctx *FuncRefContext) {}
+
+// ExitFuncRef is called when production funcRef is exited.
+func (s *BaseAnzerListener) ExitFuncRef(ctx *FuncRefContext) {}
+
 // EnterInvokeCmd is called when production invokeCmd is entered.
 func (s *BaseAnzerListener) EnterInvokeCmd(ctx *InvokeCmdContext) {}
 

@@ -2,9 +2,10 @@ package parser
 
 import (
 	"fmt"
+	"strconv"
+
 	"github.com/antlr/antlr4/runtime/Go/antlr"
 	"github.com/tariel-x/anzer/lang"
-	"strconv"
 )
 
 type Parser struct {
@@ -22,8 +23,34 @@ type ParseResult struct {
 	Invokes []lang.F
 }
 
+func New(source string) Parser {
+	return Parser{
+		source: source,
+		types:  map[string]lang.T{},
+		funcs:  map[string]lang.Composable{},
+	}
+}
+
+func (parser *Parser) Parse() ParseResult {
+	input := antlr.NewInputStream(parser.source)
+	lexer := NewAnzerLexer(input)
+	stream := antlr.NewCommonTokenStream(lexer, 0)
+	p := NewAnzerParser(stream)
+	p.AddErrorListener(antlr.NewDiagnosticErrorListener(true))
+	p.BuildParseTrees = true
+	tree := p.Forms()
+	antlr.ParseTreeWalkerDefault.Walk(Newlistener(parser), tree)
+
+	return ParseResult{
+		Types: parser.types,
+		Funcs: parser.funcs,
+	}
+}
+
 type fContainer struct {
-	f lang.F
+	f       lang.F
+	a       lang.Alias
+	refpath []lang.FRef
 }
 
 type tContainer struct {
@@ -48,29 +75,6 @@ func (c *tContainer) appendT(t lang.T) {
 		c.tpath = []lang.T{}
 	}
 	c.tpath = append(c.tpath, t)
-}
-
-func New(source string) Parser {
-	return Parser{
-		source: source,
-		types:  map[string]lang.T{},
-	}
-}
-
-func (parser *Parser) Parse() ParseResult {
-	input := antlr.NewInputStream(parser.source)
-	lexer := NewAnzerLexer(input)
-	stream := antlr.NewCommonTokenStream(lexer, 0)
-	p := NewAnzerParser(stream)
-	p.AddErrorListener(antlr.NewDiagnosticErrorListener(true))
-	p.BuildParseTrees = true
-	tree := p.Forms()
-	antlr.ParseTreeWalkerDefault.Walk(Newlistener(parser), tree)
-
-	return ParseResult{
-		Types: parser.types,
-		Funcs: parser.funcs,
-	}
 }
 
 type listener struct {
@@ -115,48 +119,57 @@ func (l *listener) ExitTypeField(ctx *TypeFieldContext) {
 	l.parser.tc = parentc
 }
 
-func (l *listener) ExitTypeMinLength(ctx *TypeMinLengthContext) {
+func (l *listener) EnterTypeMinLength(ctx *TypeMinLengthContext) {
 	arg, _ := strconv.Atoi(ctx.ConstructorArg().GetText())
 	t := lang.Construct(nil, lang.TypeMinLength, []interface{}{arg})
 	l.parser.tc.appendT(t)
 }
 
-func (l *listener) ExitTypeMaxLength(ctx *TypeMaxLengthContext) {
+func (l *listener) EnterTypeMaxLength(ctx *TypeMaxLengthContext) {
 	arg, _ := strconv.Atoi(ctx.ConstructorArg().GetText())
 	t := lang.Construct(nil, lang.TypeMaxLength, []interface{}{arg})
 	l.parser.tc.appendT(t)
 }
 
-func (l *listener) ExitTypeOptional(ctx *TypeOptionalContext) {
+func (l *listener) EnterTypeOptional(ctx *TypeOptionalContext) {
 	t := lang.Construct(nil, lang.TypeOptional, nil)
 	l.parser.tc.appendT(t)
 }
 
-func (l *listener) ExitTypeString(ctx *TypeStringContext) {
+func (l *listener) EnterTypeString(ctx *TypeStringContext) {
 	l.parser.tc.appendT(lang.TypeString)
 }
 
-func (l *listener) ExitTypeBool(ctx *TypeBoolContext) {
+func (l *listener) EnterTypeBool(ctx *TypeBoolContext) {
 	l.parser.tc.appendT(lang.TypeBool)
 }
 
-func (l *listener) ExitTypeInteger(ctx *TypeIntegerContext) {
+func (l *listener) EnterTypeInteger(ctx *TypeIntegerContext) {
 	l.parser.tc.appendT(lang.TypeInteger)
 }
 
+func (l *listener) EnterTypeOther(ctx *TypeOtherContext) {
+	l.parser.tc.appendT(lang.Ref(ctx.GetText()))
+}
+
 func (l *listener) ExitTypeSimpleDefinition(ctx *TypeSimpleDefinitionContext) {
+	l.parser.tc.t = l.reduceTpath(l.parser.tc.tpath)
+	l.parser.tc.tpath = []lang.T{}
+}
+
+func (l *listener) reduceTpath(tpath []lang.T) lang.T {
 	var finalT lang.T
-	for i := len(l.parser.tc.tpath) - 1; i >= 0; i-- {
+	for i := len(tpath) - 1; i >= 0; i-- {
 		if finalT == nil {
-			finalT = l.parser.tc.tpath[i]
+			finalT = tpath[i]
 			continue
 		}
-		if constructor, ok := l.parser.tc.tpath[i].(lang.Constructor); ok {
+		if constructor, ok := tpath[i].(lang.Constructor); ok {
 			constructor.Operand = finalT
 			finalT = constructor
 		}
 	}
-	l.parser.tc.t = finalT
+	return finalT
 }
 
 func (l *listener) ExitTypeDeclaration(ctx *TypeDeclarationContext) {
@@ -168,14 +181,65 @@ func (l *listener) ExitTypeDeclaration(ctx *TypeDeclarationContext) {
 
 func (l *listener) EnterFuncDeclaration(ctx *FuncDeclarationContext) {
 	l.parser.fc = &fContainer{
-		f: lang.F{},
+		f: lang.F{
+			Link:    lang.FunctionLink(ctx.Url().GetText()),
+			Runtime: ctx.Runtime().GetText(),
+		},
+	}
+	if ctx.FuncName() != nil {
+		l.parser.fc.f.Name = ctx.FuncName().GetText()
 	}
 }
 
-func (l *listener) EnterFuncName(ctx *FuncNameContext) {
-	l.parser.fc.f.Name = ctx.GetText()
+func (l *listener) EnterFuncArgument(ctx *FuncArgumentContext) {
+	l.parser.tc = &tContainer{}
 }
 
-func (l *listener) EnterUrl(ctx *UrlContext) {
-	l.parser.fc.f.Link = lang.FunctionLink(ctx.GetText())
+func (l *listener) ExitFuncArgument(ctx *FuncArgumentContext) {
+	if len(l.parser.tc.tpath) > 0 {
+		l.parser.tc.t = l.reduceTpath(l.parser.tc.tpath)
+	}
+	l.parser.fc.f.TypeIn = l.parser.tc.t
+	l.parser.tc = nil
+}
+
+func (l *listener) EnterFuncResult(ctx *FuncResultContext) {
+	l.parser.tc = &tContainer{}
+}
+
+func (l *listener) ExitFuncResult(ctx *FuncResultContext) {
+	if len(l.parser.tc.tpath) > 0 {
+		l.parser.tc.t = l.reduceTpath(l.parser.tc.tpath)
+	}
+	l.parser.fc.f.TypeOut = l.parser.tc.t
+	l.parser.tc = nil
+}
+
+func (l *listener) ExitFuncDeclaration(ctx *FuncDeclarationContext) {
+	l.parser.funcs[l.parser.fc.f.GetName()] = l.parser.fc.f
+	l.parser.fc = nil
+}
+
+func (l *listener) EnterLocalFuncDeclaration(ctx *LocalFuncDeclarationContext) {
+	l.parser.fc = &fContainer{
+		refpath: []lang.FRef{},
+		a:       lang.Alias{},
+	}
+	if ctx.FuncName() != nil {
+		l.parser.fc.a.Name = ctx.FuncName().GetText()
+	}
+}
+
+func (l *listener) EnterFuncRef(ctx *FuncRefContext) {
+	l.parser.fc.refpath = append(l.parser.fc.refpath, lang.FRef(ctx.GetText()))
+}
+
+func (l *listener) ExitLocalFuncDeclaration(ctx *LocalFuncDeclarationContext) {
+	composables := make([]lang.Composable, 0, len(l.parser.fc.refpath))
+	for _, ref := range l.parser.fc.refpath {
+		composables = append(composables, ref)
+	}
+	l.parser.fc.a.Compose = composables
+	l.parser.funcs[l.parser.fc.a.Name] = l.parser.fc.a
+	l.parser.fc = nil
 }

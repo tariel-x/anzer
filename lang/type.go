@@ -82,6 +82,20 @@ func (b Basic) Subtype(of T) bool {
 	return false
 }
 
+type Ref string
+
+func (r Ref) Equal(to T) bool {
+	return r == to
+}
+
+func (r Ref) Parent(of T) bool {
+	return false
+}
+
+func (r Ref) Subtype(of T) bool {
+	return false
+}
+
 type Complex struct {
 	Fields map[string]T
 }

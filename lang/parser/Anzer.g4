@@ -60,7 +60,9 @@ funcResult : typeId + ;
 
 // Local func
 
-localFuncDeclaration : funcName '=' (funcName | '.')+ ;
+localFuncDeclaration : funcName '=' (funcRef | '.')+ ;
+
+funcRef : LowIdent ;
 
 // Invoke
 

@@ -98,6 +98,9 @@ type AnzerListener interface {
 	// EnterLocalFuncDeclaration is called when entering the localFuncDeclaration production.
 	EnterLocalFuncDeclaration(c *LocalFuncDeclarationContext)
 
+	// EnterFuncRef is called when entering the funcRef production.
+	EnterFuncRef(c *FuncRefContext)
+
 	// EnterInvokeCmd is called when entering the invokeCmd production.
 	EnterInvokeCmd(c *InvokeCmdContext)
 
@@ -190,6 +193,9 @@ type AnzerListener interface {
 
 	// ExitLocalFuncDeclaration is called when exiting the localFuncDeclaration production.
 	ExitLocalFuncDeclaration(c *LocalFuncDeclarationContext)
+
+	// ExitFuncRef is called when exiting the funcRef production.
+	ExitFuncRef(c *FuncRefContext)
 
 	// ExitInvokeCmd is called when exiting the invokeCmd production.
 	ExitInvokeCmd(c *InvokeCmdContext)

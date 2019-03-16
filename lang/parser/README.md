@@ -1,3 +1,3 @@
 # Parser
 
-Generate with antlr: `antlr4 -Dlanguage=Go grammar.g4`
+Generate with antlr: `antlr4 -Dlanguage=Go Anzer.g4`

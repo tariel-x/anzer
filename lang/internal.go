@@ -70,6 +70,10 @@ type F struct {
 }
 
 func (f F) Definition() string {
+	return f.GetName()
+}
+
+func (f F) GetName() string {
 	if f.Name != "" {
 		return f.Name
 	}
@@ -88,5 +92,23 @@ func (f F) Out() T {
 }
 
 func (f F) Invalid() error {
+	return nil
+}
+
+type FRef string
+
+func (f FRef) Definition() string {
+	return string(f)
+}
+
+func (f FRef) In() T {
+	return nil
+}
+
+func (f FRef) Out() T {
+	return nil
+}
+
+func (f FRef) Invalid() error {
 	return nil
 }
