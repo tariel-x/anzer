@@ -277,6 +277,10 @@ func (l *listener) EnterTypeInteger(ctx *TypeIntegerContext) {
 	l.parser.tc.appendT(lang.TypeInteger)
 }
 
+func (l *listener) EnterTypeFloat(ctx *TypeFloatContext) {
+	l.parser.tc.appendT(lang.TypeFloat)
+}
+
 func (l *listener) EnterTypeOther(ctx *TypeOtherContext) {
 	l.parser.tc.appendT(lang.Ref(ctx.GetText()))
 }
