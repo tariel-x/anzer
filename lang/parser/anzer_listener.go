@@ -104,6 +104,9 @@ type AnzerListener interface {
 	// EnterInvokeCmd is called when entering the invokeCmd production.
 	EnterInvokeCmd(c *InvokeCmdContext)
 
+	// EnterInvokeFuncName is called when entering the invokeFuncName production.
+	EnterInvokeFuncName(c *InvokeFuncNameContext)
+
 	// ExitForms is called when exiting the forms production.
 	ExitForms(c *FormsContext)
 
@@ -199,4 +202,7 @@ type AnzerListener interface {
 
 	// ExitInvokeCmd is called when exiting the invokeCmd production.
 	ExitInvokeCmd(c *InvokeCmdContext)
+
+	// ExitInvokeFuncName is called when exiting the invokeFuncName production.
+	ExitInvokeFuncName(c *InvokeFuncNameContext)
 }

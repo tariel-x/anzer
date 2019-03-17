@@ -212,3 +212,9 @@ func (s *BaseAnzerListener) EnterInvokeCmd(ctx *InvokeCmdContext) {}
 
 // ExitInvokeCmd is called when production invokeCmd is exited.
 func (s *BaseAnzerListener) ExitInvokeCmd(ctx *InvokeCmdContext) {}
+
+// EnterInvokeFuncName is called when production invokeFuncName is entered.
+func (s *BaseAnzerListener) EnterInvokeFuncName(ctx *InvokeFuncNameContext) {}
+
+// ExitInvokeFuncName is called when production invokeFuncName is exited.
+func (s *BaseAnzerListener) ExitInvokeFuncName(ctx *InvokeFuncNameContext) {}

@@ -14,7 +14,7 @@ typeName : UpperIdent;
 
 typeDefinition : typeComplexDefinition | typeSimpleDefinition ;
 
-typeComplexDefinition :  '{' typeField * '}' ;
+typeComplexDefinition : typeConstructor* '{' typeField * '}' ;
 
 typeSimpleDefinition : typeId + ;
 
@@ -32,8 +32,8 @@ typeMinLength : 'MinLength' ConstructorArg ;
 typeMaxLength : 'MaxLength' ConstructorArg ;
 typeRight : 'Right' ;
 typeLeft : 'Left' ;
-typeList : 'List' ;
-typeOptional : 'Optional' ;
+typeList : 'List' | '[]' ;
+typeOptional : 'Optional' | '*' ;
 
 typeScalar : typeString | typeInteger | typeFloat | typeBool ;
 
@@ -66,7 +66,9 @@ funcRef : LowIdent ;
 
 // Invoke
 
-invokeCmd : 'invoke' '(' funcName+ ')' ;
+invokeCmd : 'invoke' '(' (invokeFuncName ',')+ ')' ;
+
+invokeFuncName : LowIdent ;
 
 // Identifiers
 

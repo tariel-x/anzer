@@ -106,6 +106,12 @@ func (l *listener) EnterTypeComplexDefinition(ctx *TypeComplexDefinitionContext)
 	}
 }
 
+func (l *listener) ExitTypeComplexDefinition(ctx *TypeComplexDefinitionContext) {
+	tpath := append(l.parser.tc.tpath, l.parser.tc.t)
+	l.parser.tc.tpath = []lang.T{}
+	l.parser.tc.t = l.reduceTpath(tpath)
+}
+
 func (l *listener) EnterFieldName(ctx *FieldNameContext) {
 	l.parser.tc = l.parser.tc.sub(nil)
 }
@@ -133,6 +139,11 @@ func (l *listener) EnterTypeMaxLength(ctx *TypeMaxLengthContext) {
 
 func (l *listener) EnterTypeOptional(ctx *TypeOptionalContext) {
 	t := lang.Construct(nil, lang.TypeOptional, nil)
+	l.parser.tc.appendT(t)
+}
+
+func (l *listener) EnterTypeList(ctx *TypeListContext) {
+	t := lang.Construct(nil, lang.TypeList, nil)
 	l.parser.tc.appendT(t)
 }
 

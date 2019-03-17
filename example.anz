@@ -1,6 +1,8 @@
 type Status = {
     gift :: MaxLength 10 MinLength 20 String
-    sent :: Gift
+    sent :: []{
+        subfield :: *Gift
+    }
 }
 type Another = Gift
 github.com/test/deliver[go] :: Gift -> Either Error Optional Status
@@ -8,5 +10,6 @@ github.com/test/deliver[go] :: Gift -> Either Error Optional Status
 makegift = deliver . prepare . parse
 
 invoke (
-    makegift
+    makegift,
+    deliver,
 )
