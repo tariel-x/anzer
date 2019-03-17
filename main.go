@@ -4,9 +4,6 @@ import (
 	"log"
 	"os"
 
-	"github.com/tariel-x/anzer/build"
-	"github.com/tariel-x/anzer/export"
-	"github.com/tariel-x/anzer/generate"
 	"github.com/urfave/cli"
 )
 
@@ -38,7 +35,7 @@ func main() {
 			Name:    "build",
 			Aliases: []string{"b"},
 			Usage:   "build anzer project",
-			Action:  build.Build,
+			Action:  Build,
 			Flags: []cli.Flag{
 				inputFlag,
 				platformFlag,
@@ -48,7 +45,7 @@ func main() {
 			Name:    "generate",
 			Aliases: []string{"g"},
 			Usage:   "generate base for anzer func",
-			Action:  generate.Generate,
+			Action:  Generate,
 			Flags: []cli.Flag{
 				inputFlag,
 				outputFlag,
@@ -62,18 +59,11 @@ func main() {
 			Name:    "export",
 			Aliases: []string{"e"},
 			Usage:   "build functions and export to zip files",
-			Action:  export.Export,
+			Action:  Export,
 			Flags: []cli.Flag{
 				inputFlag,
-				platformFlag,
+				outputFlag,
 				debugFlag,
-			},
-		},
-		{
-			Name:    "tst",
-			Action:  build.Tst,
-			Flags: []cli.Flag{
-				inputFlag,
 			},
 		},
 	}

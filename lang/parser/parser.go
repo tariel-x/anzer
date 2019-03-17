@@ -42,15 +42,8 @@ func New(source string) Parser {
 	}
 }
 
-func (parser *Parser) Parse() ([]lang.Composable, error) {
-	input := antlr.NewInputStream(parser.source)
-	lexer := NewAnzerLexer(input)
-	stream := antlr.NewCommonTokenStream(lexer, 0)
-	p := NewAnzerParser(stream)
-	p.AddErrorListener(antlr.NewDiagnosticErrorListener(true))
-	p.BuildParseTrees = true
-	tree := p.Forms()
-	antlr.ParseTreeWalkerDefault.Walk(Newlistener(parser), tree)
+func (parser *Parser) ParseLazy() ([]lang.Composable, error) {
+	parser.buildTree()
 
 	result := []lang.Composable{}
 	for _, invk := range parser.invokes {
@@ -61,6 +54,31 @@ func (parser *Parser) Parse() ([]lang.Composable, error) {
 		result = append(result, composable)
 	}
 	return result, nil
+}
+
+func (parser *Parser) ParseAll() ([]lang.Composable, error) {
+	parser.buildTree()
+
+	composesMap, err := parser.resolveFuncs(parser.funcs)
+	if err != nil {
+		return nil, err
+	}
+	composes := make([]lang.Composable, 0, len(composesMap))
+	for _, c := range composesMap {
+		composes = append(composes, c)
+	}
+	return composes, nil
+}
+
+func (parser *Parser) buildTree() {
+	input := antlr.NewInputStream(parser.source)
+	lexer := NewAnzerLexer(input)
+	stream := antlr.NewCommonTokenStream(lexer, 0)
+	p := NewAnzerParser(stream)
+	p.AddErrorListener(antlr.NewDiagnosticErrorListener(true))
+	p.BuildParseTrees = true
+	tree := p.Forms()
+	antlr.ParseTreeWalkerDefault.Walk(Newlistener(parser), tree)
 }
 
 func (parser *Parser) SetLogger(logger Logger) {
