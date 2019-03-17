@@ -13,7 +13,7 @@ type GreetingText = {
     text       :: String
     formatting :: *String
 }
-
+//Comment for testing
 type Gift = {
     address :: MinLength 10 MaxLength 20 String
     gift    :: {

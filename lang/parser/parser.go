@@ -1,7 +1,6 @@
 package parser
 
 import (
-	"fmt"
 	"strconv"
 
 	"github.com/antlr/antlr4/runtime/Go/antlr"
@@ -9,11 +8,22 @@ import (
 	"github.com/tariel-x/anzer/lang"
 )
 
+type Logger interface {
+	Debug(args ...interface{})
+}
+
+type stubLogger struct{}
+
+func (l stubLogger) Debug(args ...interface{}) {}
+
 var (
 	ErrTypeRefUnreachable = errors.New("Type reference can not be reached")
+	ErrFuncRefUnreachable = errors.New("Function reference can not be reached")
+	ErrFuncTypeIncorrect  = errors.New("Func type is incorrect")
 )
 
 type Parser struct {
+	logger  Logger
 	source  string
 	types   map[string]lang.T
 	funcs   map[string]lang.Composable
@@ -22,14 +32,9 @@ type Parser struct {
 	fc      *fContainer
 }
 
-type ParseResult struct {
-	Types   map[string]lang.T
-	Funcs   map[string]lang.Composable
-	Invokes []lang.Composable
-}
-
 func New(source string) Parser {
 	return Parser{
+		logger:  stubLogger{},
 		source:  source,
 		types:   map[string]lang.T{},
 		funcs:   map[string]lang.Composable{},
@@ -37,7 +42,7 @@ func New(source string) Parser {
 	}
 }
 
-func (parser *Parser) Parse() (ParseResult, error) {
+func (parser *Parser) Parse() ([]lang.Composable, error) {
 	input := antlr.NewInputStream(parser.source)
 	lexer := NewAnzerLexer(input)
 	stream := antlr.NewCommonTokenStream(lexer, 0)
@@ -47,15 +52,19 @@ func (parser *Parser) Parse() (ParseResult, error) {
 	tree := p.Forms()
 	antlr.ParseTreeWalkerDefault.Walk(Newlistener(parser), tree)
 
-	types, err := parser.resolveTypes(parser.types)
-	if err != nil {
-		return ParseResult{}, err
+	result := []lang.Composable{}
+	for _, invk := range parser.invokes {
+		composable, err := parser.resolveFunc(invk)
+		if err != nil {
+			return nil, err
+		}
+		result = append(result, composable)
 	}
+	return result, nil
+}
 
-	return ParseResult{
-		Types: types,
-		Funcs: parser.funcs,
-	}, nil
+func (parser *Parser) SetLogger(logger Logger) {
+	parser.logger = logger
 }
 
 func (parser *Parser) resolveTypes(types map[string]lang.T) (map[string]lang.T, error) {
@@ -94,6 +103,48 @@ func (parser *Parser) resolveType(t lang.T) (lang.T, error) {
 		return nil, errors.Wrap(ErrTypeRefUnreachable, string(tt))
 	}
 	return t, nil
+}
+
+func (parser *Parser) resolveFuncs(funcs map[string]lang.Composable) (map[string]lang.Composable, error) {
+	for name, f := range funcs {
+		tr, err := parser.resolveFunc(f)
+		if err != nil {
+			return nil, err
+		}
+		funcs[name] = tr
+	}
+	return funcs, nil
+}
+
+func (parser *Parser) resolveFunc(f lang.Composable) (lang.Composable, error) {
+	switch ff := f.(type) {
+	case lang.Alias:
+		for idx, f := range ff.Compose {
+			fr, err := parser.resolveFunc(f)
+			if err != nil {
+				return nil, err
+			}
+			ff.Compose[idx] = fr
+		}
+		return ff, nil
+	case lang.FRef:
+		if target, ok := parser.funcs[string(ff)]; ok {
+			return parser.resolveFunc(target)
+		}
+		return nil, errors.Wrap(ErrFuncRefUnreachable, string(ff))
+	case lang.F:
+		var err error
+		ff.TypeIn, err = parser.resolveType(ff.TypeIn)
+		if err != nil {
+			return nil, errors.Wrap(ErrFuncTypeIncorrect, ff.Name)
+		}
+		ff.TypeOut, err = parser.resolveType(ff.TypeOut)
+		if err != nil {
+			return nil, errors.Wrap(ErrFuncTypeIncorrect, ff.Name)
+		}
+		return ff, nil
+	}
+	return f, nil
 }
 
 type fContainer struct {
@@ -138,11 +189,11 @@ func Newlistener(parser *Parser) *listener {
 }
 
 func (l *listener) EnterEveryRule(ctx antlr.ParserRuleContext) {
-	fmt.Println("->  ", ctx.GetText())
+	l.parser.logger.Debug("->   " + ctx.GetText())
 }
 
 func (l *listener) ExitEveryRule(ctx antlr.ParserRuleContext) {
-	fmt.Println("  <-", ctx.GetText())
+	l.parser.logger.Debug("  <- " + ctx.GetText())
 }
 
 func (l *listener) EnterTypeDeclaration(ctx *TypeDeclarationContext) {
