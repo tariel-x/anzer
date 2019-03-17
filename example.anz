@@ -5,6 +5,8 @@ type Status = {
     }
 }
 type Another = Gift
+
+// Func definition
 github.com/test/deliver[go] :: Gift -> Either Error Optional Status
 
 makegift = deliver . prepare . parse

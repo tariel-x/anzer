@@ -12,7 +12,7 @@ type Parser struct {
 	source  string
 	types   map[string]lang.T
 	funcs   map[string]lang.Composable
-	invokes []lang.F
+	invokes []lang.FRef
 	tc      *tContainer
 	fc      *fContainer
 }
@@ -25,9 +25,10 @@ type ParseResult struct {
 
 func New(source string) Parser {
 	return Parser{
-		source: source,
-		types:  map[string]lang.T{},
-		funcs:  map[string]lang.Composable{},
+		source:  source,
+		types:   map[string]lang.T{},
+		funcs:   map[string]lang.Composable{},
+		invokes: []lang.FRef{},
 	}
 }
 
@@ -253,4 +254,8 @@ func (l *listener) ExitLocalFuncDeclaration(ctx *LocalFuncDeclarationContext) {
 	l.parser.fc.a.Compose = composables
 	l.parser.funcs[l.parser.fc.a.Name] = l.parser.fc.a
 	l.parser.fc = nil
+}
+
+func (l *listener) EnterInvokeFuncName(ctx *InvokeFuncNameContext) {
+	l.parser.invokes = append(l.parser.invokes, lang.FRef(ctx.GetText()))
 }
