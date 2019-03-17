@@ -10,6 +10,7 @@ require (
 	github.com/docker/go-connections v0.4.0 // indirect
 	github.com/docker/go-units v0.3.3 // indirect
 	github.com/fatih/color v1.7.0 // indirect
+	github.com/go-test/deep v1.0.1
 	github.com/google/go-querystring v1.0.0 // indirect
 	github.com/hokaccha/go-prettyjson v0.0.0-20180920040306-f579f869bbfe // indirect
 	github.com/mattn/go-colorable v0.1.1 // indirect

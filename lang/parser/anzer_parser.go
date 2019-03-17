@@ -16,7 +16,7 @@ var _ = reflect.Copy
 var _ = strconv.Itoa
 
 var parserATN = []uint16{
-	3, 24715, 42794, 33075, 47597, 16764, 15335, 30598, 22884, 3, 32, 213,
+	3, 24715, 42794, 33075, 47597, 16764, 15335, 30598, 22884, 3, 33, 213,
 	4, 2, 9, 2, 4, 3, 9, 3, 4, 4, 9, 4, 4, 5, 9, 5, 4, 6, 9, 6, 4, 7, 9, 7,
 	4, 8, 9, 8, 4, 9, 9, 9, 4, 10, 9, 10, 4, 11, 9, 11, 4, 12, 9, 12, 4, 13,
 	9, 13, 4, 14, 9, 14, 4, 15, 9, 15, 4, 16, 9, 16, 4, 17, 9, 17, 4, 18, 9,
@@ -116,7 +116,7 @@ var literalNames = []string{
 var symbolicNames = []string{
 	"", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "",
 	"", "", "", "", "", "", "", "", "LowIdent", "UpperIdent", "ConstructorArg",
-	"URL", "WS",
+	"URL", "LINE_COMMENT", "WS",
 }
 
 var ruleNames = []string{
@@ -186,7 +186,8 @@ const (
 	AnzerParserUpperIdent     = 27
 	AnzerParserConstructorArg = 28
 	AnzerParserURL            = 29
-	AnzerParserWS             = 30
+	AnzerParserLINE_COMMENT   = 30
+	AnzerParserWS             = 31
 )
 
 // AnzerParser rules.

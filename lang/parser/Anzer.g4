@@ -86,4 +86,6 @@ ConstructorArg : DecimalDigit+ ;
 
 URL : ( Urlpart | '.' )+ '.' Letter+ '/' ( Urlpart | '/' )+ ;
 
+LINE_COMMENT : '//' ~[\r\n]* -> skip ;
+
 WS : [ \t\r\n]+ -> skip ;

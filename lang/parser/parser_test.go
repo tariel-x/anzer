@@ -1,34 +1,35 @@
-package platform
+package parser
 
 import (
-	"fmt"
-	"io"
-	"io/ioutil"
+	"testing"
 
+	"github.com/go-test/deep"
 	"github.com/tariel-x/anzer/lang"
-	"github.com/tariel-x/anzer/lang/parser"
 )
 
-func Parse(sourceStream io.Reader) ([]lang.F, error) {
-	source, err := ioutil.ReadAll(sourceStream)
-	if err != nil {
-		return nil, err
-	}
-
-	p := parser.New(string(source))
-	result, err := p.Parse()
-	if err != nil {
-		return nil, err
-	}
-
-	fmt.Printf("%#v\n\n", result.Types)
-	fmt.Printf("%+v\n\n", result.Funcs)
-
-	return nil, nil
+var (
+	Source = `
+type GreetingText = {
+    text       :: String
+    formatting :: *String
 }
 
-func tst() {
-	tt := map[string]lang.T{
+type Gift = {
+    address :: MinLength 10 MaxLength 20 String
+    gift    :: {
+        name :: String
+        size :: Integer
+        age  :: *Integer
+    }
+    greeting :: []{
+        author :: String
+        text   :: GreetingText
+    }
+}
+type DeliverResult = Integer
+`
+
+	Expected = map[string]lang.T{
 		"GreetingText": lang.Complex{
 			Fields: map[string]lang.T{
 				"text": lang.TypeString,
@@ -82,7 +83,18 @@ func tst() {
 				},
 			},
 		},
-		"DeliverResult": lang.TypeBool,
+		"DeliverResult": lang.TypeInteger,
 	}
-	fmt.Println(tt)
+)
+
+func TestParseType(t *testing.T) {
+	parser := New(Source)
+	result, err := parser.Parse()
+	if err != nil {
+		t.Error(err)
+	}
+
+	if diff := deep.Equal(result.Types, Expected); diff != nil {
+		t.Error(diff)
+	}
 }

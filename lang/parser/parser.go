@@ -5,7 +5,12 @@ import (
 	"strconv"
 
 	"github.com/antlr/antlr4/runtime/Go/antlr"
+	"github.com/pkg/errors"
 	"github.com/tariel-x/anzer/lang"
+)
+
+var (
+	ErrTypeRefUnreachable = errors.New("Type reference can not be reached")
 )
 
 type Parser struct {
@@ -20,7 +25,7 @@ type Parser struct {
 type ParseResult struct {
 	Types   map[string]lang.T
 	Funcs   map[string]lang.Composable
-	Invokes []lang.F
+	Invokes []lang.Composable
 }
 
 func New(source string) Parser {
@@ -32,7 +37,7 @@ func New(source string) Parser {
 	}
 }
 
-func (parser *Parser) Parse() ParseResult {
+func (parser *Parser) Parse() (ParseResult, error) {
 	input := antlr.NewInputStream(parser.source)
 	lexer := NewAnzerLexer(input)
 	stream := antlr.NewCommonTokenStream(lexer, 0)
@@ -42,10 +47,53 @@ func (parser *Parser) Parse() ParseResult {
 	tree := p.Forms()
 	antlr.ParseTreeWalkerDefault.Walk(Newlistener(parser), tree)
 
-	return ParseResult{
-		Types: parser.types,
-		Funcs: parser.funcs,
+	types, err := parser.resolveTypes(parser.types)
+	if err != nil {
+		return ParseResult{}, err
 	}
+
+	return ParseResult{
+		Types: types,
+		Funcs: parser.funcs,
+	}, nil
+}
+
+func (parser *Parser) resolveTypes(types map[string]lang.T) (map[string]lang.T, error) {
+	for name, t := range types {
+		tr, err := parser.resolveType(t)
+		if err != nil {
+			return nil, err
+		}
+		types[name] = tr
+	}
+	return types, nil
+}
+
+func (parser *Parser) resolveType(t lang.T) (lang.T, error) {
+	switch tt := t.(type) {
+	case lang.Complex:
+		for fname, ft := range tt.Fields {
+			ftr, err := parser.resolveType(ft)
+			if err != nil {
+				return nil, err
+			}
+			tt.Fields[fname] = ftr
+		}
+		return tt, nil
+	case lang.Constructor:
+		opr, err := parser.resolveType(tt.Operand)
+		if err != nil {
+			return nil, err
+		}
+		tt.Operand = opr
+		return tt, nil
+	case lang.Ref:
+		if target, ok := parser.types[string(tt)]; ok {
+			return parser.resolveType(target)
+		}
+		return nil, errors.Wrap(ErrTypeRefUnreachable, string(tt))
+	}
+	return t, nil
 }
 
 type fContainer struct {

@@ -27,7 +27,8 @@ LowIdent=26
 UpperIdent=27
 ConstructorArg=28
 URL=29
-WS=30
+LINE_COMMENT=30
+WS=31
 'type'=1
 '='=2
 '{'=3
