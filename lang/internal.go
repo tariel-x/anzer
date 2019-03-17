@@ -13,6 +13,7 @@ var (
 
 type Composable interface {
 	Definition() string
+	GetName() string
 	In() T
 	Out() T
 	Invalid() error
@@ -29,6 +30,10 @@ func (a Alias) Definition() string {
 		definitions = append(definitions, c.Definition())
 	}
 	return strings.Join(definitions, " . ")
+}
+
+func (a Alias) GetName() string {
+	return a.Name
 }
 
 func (a Alias) In() T {
@@ -98,6 +103,10 @@ func (f F) Invalid() error {
 type FRef string
 
 func (f FRef) Definition() string {
+	return string(f)
+}
+
+func (f FRef) GetName() string {
 	return string(f)
 }
 

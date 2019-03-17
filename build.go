@@ -44,6 +44,8 @@ func Build(c *cli.Context) error {
 }
 
 func buildCompose(compose l.Composable, plat platform.Platform) error {
+	log.Printf("build composition %s = %s", compose.GetName(), compose.Definition())
+
 	if err := compose.Invalid(); err != nil {
 		return err
 	}
@@ -53,11 +55,19 @@ func buildCompose(compose l.Composable, plat platform.Platform) error {
 		return err
 	}
 
+	names := make([]string, 0, len(chain))
 	for _, el := range chain {
 		log.Printf("build function %s", el.Definition())
-		if err := buildFunc(el, plat); err != nil {
+		name, err := buildFunc(el, plat)
+		if err != nil {
 			return errors.Wrap(err, fmt.Sprintf("build function %s", el.Definition()))
 		}
+		names = append(names, fmt.Sprintf("/guest/%s", name))
+	}
+
+	log.Printf("make link for %v", names)
+	if err := plat.Link(compose.GetName(), names); err != nil {
+		return err
 	}
 
 	return nil
@@ -80,26 +90,26 @@ func toChain(f l.Composable) ([]l.F, error) {
 	return chain, nil
 }
 
-func buildFunc(f l.F, plat platform.Platform) error {
+func buildFunc(f l.F, plat platform.Platform) (string, error) {
 	dockerGenerator, err := platform.GetDockerGenerator(f.Runtime)
 	if err != nil {
-		return err
+		return "", err
 	}
 	opts, err := dockerGenerator.GetBuildOptions(f.Link, f.In(), f.Out(), false)
 	if err != nil {
-		return err
+		return "", err
 	}
 
 	builder, err := platform.NewBuilder()
 	if err != nil {
-		return err
+		return "", err
 	}
 
 	action, err := builder.BuildWithImage(opts, f.Link)
 	if err != nil {
-		return err
+		return "", err
 	}
 
 	name := strings.Replace(string(f.Link), "/", "_", -1)
-	return plat.Create(action, name, f.Runtime)
+	return name, plat.Create(action, name, f.Runtime)
 }

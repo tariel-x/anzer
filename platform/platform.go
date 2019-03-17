@@ -35,6 +35,7 @@ type Platform interface {
 	Update(action io.Reader, name, runtime string) error
 	Create(action io.Reader, name, runtime string) error
 	Upsert(action io.Reader, name, runtime string) error
+	Link(invoke string, names []string) error
 }
 
 func GetPlatform(name string) (Platform, error) {

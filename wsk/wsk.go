@@ -11,6 +11,10 @@ import (
 	"github.com/apache/incubator-openwhisk-client-go/whisk"
 )
 
+const (
+	Sequence = "sequence"
+)
+
 type Wsk struct {
 	client *whisk.Client
 }
@@ -34,7 +38,7 @@ func (w Wsk) List() error {
 }
 
 func (w Wsk) Update(action io.Reader, name, runtime string) error {
-	return nil
+	return w.Create(action, name, runtime)
 }
 
 func (w Wsk) Create(action io.Reader, name, runtime string) error {
@@ -50,7 +54,7 @@ func (w Wsk) Create(action io.Reader, name, runtime string) error {
 	wskaction := whisk.Action{
 		Exec:      exec,
 		Name:      name,
-		Namespace: "",
+		Namespace: "guest",
 		Publish:   &publish,
 	}
 	wskaction.Annotations.AddOrReplace(&whisk.KeyValue{
@@ -63,7 +67,7 @@ func (w Wsk) Create(action io.Reader, name, runtime string) error {
 }
 
 func (w Wsk) Upsert(action io.Reader, name, runtime string) error {
-	return nil
+	return w.Create(action, name, runtime)
 }
 
 func (w Wsk) makeExec(action io.Reader, runtime string) (*whisk.Exec, error) {
@@ -79,4 +83,32 @@ func (w Wsk) makeExec(action io.Reader, runtime string) (*whisk.Exec, error) {
 	exec.Code = &code
 
 	return exec, err
+}
+
+func (w Wsk) Link(invoke string, names []string) error {
+	publish := true
+	wskaction := whisk.Action{
+		Exec: &whisk.Exec{
+			Kind:       Sequence,
+			Components: names,
+		},
+		Name:      invoke + "_sequence",
+		Namespace: "guest",
+		Publish:   &publish,
+	}
+	wskaction.Annotations.AddOrReplace(&whisk.KeyValue{
+		Key:   "web-export",
+		Value: true,
+	})
+	wskaction.Annotations.AddOrReplace(&whisk.KeyValue{
+		Key:   "web",
+		Value: true,
+	})
+	fmt.Println(wskaction)
+	readyAction, _, err := w.client.Actions.Insert(&wskaction, true)
+	if err != nil {
+		return err
+	}
+	fmt.Println(readyAction)
+	return nil
 }
