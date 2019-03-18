@@ -37,7 +37,7 @@ type Platform interface {
 	Create(action io.Reader, name, runtime string) (models.PublishedFunction, error)
 	Upsert(action io.Reader, name, runtime string) (models.PublishedFunction, error)
 	Link(invoke string, names []string) (models.PublishedFunction, error)
-	Init(arg string) error
+	Init(args map[string]string) error
 }
 
 func GetPlatform(name string) (Platform, error) {

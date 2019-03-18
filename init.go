@@ -1,7 +1,7 @@
 package main
 
 import (
-	"fmt"
+	"strings"
 
 	"github.com/urfave/cli"
 )
@@ -12,10 +12,17 @@ func Init(c *cli.Context) error {
 		return err
 	}
 
-	arg := c.String("arg")
-	if arg == "" {
-		return fmt.Errorf("no argument")
+	args := map[string]string{}
+
+	num := len(c.Args().Tail())
+	for i := 0; i <= num; i++ {
+		arg := c.Args().Get(i)
+		parts := strings.SplitN(arg, "=", 2)
+		if len(parts) < 2 {
+			continue
+		}
+		args[parts[0]] = parts[1]
 	}
 
-	return plat.Init(arg)
+	return plat.Init(args)
 }

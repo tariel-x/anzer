@@ -134,6 +134,7 @@ func (w Wsk) extractNamespace(name string) (string, string, error) {
 	return parts[0], parts[1], nil
 }
 
-func (w Wsk) Init(arg string) error {
+func (w Wsk) Init(args map[string]string) error {
+	fmt.Printf("%#v\n", args)
 	return nil
 }

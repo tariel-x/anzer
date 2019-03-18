@@ -38,13 +38,9 @@ func main() {
 			Name:    "init",
 			Aliases: []string{"i"},
 			Usage:   "init target platform settings",
-			Action:  Build,
+			Action:  Init,
 			Flags: []cli.Flag{
 				platformFlag,
-				cli.StringFlag{
-					Name:  "arg, a",
-					Usage: "Platform-specific settings string",
-				},
 			},
 		},
 		{
