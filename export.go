@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"io/ioutil"
 	"log"
-	"os"
 	"strings"
 
 	"github.com/pkg/errors"
@@ -16,14 +15,11 @@ import (
 func Export(c *cli.Context) error {
 	debug := c.Bool("debug")
 
-	input := c.String("input")
-	if input == "" {
-		return fmt.Errorf("no input")
-	}
-	f, err := os.Open(input)
+	f, err := getInput(c)
 	if err != nil {
 		return err
 	}
+
 	composes, err := platform.ParseLazy(f)
 	if err != nil {
 		return err

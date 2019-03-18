@@ -1,9 +1,12 @@
 package main
 
 import (
+	"fmt"
+	"io"
 	"log"
 	"os"
 
+	"github.com/tariel-x/anzer/platform"
 	"github.com/urfave/cli"
 )
 
@@ -31,6 +34,19 @@ func main() {
 	}
 
 	app.Commands = []cli.Command{
+		{
+			Name:    "init",
+			Aliases: []string{"i"},
+			Usage:   "init target platform settings",
+			Action:  Build,
+			Flags: []cli.Flag{
+				platformFlag,
+				cli.StringFlag{
+					Name:  "arg, a",
+					Usage: "Platform-specific settings string",
+				},
+			},
+		},
 		{
 			Name:    "build",
 			Aliases: []string{"b"},
@@ -72,5 +88,28 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
+}
 
+func getPlatform(c *cli.Context) (platform.Platform, error) {
+	platName := c.String("platform")
+	if platName == "" {
+		return nil, fmt.Errorf("no platform")
+	}
+	plat, err := platform.GetPlatform(platName)
+	if err != nil {
+		return nil, err
+	}
+	return plat, nil
+}
+
+func getInput(c *cli.Context) (io.Reader, error) {
+	input := c.String("input")
+	if input == "" {
+		return nil, fmt.Errorf("no input")
+	}
+	f, err := os.Open(input)
+	if err != nil {
+		return nil, err
+	}
+	return f, nil
 }

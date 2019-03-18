@@ -3,7 +3,6 @@ package main
 import (
 	"fmt"
 	"log"
-	"os"
 	"strings"
 
 	"github.com/pkg/errors"
@@ -13,23 +12,16 @@ import (
 )
 
 func Build(c *cli.Context) error {
-	platName := c.String("platform")
-	if platName == "" {
-		return fmt.Errorf("no platform")
-	}
-	plat, err := platform.GetPlatform(platName)
+	plat, err := getPlatform(c)
 	if err != nil {
 		return err
 	}
 
-	input := c.String("input")
-	if input == "" {
-		return fmt.Errorf("no input")
-	}
-	f, err := os.Open(input)
+	f, err := getInput(c)
 	if err != nil {
 		return err
 	}
+
 	composes, err := platform.ParseLazy(f)
 	if err != nil {
 		return err
@@ -62,11 +54,12 @@ func buildCompose(compose l.Composable, plat platform.Platform) error {
 		if err != nil {
 			return errors.Wrap(err, fmt.Sprintf("build function %s", el.Definition()))
 		}
-		names = append(names, fmt.Sprintf("/guest/%s", name))
+		names = append(names, name)
 	}
 
 	log.Printf("make link for %v", names)
-	if err := plat.Link(compose.GetName(), names); err != nil {
+	_, err = plat.Link(compose.GetName(), names)
+	if err != nil {
 		return err
 	}
 
@@ -111,5 +104,9 @@ func buildFunc(f l.F, plat platform.Platform) (string, error) {
 	}
 
 	name := strings.Replace(string(f.Link), "/", "_", -1)
-	return name, plat.Create(action, name, f.Runtime)
+	function, err := plat.Create(action, name, f.Runtime)
+	if err != nil {
+		return "", err
+	}
+	return function.Name, nil
 }

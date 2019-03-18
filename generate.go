@@ -2,13 +2,10 @@ package main
 
 import (
 	"errors"
-	"fmt"
-	"io/ioutil"
-	"os"
-
 	l "github.com/tariel-x/anzer/lang"
 	"github.com/tariel-x/anzer/platform"
 	"github.com/urfave/cli"
+	"io/ioutil"
 )
 
 var (
@@ -27,14 +24,11 @@ func Generate(c *cli.Context) error {
 		return errFunctionUndefined
 	}
 
-	input := c.String("input")
-	if input == "" {
-		return fmt.Errorf("no input")
-	}
-	f, err := os.Open(input)
+	f, err := getInput(c)
 	if err != nil {
 		return err
 	}
+
 	composes, err := platform.ParseAll(f)
 	if err != nil {
 		return err

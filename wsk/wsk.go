@@ -97,11 +97,6 @@ func (w Wsk) makeExec(action io.Reader, runtime string) (*whisk.Exec, error) {
 }
 
 func (w Wsk) Link(invoke string, names []string) (models.PublishedFunction, error) {
-	components := make([]string, 0, len(names))
-	for _, name := range names {
-		//TODO extract name
-	}
-
 	publish := true
 	wskaction := whisk.Action{
 		Exec: &whisk.Exec{
@@ -137,4 +132,8 @@ func (w Wsk) extractNamespace(name string) (string, string, error) {
 		return "", "", errors.New("Wrong function uri")
 	}
 	return parts[0], parts[1], nil
+}
+
+func (w Wsk) Init(arg string) error {
+	return nil
 }
