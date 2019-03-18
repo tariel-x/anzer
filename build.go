@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"log"
+	"os"
 	"strings"
 
 	"github.com/pkg/errors"
@@ -17,10 +18,15 @@ func Build(c *cli.Context) error {
 		return err
 	}
 
-	f, err := getInput(c)
+	input := c.String("input")
+	if input == "" {
+		return errNoInput
+	}
+	f, err := os.Open(input)
 	if err != nil {
 		return err
 	}
+	defer f.Close()
 
 	composes, err := platform.ParseLazy(f)
 	if err != nil {

@@ -2,15 +2,12 @@ package main
 
 import (
 	"errors"
+	"io/ioutil"
+	"os"
+
 	l "github.com/tariel-x/anzer/lang"
 	"github.com/tariel-x/anzer/platform"
 	"github.com/urfave/cli"
-	"io/ioutil"
-)
-
-var (
-	errOutputUndefined   = errors.New("Output is undefined")
-	errFunctionUndefined = errors.New("Function is undefined")
 )
 
 func Generate(c *cli.Context) error {
@@ -24,10 +21,15 @@ func Generate(c *cli.Context) error {
 		return errFunctionUndefined
 	}
 
-	f, err := getInput(c)
+	input := c.String("input")
+	if input == "" {
+		return errNoInput
+	}
+	f, err := os.Open(input)
 	if err != nil {
 		return err
 	}
+	defer f.Close()
 
 	composes, err := platform.ParseAll(f)
 	if err != nil {

@@ -14,8 +14,13 @@ import (
 )
 
 const (
-	Sequence  = "sequence"
-	Namespace = "guest"
+	Sequence            = "sequence"
+	Namespace           = "guest"
+	CfgDefaultNamespace = "_"
+	CfgNamespace        = "NAMESPACE"
+	CfgAuth             = "AUTH"
+	CfgApiGWAccessToken = "APIGW_ACCESS_TOKEN"
+	CfgApihost          = "APIHOST"
 )
 
 type Wsk struct {
@@ -135,6 +140,11 @@ func (w Wsk) extractNamespace(name string) (string, string, error) {
 }
 
 func (w Wsk) Init(args map[string]string) error {
-	fmt.Printf("%#v\n", args)
+
+	auth, ok := args["auth"]
+	if !ok {
+		return errors.New("no auth")
+	}
+
 	return nil
 }

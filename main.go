@@ -1,13 +1,19 @@
 package main
 
 import (
+	"errors"
 	"fmt"
-	"io"
 	"log"
 	"os"
 
 	"github.com/tariel-x/anzer/platform"
 	"github.com/urfave/cli"
+)
+
+var (
+	errOutputUndefined   = errors.New("output is undefined")
+	errFunctionUndefined = errors.New("function is undefined")
+	errNoInput           = errors.New("no input")
 )
 
 func main() {
@@ -96,16 +102,4 @@ func getPlatform(c *cli.Context) (platform.Platform, error) {
 		return nil, err
 	}
 	return plat, nil
-}
-
-func getInput(c *cli.Context) (io.Reader, error) {
-	input := c.String("input")
-	if input == "" {
-		return nil, fmt.Errorf("no input")
-	}
-	f, err := os.Open(input)
-	if err != nil {
-		return nil, err
-	}
-	return f, nil
 }
