@@ -7,6 +7,7 @@ import (
 	"io"
 	"io/ioutil"
 	"net/http"
+	"os"
 	"strings"
 
 	"github.com/apache/incubator-openwhisk-client-go/whisk"
@@ -16,6 +17,7 @@ import (
 const (
 	Sequence            = "sequence"
 	Namespace           = "guest"
+	CfgFile             = ".wskprops"
 	CfgDefaultNamespace = "_"
 	CfgNamespace        = "NAMESPACE"
 	CfgAuth             = "AUTH"
@@ -28,15 +30,19 @@ type Wsk struct {
 	namespace string
 }
 
-func New() (Wsk, error) {
-	client, err := whisk.NewClient(http.DefaultClient, nil)
-	return Wsk{
-		client:    client,
+func New() (*Wsk, error) {
+	return &Wsk{
 		namespace: Namespace,
-	}, err
+	}, nil
 }
 
-func (w Wsk) List() ([]models.PublishedFunction, error) {
+func (w *Wsk) Connect() error {
+	var err error
+	w.client, err = whisk.NewClient(http.DefaultClient, nil)
+	return err
+}
+
+func (w *Wsk) List() ([]models.PublishedFunction, error) {
 	actions, _, err := w.client.Actions.List("", nil)
 	if err != nil {
 		return nil, err
@@ -50,11 +56,11 @@ func (w Wsk) List() ([]models.PublishedFunction, error) {
 	return published, nil
 }
 
-func (w Wsk) Update(action io.Reader, name, runtime string) (models.PublishedFunction, error) {
+func (w *Wsk) Update(action io.Reader, name, runtime string) (models.PublishedFunction, error) {
 	return w.Create(action, name, runtime)
 }
 
-func (w Wsk) Create(action io.Reader, name, runtime string) (models.PublishedFunction, error) {
+func (w *Wsk) Create(action io.Reader, name, runtime string) (models.PublishedFunction, error) {
 	if len(strings.Split(runtime, ":")) == 1 {
 		runtime = runtime + ":default"
 	}
@@ -82,11 +88,11 @@ func (w Wsk) Create(action io.Reader, name, runtime string) (models.PublishedFun
 	}, err
 }
 
-func (w Wsk) Upsert(action io.Reader, name, runtime string) (models.PublishedFunction, error) {
+func (w *Wsk) Upsert(action io.Reader, name, runtime string) (models.PublishedFunction, error) {
 	return w.Create(action, name, runtime)
 }
 
-func (w Wsk) makeExec(action io.Reader, runtime string) (*whisk.Exec, error) {
+func (w *Wsk) makeExec(action io.Reader, runtime string) (*whisk.Exec, error) {
 	exec := new(whisk.Exec)
 	var err error
 	exec.Kind = runtime
@@ -101,7 +107,7 @@ func (w Wsk) makeExec(action io.Reader, runtime string) (*whisk.Exec, error) {
 	return exec, err
 }
 
-func (w Wsk) Link(invoke string, names []string) (models.PublishedFunction, error) {
+func (w *Wsk) Link(invoke string, names []string) (models.PublishedFunction, error) {
 	publish := true
 	wskaction := whisk.Action{
 		Exec: &whisk.Exec{
@@ -131,7 +137,7 @@ func (w Wsk) Link(invoke string, names []string) (models.PublishedFunction, erro
 	}, nil
 }
 
-func (w Wsk) extractNamespace(name string) (string, string, error) {
+func (w *Wsk) extractNamespace(name string) (string, string, error) {
 	parts := strings.Split(name, "/")
 	if len(parts) < 2 {
 		return "", "", errors.New("Wrong function uri")
@@ -139,11 +145,46 @@ func (w Wsk) extractNamespace(name string) (string, string, error) {
 	return parts[0], parts[1], nil
 }
 
-func (w Wsk) Init(args map[string]string) error {
-
+func (w *Wsk) Init(args map[string]string) error {
+	homedir, err := os.UserHomeDir()
+	if err != nil {
+		return err
+	}
+	f, err := os.Create(fmt.Sprintf("%s/%s", homedir, CfgFile))
+	if err != nil {
+		return err
+	}
+	defer f.Close()
 	auth, ok := args["auth"]
 	if !ok {
 		return errors.New("no auth")
+	}
+	apihost, ok := args["apihost"]
+	if !ok {
+		return errors.New("no apihost")
+	}
+	namespace, ok := args["namespace"]
+	if !ok {
+		namespace = CfgDefaultNamespace
+	}
+
+	cfg := fmt.Sprintf(
+		"%s=%s\n%s=%s\n%s=%s\n%s=%s\n",
+		CfgNamespace, namespace,
+		CfgAuth, auth,
+		CfgApiGWAccessToken, auth,
+		CfgApihost, apihost,
+	)
+
+	if _, err := f.WriteString(cfg); err != nil {
+		return err
+	}
+
+	if err := w.Connect(); err != nil {
+		return err
+	}
+	if _, err := w.List(); err != nil {
+		return err
 	}
 
 	return nil

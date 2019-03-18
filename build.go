@@ -17,6 +17,9 @@ func Build(c *cli.Context) error {
 	if err != nil {
 		return err
 	}
+	if err := plat.Connect(); err != nil {
+		return err
+	}
 
 	input := c.String("input")
 	if input == "" {
