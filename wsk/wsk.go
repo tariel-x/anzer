@@ -3,7 +3,6 @@ package wsk
 import (
 	"encoding/base64"
 	"fmt"
-	"github.com/pkg/errors"
 	"io"
 	"io/ioutil"
 	"net/http"
@@ -11,6 +10,7 @@ import (
 	"strings"
 
 	"github.com/apache/incubator-openwhisk-client-go/whisk"
+	"github.com/pkg/errors"
 	"github.com/tariel-x/anzer/platform/models"
 )
 
@@ -50,7 +50,7 @@ func (w *Wsk) List() ([]models.PublishedFunction, error) {
 	published := make([]models.PublishedFunction, 0, len(actions))
 	for _, action := range actions {
 		published = append(published, models.PublishedFunction{
-			Name: fmt.Sprintf("%s/%s", action.Namespace, action.Name),
+			Name: fmt.Sprintf("/%s/%s", action.Namespace, action.Name),
 		})
 	}
 	return published, nil
@@ -84,7 +84,7 @@ func (w *Wsk) Create(action io.Reader, name, runtime string) (models.PublishedFu
 	}
 	readyAction, _, err := w.client.Actions.Insert(&wskaction, true)
 	return models.PublishedFunction{
-		Name: fmt.Sprintf("%s/%s", readyAction.Namespace, readyAction.Name),
+		Name: fmt.Sprintf("/%s/%s", readyAction.Namespace, readyAction.Name),
 	}, err
 }
 
@@ -132,9 +132,34 @@ func (w *Wsk) Link(invoke string, names []string) (models.PublishedFunction, err
 	if err != nil {
 		return models.PublishedFunction{}, err
 	}
-	return models.PublishedFunction{
-		Name: fmt.Sprintf("%s/%s", readyAction.Namespace, readyAction.Name),
-	}, nil
+
+	publishedFunction := models.PublishedFunction{
+		Name: fmt.Sprintf("/%s/%s", readyAction.Namespace, readyAction.Name),
+	}
+
+	apiCreateReq := &whisk.ApiCreateRequest{
+		ApiDoc: &whisk.Api{
+			Namespace:       w.namespace,
+			ApiName:         invoke + "_api",
+			GatewayBasePath: "/anzer",
+			GatewayRelPath:  "/" + invoke,
+			GatewayMethod:   http.MethodPost,
+		},
+	}
+	apiCreateOpts := &whisk.ApiCreateRequestOptions{
+		ActionName:  publishedFunction.Name,
+		ApiBasePath: apiCreateReq.ApiDoc.GatewayBasePath,
+		ApiRelPath:  apiCreateReq.ApiDoc.GatewayRelPath,
+		ApiVerb:     apiCreateReq.ApiDoc.GatewayMethod,
+		ApiName:     invoke + "_api",
+	}
+	apiCreateResp, _, err := w.client.Apis.Insert(apiCreateReq, apiCreateOpts, true)
+	if err != nil {
+		return models.PublishedFunction{}, err
+	}
+	publishedFunction.URL = fmt.Sprintf("%s/%s", apiCreateResp.BaseUrl, "")
+
+	return publishedFunction, nil
 }
 
 func (w *Wsk) extractNamespace(name string) (string, string, error) {

@@ -6,6 +6,7 @@ import (
 	"os"
 	"strings"
 
+	"github.com/logrusorgru/aurora"
 	"github.com/pkg/errors"
 	l "github.com/tariel-x/anzer/lang"
 	"github.com/tariel-x/anzer/platform"
@@ -67,10 +68,12 @@ func buildCompose(compose l.Composable, plat platform.Platform) error {
 	}
 
 	log.Printf("make link for %v", names)
-	_, err = plat.Link(compose.GetName(), names)
+	lnk, err := plat.Link(compose.GetName(), names)
 	if err != nil {
 		return err
 	}
+	fmt.Println("Your function name is:", aurora.Cyan(lnk.Name))
+	fmt.Println("Your function url is:", aurora.Cyan(lnk.URL))
 
 	return nil
 }
