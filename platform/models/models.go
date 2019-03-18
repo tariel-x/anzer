@@ -7,3 +7,8 @@ type BuildWithImageOpts struct {
 	ActionPath string
 	Debug      bool
 }
+
+type PublishedFunction struct {
+	Name string
+	URL  string
+}

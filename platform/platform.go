@@ -2,6 +2,7 @@ package platform
 
 import (
 	"errors"
+	"github.com/tariel-x/anzer/platform/models"
 	"io"
 
 	l "github.com/tariel-x/anzer/lang"
@@ -32,10 +33,10 @@ var (
 )
 
 type Platform interface {
-	Update(action io.Reader, name, runtime string) error
-	Create(action io.Reader, name, runtime string) error
-	Upsert(action io.Reader, name, runtime string) error
-	Link(invoke string, names []string) error
+	Update(action io.Reader, name, runtime string) (models.PublishedFunction, error)
+	Create(action io.Reader, name, runtime string) (models.PublishedFunction, error)
+	Upsert(action io.Reader, name, runtime string) (models.PublishedFunction, error)
+	Link(invoke string, names []string) (models.PublishedFunction, error)
 }
 
 func GetPlatform(name string) (Platform, error) {
