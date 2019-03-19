@@ -30,6 +30,8 @@ create = prepare . save
 invoke(create,)
 ```
 
+Anzer utility currently supports only [Apache OpenWhisk](http://openwhisk.apache.org/) and [Golang](https://golang.org/).
+
 ## As quick as possible start
 
 ### Setup
