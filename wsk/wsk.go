@@ -144,6 +144,13 @@ func (w *Wsk) Link(invoke string, names []string) (models.PublishedFunction, err
 			GatewayBasePath: "/anzer",
 			GatewayRelPath:  "/" + invoke,
 			GatewayMethod:   http.MethodPost,
+			Action: &whisk.ApiAction{
+				Name:          publishedFunction.Name,
+				Namespace:     w.namespace,
+				BackendMethod: http.MethodPost,
+				//BackendUrl: "",
+				Auth: w.client.AuthToken,
+			},
 		},
 	}
 	apiCreateOpts := &whisk.ApiCreateRequestOptions{
