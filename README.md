@@ -57,6 +57,30 @@ anzer build -p wsk -i etl.anz
 
 The output of utility would be name of functions sequence in OpenWhisk.
 
+### Create POST API
+
+```bash
+wsk -i api create /etl post /guest/etl_sequence --response-type json
+```
+
+Make request like the following:
+
+```bash
+curl -X POST \
+  http://your.whisk.com:9001/api/23bc46b1-71f6-4ed5-8c54-816aa4f8c502/etl \
+  -H 'Content-Type: application/json' \
+  -d '{
+    "name": "Opel",
+    "model": "Astra J",
+    "phone": "79095544445",
+    "price": 500.50,
+    "photos": [
+    	"http://origin.org/path/image.jpeg"	
+    ],
+    "year": 2014
+}'
+```
+
 ## Full documentation
 
 Full documentation is in progress...
