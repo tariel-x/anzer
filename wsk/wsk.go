@@ -40,12 +40,6 @@ func New() (*Wsk, error) {
 func (w *Wsk) Connect() error {
 	var err error
 	w.client, err = whisk.NewClient(http.DefaultClient, nil)
-	// Hack here
-	w.client.ApigwAccessToken = w.client.AuthToken
-	w.client.Config.ApigwAccessToken = w.client.Config.AuthToken
-	fmt.Println(w.client.Config)
-	fmt.Println(w.client.Config.ApigwAccessToken)
-	fmt.Println(w.client.ApigwAccessToken)
 	return err
 }
 
@@ -148,51 +142,6 @@ func (w *Wsk) Link(invoke string, funcs []models.PublishedFunction) (models.Publ
 	publishedFunction := models.PublishedFunction{
 		Name: fmt.Sprintf("/%s/%s", readyAction.Namespace, readyAction.Name),
 	}
-
-	namespace := w.namespace
-	if namespace == "guest" {
-		namespace = "_"
-	}
-
-	// https://wsk.tariel.space/api/v1/web/guest/default/etl_sequence.http
-	backendUri := "https://" + w.client.Config.Host + "/api/v1/web/" + w.namespace + "/default/" + readyAction.Name + ".http"
-	fmt.Println(backendUri)
-	apiCreateReq := &whisk.ApiCreateRequest{
-		ApiDoc: &whisk.Api{
-			Namespace:       namespace,
-			ApiName:         "",
-			GatewayBasePath: "/",
-			GatewayRelPath:  "/" + readyAction.Name,
-			GatewayMethod:   http.MethodPost,
-			Id:              "API:_:/",
-			Action: &whisk.ApiAction{
-				Name:          readyAction.Name,
-				Namespace:     w.namespace,
-				BackendMethod: http.MethodPost,
-				BackendUrl:    backendUri,
-				Auth:          w.client.AuthToken,
-			},
-		},
-	}
-	fmt.Printf("%#v\n", apiCreateReq)
-	fmt.Printf("%#v\n", apiCreateReq.ApiDoc)
-	fmt.Printf("%#v\n", apiCreateReq.ApiDoc.Action)
-	apiCreateOpts := &whisk.ApiCreateRequestOptions{
-		ActionName:  publishedFunction.Name,
-		ApiBasePath: apiCreateReq.ApiDoc.GatewayBasePath,
-		ApiRelPath:  apiCreateReq.ApiDoc.GatewayRelPath,
-		ApiVerb:     apiCreateReq.ApiDoc.GatewayMethod,
-		ApiName:     invoke + "_api",
-	}
-	fmt.Println("---REQUEST---")
-	apiCreateResp, httpResp, err := w.client.Apis.Insert(apiCreateReq, apiCreateOpts, true)
-	fmt.Printf("%#v", apiCreateResp)
-	fmt.Printf("%#v", httpResp)
-	if err != nil {
-		return models.PublishedFunction{}, err
-	}
-	publishedFunction.URL = fmt.Sprintf("%s/%s", apiCreateResp.BaseUrl, "")
-
 	return publishedFunction, nil
 }
 

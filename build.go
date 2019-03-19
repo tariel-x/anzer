@@ -74,8 +74,6 @@ func buildCompose(compose l.Composable, plat platform.Platform) error {
 		return err
 	}
 	fmt.Println("Your function name is:", aurora.Cyan(lnk.Name))
-	fmt.Println("Your function url is:", aurora.Cyan(lnk.URL))
-
 	return nil
 }
 
