@@ -10,6 +10,7 @@ import (
 	"github.com/pkg/errors"
 	l "github.com/tariel-x/anzer/lang"
 	"github.com/tariel-x/anzer/platform"
+	"github.com/tariel-x/anzer/platform/models"
 	"github.com/urfave/cli"
 )
 
@@ -57,18 +58,18 @@ func buildCompose(compose l.Composable, plat platform.Platform) error {
 		return err
 	}
 
-	names := make([]string, 0, len(chain))
+	components := make([]models.PublishedFunction, 0, len(chain))
 	for _, el := range chain {
 		log.Printf("build function %s", el.Definition())
-		name, err := buildFunc(el, plat)
+		component, err := buildFunc(el, plat)
 		if err != nil {
 			return errors.Wrap(err, fmt.Sprintf("build function %s", el.Definition()))
 		}
-		names = append(names, name)
+		components = append(components, component)
 	}
 
-	log.Printf("make link for %v", names)
-	lnk, err := plat.Link(compose.GetName(), names)
+	log.Printf("make link for %v", components)
+	lnk, err := plat.Link(compose.GetName(), components)
 	if err != nil {
 		return err
 	}
@@ -95,30 +96,30 @@ func toChain(f l.Composable) ([]l.F, error) {
 	return chain, nil
 }
 
-func buildFunc(f l.F, plat platform.Platform) (string, error) {
+func buildFunc(f l.F, plat platform.Platform) (models.PublishedFunction, error) {
 	dockerGenerator, err := platform.GetDockerGenerator(f.Runtime)
 	if err != nil {
-		return "", err
+		return models.PublishedFunction{}, err
 	}
 	opts, err := dockerGenerator.GetBuildOptions(f.Link, f.In(), f.Out(), false)
 	if err != nil {
-		return "", err
+		return models.PublishedFunction{}, err
 	}
 
 	builder, err := platform.NewBuilder()
 	if err != nil {
-		return "", err
+		return models.PublishedFunction{}, err
 	}
 
 	action, err := builder.BuildWithImage(opts, f.Link)
 	if err != nil {
-		return "", err
+		return models.PublishedFunction{}, err
 	}
 
 	name := strings.Replace(string(f.Link), "/", "_", -1)
 	function, err := plat.Create(action, name, f.Runtime)
 	if err != nil {
-		return "", err
+		return models.PublishedFunction{}, err
 	}
-	return function.Name, nil
+	return function, nil
 }

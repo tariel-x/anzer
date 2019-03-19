@@ -7,6 +7,7 @@ import (
 	"io/ioutil"
 	"net/http"
 	"os"
+	"os/user"
 	"strings"
 
 	"github.com/apache/incubator-openwhisk-client-go/whisk"
@@ -39,6 +40,12 @@ func New() (*Wsk, error) {
 func (w *Wsk) Connect() error {
 	var err error
 	w.client, err = whisk.NewClient(http.DefaultClient, nil)
+	// Hack here
+	w.client.ApigwAccessToken = w.client.AuthToken
+	w.client.Config.ApigwAccessToken = w.client.Config.AuthToken
+	fmt.Println(w.client.Config)
+	fmt.Println(w.client.Config.ApigwAccessToken)
+	fmt.Println(w.client.ApigwAccessToken)
 	return err
 }
 
@@ -107,12 +114,17 @@ func (w *Wsk) makeExec(action io.Reader, runtime string) (*whisk.Exec, error) {
 	return exec, err
 }
 
-func (w *Wsk) Link(invoke string, names []string) (models.PublishedFunction, error) {
+func (w *Wsk) Link(invoke string, funcs []models.PublishedFunction) (models.PublishedFunction, error) {
+	components := []string{}
+	for _, f := range funcs {
+		components = append(components, f.Name)
+	}
+
 	publish := true
 	wskaction := whisk.Action{
 		Exec: &whisk.Exec{
 			Kind:       Sequence,
-			Components: names,
+			Components: components,
 		},
 		Annotations: whisk.KeyValueArr{
 			whisk.KeyValue{
@@ -137,22 +149,34 @@ func (w *Wsk) Link(invoke string, names []string) (models.PublishedFunction, err
 		Name: fmt.Sprintf("/%s/%s", readyAction.Namespace, readyAction.Name),
 	}
 
+	namespace := w.namespace
+	if namespace == "guest" {
+		namespace = "_"
+	}
+
+	// https://wsk.tariel.space/api/v1/web/guest/default/etl_sequence.http
+	backendUri := "https://" + w.client.Config.Host + "/api/v1/web/" + w.namespace + "/default/" + readyAction.Name + ".http"
+	fmt.Println(backendUri)
 	apiCreateReq := &whisk.ApiCreateRequest{
 		ApiDoc: &whisk.Api{
-			Namespace:       w.namespace,
-			ApiName:         invoke + "_api",
-			GatewayBasePath: "/anzer",
-			GatewayRelPath:  "/" + invoke,
+			Namespace:       namespace,
+			ApiName:         "",
+			GatewayBasePath: "/",
+			GatewayRelPath:  "/" + readyAction.Name,
 			GatewayMethod:   http.MethodPost,
+			Id:              "API:_:/",
 			Action: &whisk.ApiAction{
-				Name:          publishedFunction.Name,
+				Name:          readyAction.Name,
 				Namespace:     w.namespace,
 				BackendMethod: http.MethodPost,
-				//BackendUrl: "",
-				Auth: w.client.AuthToken,
+				BackendUrl:    backendUri,
+				Auth:          w.client.AuthToken,
 			},
 		},
 	}
+	fmt.Printf("%#v\n", apiCreateReq)
+	fmt.Printf("%#v\n", apiCreateReq.ApiDoc)
+	fmt.Printf("%#v\n", apiCreateReq.ApiDoc.Action)
 	apiCreateOpts := &whisk.ApiCreateRequestOptions{
 		ActionName:  publishedFunction.Name,
 		ApiBasePath: apiCreateReq.ApiDoc.GatewayBasePath,
@@ -160,7 +184,10 @@ func (w *Wsk) Link(invoke string, names []string) (models.PublishedFunction, err
 		ApiVerb:     apiCreateReq.ApiDoc.GatewayMethod,
 		ApiName:     invoke + "_api",
 	}
-	apiCreateResp, _, err := w.client.Apis.Insert(apiCreateReq, apiCreateOpts, true)
+	fmt.Println("---REQUEST---")
+	apiCreateResp, httpResp, err := w.client.Apis.Insert(apiCreateReq, apiCreateOpts, true)
+	fmt.Printf("%#v", apiCreateResp)
+	fmt.Printf("%#v", httpResp)
 	if err != nil {
 		return models.PublishedFunction{}, err
 	}
@@ -178,11 +205,11 @@ func (w *Wsk) extractNamespace(name string) (string, string, error) {
 }
 
 func (w *Wsk) Init(args map[string]string) error {
-	homedir, err := os.UserHomeDir()
+	usr, err := user.Current()
 	if err != nil {
 		return err
 	}
-	f, err := os.Create(fmt.Sprintf("%s/%s", homedir, CfgFile))
+	f, err := os.Create(fmt.Sprintf("%s/%s", usr.HomeDir, CfgFile))
 	if err != nil {
 		return err
 	}
