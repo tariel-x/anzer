@@ -1,7 +1,7 @@
 # Anzer platform and language
 
 Both the provided platform and described language implement 
-convenient way for verbose and type-safe composition of cloud functions.
+convenient way for explicit and type-safe composition of cloud functions.
 
 For example the following scheme describes two services and 
 their communication.
@@ -79,6 +79,24 @@ curl -X POST \
     ],
     "year": 2014
 }'
+```
+
+The expected result is:
+
+```json
+{
+    "body": null,
+    "brand": "Opel",
+    "generation": "J",
+    "id": 38081,
+    "model": "Astra",
+    "phone": "+790911222233",
+    "photos": [
+        "http://storage.org/photo.jpeg"
+    ],
+    "price": 55000,
+    "year": 2014
+}
 ```
 
 ## Full documentation

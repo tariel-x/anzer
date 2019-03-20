@@ -70,9 +70,7 @@ type whiskInput struct {
 	Value json.RawMessage ` + "`" + `json:"value"` + "`" + `
 }
 
-type whiskOutput struct {
-	Value json.RawMessage ` + "`" + `json:"value"` + "`" + `
-}
+type whiskOutput json.RawMessage
 
 type rawInput map[string]interface{}
 
@@ -123,25 +121,18 @@ func main() {
 			printError(out, err)
 			continue
 		}
-		if debug {
-			log.Printf("%v\n", raw)
-		}
+		
+		log.Printf("RAW %v\n", raw)
 
 		setEnvironment(raw)
 
 		// process the request
-		result, err := callHandler(input)
+		output, err := callHandler(input)
 		if err != nil {
 			printError(out, err)
 			continue
 		}
 
-		// encode the answer
-		output, err := json.Marshal(&result)
-		if err != nil {
-			printError(out, err)
-			continue
-		}
 		output = bytes.Replace(output, []byte("\n"), []byte(""), -1)
 		if debug {
 			log.Printf("'<<<%s'<<<", output)
@@ -171,12 +162,12 @@ func callHandler(input whiskInput) (whiskOutput, error) {
 	if err := json.Unmarshal(input.Value, &anzHandlerInput); err != nil {
 		return whiskOutput{}, err
 	}
+	log.Printf("ANZ HANDLER IN %#v\n", anzHandlerInput)
 	anzHandlerOutput := {{ .Package }}.Handle({{ .Package }}.TypeIn(anzHandlerInput))
 	handlerOutput := AnzerOut(anzHandlerOutput)
 	output, err := json.Marshal(handlerOutput)
-	return whiskOutput{
-		Value: output,
-	}, err
+	log.Printf("ANZ HANDLER OUT %v\n", string(output))
+	return output, err
 }
 
 {{ .AnzerIn}}
