@@ -1,136 +1,105 @@
 package main
 
 import (
-	"encoding/json"
+	"errors"
 	"fmt"
-	"io/ioutil"
+	"log"
 	"os"
 
-	"github.com/tariel-x/anzer/funcs"
-	"github.com/tariel-x/anzer/listener"
-	"github.com/tariel-x/anzer/parser"
-	"github.com/tariel-x/anzer/types"
-
-	"github.com/antlr/antlr4/runtime/Go/antlr"
-	"github.com/fatih/color"
+	"github.com/tariel-x/anzer/platform"
+	"github.com/urfave/cli"
 )
 
 var (
-	Debug = false
+	errOutputUndefined   = errors.New("output is undefined")
+	errFunctionUndefined = errors.New("function is undefined")
+	errNoInput           = errors.New("no input")
 )
 
 func main() {
-	if len(os.Args) < 3 {
-		fmt.Printf("Specify input and output or -d for debug\n")
-		return
+	app := cli.NewApp()
+	app.Name = "Anzer CLI tool"
+	app.Version = "2.0"
+	app.Usage = "generate new functions and build system"
+
+	inputFlag := cli.StringFlag{
+		Name:  "input, i",
+		Usage: "Anzer source file",
+	}
+	platformFlag := cli.StringFlag{
+		Name:  "platform, p",
+		Usage: "Target FaaS platform",
+	}
+	debugFlag := cli.StringFlag{
+		Name:  "debug, d",
+		Usage: "Debug mode, specific for platform and language",
+	}
+	outputFlag := cli.StringFlag{
+		Name:  "output, o",
+		Usage: "Output for generated files",
 	}
 
-	if os.Args[2] == "-d" {
-		Debug = true
+	app.Commands = []cli.Command{
+		{
+			Name:    "init",
+			Aliases: []string{"i"},
+			Usage:   "init target platform settings",
+			Action:  Init,
+			Flags: []cli.Flag{
+				platformFlag,
+			},
+		},
+		{
+			Name:    "build",
+			Aliases: []string{"b"},
+			Usage:   "build anzer project",
+			Action:  Build,
+			Flags: []cli.Flag{
+				inputFlag,
+				platformFlag,
+			},
+		},
+		{
+			Name:    "generate",
+			Aliases: []string{"g"},
+			Usage:   "generate base for anzer func",
+			Action:  Generate,
+			Flags: []cli.Flag{
+				inputFlag,
+				outputFlag,
+				cli.StringFlag{
+					Name:  "function, f",
+					Usage: "Function to generate",
+				},
+			},
+		},
+		{
+			Name:    "export",
+			Aliases: []string{"e"},
+			Usage:   "build functions and export to zip files",
+			Action:  Export,
+			Flags: []cli.Flag{
+				inputFlag,
+				outputFlag,
+				debugFlag,
+			},
+		},
 	}
 
-	rawTypes, rawFuncs, err := readInput(os.Args[1])
-	die(err)
-
-	if Debug {
-		displayFuncs(rawFuncs)
-	}
-	types, err := types.Resolve(rawTypes)
-	die(err)
-
-	if Debug {
-		displayTypes(types)
-	}
-
-	sysgraph, err := funcs.Resolve(rawFuncs, types)
+	err := app.Run(os.Args)
 	if err != nil {
-		fmt.Printf("funcs resolving error: %s\n", err)
-	}
-
-	if Debug {
-		printOutput(*sysgraph)
-	} else {
-		writeOutput(*sysgraph, os.Args[2])
+		log.Fatal(err)
 	}
 }
 
-func readInput(fileName string) (listener.Types, listener.Funcs, error) {
-
-	b, err := ioutil.ReadFile(fileName)
+func getPlatform(c *cli.Context) (platform.Platform, error) {
+	platName := c.String("platform")
+	if platName == "" {
+		return nil, fmt.Errorf("no platform")
+	}
+	plat, err := platform.GetPlatform(platName)
 	if err != nil {
-		return nil, nil, err
+		return nil, err
 	}
-
-	input := antlr.NewInputStream(string(b))
-	lexer := parser.NewAnzerLexer(input)
-	stream := antlr.NewCommonTokenStream(lexer, 0)
-	p := parser.NewAnzerParser(stream)
-	//p.AddErrorListener(antlr.NewDiagnosticErrorListener(true))
-	p.BuildParseTrees = true
-	tree := p.System()
-	listener := listener.NewListener()
-	antlr.ParseTreeWalkerDefault.Walk(listener, tree)
-	return listener.Types, listener.Funcs, nil
-}
-
-func displayFuncs(fbs listener.Funcs) {
-	color.Green("RAW FUNCS:\n\n")
-
-	for name, t := range fbs {
-		fmt.Printf("%s :: %s -> %s\n", name, t.Arg, t.Ret)
-		fmt.Printf("%s params: %v\n", name, t.Params)
-		if t.Body != nil {
-			displayFunc(*t.Body)
-		}
-		fmt.Printf("\n")
-	}
-
-	color.Green("END RAW FUNCS\n\n\n")
-}
-
-func displayFunc(fb listener.FuncBody) {
-	if fb.Ref != nil {
-		fmt.Printf(" %s", *fb.Ref)
-		if fb.ComposeTo != nil {
-			displayFunc(*fb.ComposeTo)
-		}
-	} else if fb.ProductEls != nil {
-		fmt.Print(" <")
-		for _, childFd := range fb.ProductEls {
-			fmt.Print(",")
-			displayFunc(childFd)
-		}
-		fmt.Print(">")
-	}
-}
-
-func displayTypes(types types.Types) {
-	color.Green("TYPES:\n\n")
-	for name, td := range types {
-		displayType(name, td)
-	}
-	color.Green("END TYPES\n\n\n")
-}
-
-func displayType(name string, td types.JsonSchema) {
-	typeStr, err := json.Marshal(td)
-	die(err)
-	fmt.Printf("%s: %s\n\n", name, typeStr)
-}
-
-func printOutput(system funcs.SystemGraph) {
-	jsonSystem, _ := json.Marshal(system)
-	fmt.Printf("System:\n\n%s\n", jsonSystem)
-}
-
-func writeOutput(system funcs.SystemGraph, output string) {
-	jsonSystem, _ := json.MarshalIndent(system, "", "    ")
-	err := ioutil.WriteFile(output, jsonSystem, 0644)
-	die(err)
-}
-
-func die(err error) {
-	if err != nil {
-		panic(err)
-	}
+	return plat, nil
 }
