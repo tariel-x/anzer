@@ -121,3 +121,36 @@ func (f FRef) Out() T {
 func (f FRef) Invalid() error {
 	return nil
 }
+
+type ApplicationType int
+
+const (
+	ResponseApplication ApplicationType = iota
+)
+
+type Application struct {
+	Parent   *Application
+	Type     ApplicationType
+	Name     string
+	Argument Composable
+}
+
+func (a Application) Definition() string {
+	return a.GetName()
+}
+
+func (a Application) GetName() string {
+	return a.Name
+}
+
+func (a Application) In() T {
+	return nil
+}
+
+func (a Application) Out() T {
+	return nil
+}
+
+func (a Application) Invalid() error {
+	return nil
+}
