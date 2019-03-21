@@ -70,6 +70,11 @@ func (parser *Parser) ParseAll() ([]lang.Composable, error) {
 	return composes, nil
 }
 
+func (parser *Parser) ParseTypes() (map[string]lang.T, error) {
+	parser.buildTree()
+	return parser.resolveTypes(parser.types)
+}
+
 func (parser *Parser) buildTree() {
 	input := antlr.NewInputStream(parser.source)
 	lexer := NewAnzerLexer(input)

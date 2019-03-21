@@ -26,10 +26,11 @@ typeId : typeConstructor | typeScalar | typeOther ;
 
 // Tokens
 
-typeConstructor : typeMinLength | typeMaxLength | typeRight | typeLeft | typeList | typeOptional ;
+typeConstructor : typeMinLength | typeMaxLength | typeRight | typeLeft | typeList | typeOptional | typeEither ;
 
 typeMinLength : 'MinLength' ConstructorArg ;
 typeMaxLength : 'MaxLength' ConstructorArg ;
+typeEither : typeId '^' typeId ;
 typeRight : 'Right' ;
 typeLeft : 'Left' ;
 typeList : 'List' | '[]' ;

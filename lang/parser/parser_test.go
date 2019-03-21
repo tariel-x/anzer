@@ -34,7 +34,7 @@ type DeliverResult = Integer
 			Fields: map[string]lang.T{
 				"text": lang.TypeString,
 				"formatting": lang.Constructor{
-					Operand:   lang.TypeString,
+					Operands:  []lang.T{lang.TypeString},
 					Type:      lang.TypeOptional,
 					Arguments: []interface{}(nil),
 				},
@@ -47,23 +47,25 @@ type DeliverResult = Integer
 						"name": lang.TypeString,
 						"size": lang.TypeInteger,
 						"age": lang.Constructor{
-							Operand:   lang.TypeInteger,
+							Operands:  []lang.T{lang.TypeInteger},
 							Type:      lang.TypeOptional,
 							Arguments: []interface{}(nil),
 						},
 					},
 				},
 				"greeting": lang.Constructor{
-					Operand: lang.Complex{
-						Fields: map[string]lang.T{
-							"author": lang.TypeString,
-							"text": lang.Complex{
-								Fields: map[string]lang.T{
-									"text": lang.TypeString,
-									"formatting": lang.Constructor{
-										Operand:   lang.TypeString,
-										Type:      lang.TypeOptional,
-										Arguments: []interface{}(nil),
+					Operands: []lang.T{
+						lang.Complex{
+							Fields: map[string]lang.T{
+								"author": lang.TypeString,
+								"text": lang.Complex{
+									Fields: map[string]lang.T{
+										"text": lang.TypeString,
+										"formatting": lang.Constructor{
+											Operands:  []lang.T{lang.TypeString},
+											Type:      lang.TypeOptional,
+											Arguments: []interface{}(nil),
+										},
 									},
 								},
 							},
@@ -72,15 +74,7 @@ type DeliverResult = Integer
 					Type:      lang.TypeList,
 					Arguments: []interface{}(nil),
 				},
-				"address": lang.Constructor{
-					Operand: lang.Constructor{
-						Operand:   lang.TypeString,
-						Type:      lang.TypeMaxLength,
-						Arguments: []interface{}{20},
-					},
-					Type:      lang.TypeMinLength,
-					Arguments: []interface{}{10},
-				},
+				"address": lang.MinLength(lang.MaxLength(lang.TypeString, 20), 10),
 			},
 		},
 		"DeliverResult": lang.TypeInteger,
@@ -89,12 +83,12 @@ type DeliverResult = Integer
 
 func TestParseType(t *testing.T) {
 	parser := New(Source)
-	result, err := parser.Parse()
+	result, err := parser.ParseTypes()
 	if err != nil {
 		t.Error(err)
 	}
 
-	if diff := deep.Equal(result.Types, Expected); diff != nil {
+	if diff := deep.Equal(result, Expected); diff != nil {
 		t.Error(diff)
 	}
 }

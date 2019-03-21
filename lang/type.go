@@ -17,6 +17,7 @@ const (
 	TypeLeft
 	TypeList
 	TypeOptional
+	TypeEither
 )
 
 type NothingType struct{}
@@ -149,14 +150,14 @@ func (c Complex) Subtype(of T) bool {
 type ConstructorType int
 
 type Constructor struct {
-	Operand   T
+	Operands  []T
 	Type      ConstructorType
 	Arguments []interface{}
 }
 
-func Construct(parent T, constructor ConstructorType, arguments []interface{}) T {
+func Construct(parents []T, constructor ConstructorType, arguments []interface{}) T {
 	return Constructor{
-		Operand:   parent,
+		Operands:  parents,
 		Type:      constructor,
 		Arguments: arguments,
 	}
@@ -165,9 +166,14 @@ func Construct(parent T, constructor ConstructorType, arguments []interface{}) T
 func (c Constructor) Equal(to T) bool {
 	switch t := to.(type) {
 	case Constructor:
-		if !c.Operand.Equal(t.Operand) ||
-			c.Type != t.Type {
+		if len(c.Operands) != len(t.Operands) {
 			return false
+		}
+		for i, op1 := range c.Operands {
+			if !op1.Equal(t.Operands[i]) ||
+				c.Type != t.Type {
+				return false
+			}
 		}
 		if len(c.Arguments) != len(t.Arguments) {
 			return false
@@ -196,44 +202,52 @@ func (c Constructor) Subtype(of T) bool {
 		if c.Equal(t) {
 			return false
 		}
-		if c.Equal(t.Operand) || c.Subtype(t.Operand) {
-			return true
+		for i, op1 := range c.Operands {
+			if !op1.Equal(t.Operands[i]) && !op1.Subtype(t.Operands[i]) {
+				return false
+			}
 		}
 	default:
-		if c.Operand.Equal(of) {
-			return true
+		for _, op := range c.Operands {
+			if !op.Equal(of) {
+				return false
+			}
 		}
 	}
 
-	return false
+	return true
 }
 
 func MaxLength(parent T, length int) T {
 	if parent.Subtype(TypeString) || parent.Equal(TypeString) {
-		return Construct(parent, TypeMaxLength, []interface{}{length})
+		return Construct([]T{parent}, TypeMaxLength, []interface{}{length})
 	}
 	return nil
 }
 
 func MinLength(parent T, length int) T {
 	if parent.Subtype(TypeString) || parent.Equal(TypeString) {
-		return Construct(parent, TypeMinLength, []interface{}{length})
+		return Construct([]T{parent}, TypeMinLength, []interface{}{length})
 	}
 	return nil
 }
 
 func Right(parent T) T {
-	return Construct(parent, TypeRight, nil)
+	return Construct([]T{parent}, TypeRight, nil)
 }
 
 func Left(parent T) T {
-	return Construct(parent, TypeLeft, nil)
+	return Construct([]T{parent}, TypeLeft, nil)
 }
 
 func List(parent T) T {
-	return Construct(parent, TypeList, nil)
+	return Construct([]T{parent}, TypeList, nil)
 }
 
 func Optional(parent T) T {
-	return Construct(parent, TypeOptional, nil)
+	return Construct([]T{parent}, TypeOptional, nil)
+}
+
+func Either(left, right T) T {
+	return Construct([]T{left, right}, TypeEither, nil)
 }

@@ -125,7 +125,8 @@ func (f FRef) Invalid() error {
 type ApplicationType int
 
 const (
-	ResponseApplication ApplicationType = iota
+	BindApplication ApplicationType = iota
+	ReturnApplication
 )
 
 type Application struct {

@@ -11,11 +11,11 @@ func TestAliasValid(t *testing.T) {
 			F{
 				Name:    "a",
 				TypeIn:  TypeString,
-				TypeOut: Construct(TypeString, TypeMaxLength, []interface{}{10}),
+				TypeOut: MaxLength(TypeString, 10),
 			},
 			F{
 				Name:   "b",
-				TypeIn: Construct(TypeString, TypeMaxLength, []interface{}{10}),
+				TypeIn: MaxLength(TypeString, 10),
 				TypeOut: Complex{
 					Fields: map[string]T{
 						"f1": TypeInteger,
@@ -52,7 +52,7 @@ func TestAliasInvalid(t *testing.T) {
 			},
 			F{
 				Name:   "b",
-				TypeIn: Construct(TypeString, TypeMaxLength, []interface{}{10}),
+				TypeIn: MaxLength(TypeString, 10),
 				TypeOut: Complex{
 					Fields: map[string]T{
 						"f2": TypeString,
