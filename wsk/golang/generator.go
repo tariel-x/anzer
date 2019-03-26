@@ -86,13 +86,16 @@ func genType(t l.T, name string) string {
 func genTypeDef(t l.T) *j.Statement {
 	switch tt := t.(type) {
 	case l.Constructor:
+		if len(tt.Operands) == 0 {
+			return nil
+		}
 		switch tt.Type {
 		case l.TypeList:
-			return list(genTypeDef(tt.Operand))
+			return list(genTypeDef(tt.Operands[0]))
 		case l.TypeOptional:
-			return pointer(genTypeDef(tt.Operand))
+			return pointer(genTypeDef(tt.Operands[0]))
 		default:
-			return genTypeDef(tt.Operand)
+			return genTypeDef(tt.Operands[0])
 		}
 	case l.Basic:
 		return basic(tt)
