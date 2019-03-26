@@ -30,7 +30,7 @@ typeConstructor : typeMinLength | typeMaxLength | typeRight | typeLeft | typeLis
 
 typeMinLength : 'MinLength' ConstructorArg ;
 typeMaxLength : 'MaxLength' ConstructorArg ;
-typeEither : typeId '^' typeId ;
+typeEither : 'Either';
 typeRight : 'Right' ;
 typeLeft : 'Left' ;
 typeList : 'List' | '[]' ;

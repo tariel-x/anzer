@@ -99,6 +99,12 @@ func (s *BaseAnzerListener) EnterTypeMaxLength(ctx *TypeMaxLengthContext) {}
 // ExitTypeMaxLength is called when production typeMaxLength is exited.
 func (s *BaseAnzerListener) ExitTypeMaxLength(ctx *TypeMaxLengthContext) {}
 
+// EnterTypeEither is called when production typeEither is entered.
+func (s *BaseAnzerListener) EnterTypeEither(ctx *TypeEitherContext) {}
+
+// ExitTypeEither is called when production typeEither is exited.
+func (s *BaseAnzerListener) ExitTypeEither(ctx *TypeEitherContext) {}
+
 // EnterTypeRight is called when production typeRight is entered.
 func (s *BaseAnzerListener) EnterTypeRight(ctx *TypeRightContext) {}
 

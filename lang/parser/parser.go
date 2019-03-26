@@ -113,12 +113,17 @@ func (parser *Parser) resolveType(t lang.T) (lang.T, error) {
 		}
 		return tt, nil
 	case lang.Constructor:
-		opr, err := parser.resolveType(tt.Operand)
-		if err != nil {
-			return nil, err
+		if tt.Type != lang.TypeEither {
+			if len(tt.Operands) == 0 {
+				return nil, errors.New("constructor without operands")
+			}
+			opr, err := parser.resolveType(tt.Operands[0])
+			if err != nil {
+				return nil, err
+			}
+			tt.Operands[0] = opr
+			return tt, nil
 		}
-		tt.Operand = opr
-		return tt, nil
 	case lang.Ref:
 		if target, ok := parser.types[string(tt)]; ok {
 			return parser.resolveType(target)
@@ -303,7 +308,7 @@ func (l *listener) reduceTpath(tpath []lang.T) lang.T {
 			continue
 		}
 		if constructor, ok := tpath[i].(lang.Constructor); ok {
-			constructor.Operand = finalT
+			constructor.Operands = []lang.T{finalT}
 			finalT = constructor
 		}
 	}

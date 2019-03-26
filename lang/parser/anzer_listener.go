@@ -47,6 +47,9 @@ type AnzerListener interface {
 	// EnterTypeMaxLength is called when entering the typeMaxLength production.
 	EnterTypeMaxLength(c *TypeMaxLengthContext)
 
+	// EnterTypeEither is called when entering the typeEither production.
+	EnterTypeEither(c *TypeEitherContext)
+
 	// EnterTypeRight is called when entering the typeRight production.
 	EnterTypeRight(c *TypeRightContext)
 
@@ -145,6 +148,9 @@ type AnzerListener interface {
 
 	// ExitTypeMaxLength is called when exiting the typeMaxLength production.
 	ExitTypeMaxLength(c *TypeMaxLengthContext)
+
+	// ExitTypeEither is called when exiting the typeEither production.
+	ExitTypeEither(c *TypeEitherContext)
 
 	// ExitTypeRight is called when exiting the typeRight production.
 	ExitTypeRight(c *TypeRightContext)
