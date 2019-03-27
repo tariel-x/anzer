@@ -12,6 +12,7 @@ var (
 type GreetingText = {
     text       :: String
     formatting :: *String
+    err        :: Either MaxLength 20 String Gift
 }
 //Comment for testing
 type Gift = {

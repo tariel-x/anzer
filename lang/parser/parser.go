@@ -275,6 +275,11 @@ func (l *listener) EnterTypeList(ctx *TypeListContext) {
 	l.parser.tc.appendT(t)
 }
 
+func (l *listener) EnterTypeEither(ctx *TypeEitherContext) {
+	t := lang.Construct(nil, lang.TypeEither, nil)
+	l.parser.tc.appendT(t)
+}
+
 func (l *listener) EnterTypeString(ctx *TypeStringContext) {
 	l.parser.tc.appendT(lang.TypeString)
 }
@@ -301,6 +306,15 @@ func (l *listener) ExitTypeSimpleDefinition(ctx *TypeSimpleDefinitionContext) {
 }
 
 func (l *listener) reduceTpath(tpath []lang.T) lang.T {
+	if len(tpath) == 0 {
+		return nil
+	}
+	if either, ok := tpath[0].(lang.Constructor); ok {
+		if either.Type == lang.TypeEither {
+			return l.reduceEitherTpath(tpath)
+		}
+	}
+
 	var finalT lang.T
 	for i := len(tpath) - 1; i >= 0; i-- {
 		if finalT == nil {
@@ -313,6 +327,27 @@ func (l *listener) reduceTpath(tpath []lang.T) lang.T {
 		}
 	}
 	return finalT
+}
+
+func (l *listener) reduceEitherTpath(tpath []lang.T) lang.T {
+	if len(tpath) < 3 {
+		return nil
+	}
+	var left, right lang.T
+	ptr := &left
+
+	for i := len(tpath) - 1; i >= 0; i-- {
+		if ptr == nil {
+			ptr = &tpath[i]
+			continue
+		}
+		if constructor, ok := tpath[i].(lang.Constructor); ok {
+			constructor.Operands = []lang.T{*ptr}
+			ptr = &constructor
+		}
+	}
+
+	return nil
 }
 
 func (l *listener) ExitTypeDeclaration(ctx *TypeDeclarationContext) {
