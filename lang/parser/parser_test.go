@@ -12,7 +12,7 @@ var (
 type GreetingText = {
     text       :: String
     formatting :: *String
-    err        :: Either MaxLength 20 String Integer
+	err        :: Either MaxLength 20 String Integer
 }
 //Comment for testing
 type Gift = {
@@ -79,6 +79,18 @@ type DeliverResult = Integer
 											Type:      lang.TypeOptional,
 											Arguments: []interface{}(nil),
 										},
+										"err": lang.Constructor{
+											Operands: []lang.T{
+												lang.Constructor{
+													Operands:  []lang.T{lang.TypeString},
+													Type:      lang.TypeMaxLength,
+													Arguments: []interface{}{20},
+												},
+												lang.TypeInteger,
+											},
+											Type:      lang.TypeEither,
+											Arguments: []interface{}(nil),
+										},
 									},
 								},
 							},
@@ -102,7 +114,6 @@ func TestParseType(t *testing.T) {
 	}
 
 	if diff := deep.Equal(result, Expected); diff != nil {
-		t.Logf("\n%#v\n\n", result)
 		t.Error(diff)
 	}
 }
