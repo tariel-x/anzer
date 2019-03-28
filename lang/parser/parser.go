@@ -333,21 +333,29 @@ func (l *listener) reduceEitherTpath(tpath []lang.T) lang.T {
 	if len(tpath) < 3 {
 		return nil
 	}
-	var left, right lang.T
-	ptr := &left
+	operands := make([]lang.T, 2, 2)
+	ptr := 1
 
-	for i := len(tpath) - 1; i >= 0; i-- {
-		if ptr == nil {
-			ptr = &tpath[i]
+	for i := len(tpath) - 1; i > 0; i-- {
+		if operands[ptr] == nil {
+			operands[ptr] = tpath[i]
 			continue
 		}
 		if constructor, ok := tpath[i].(lang.Constructor); ok {
-			constructor.Operands = []lang.T{*ptr}
-			ptr = &constructor
+			constructor.Operands = []lang.T{operands[ptr]}
+			operands[ptr] = constructor
+		} else {
+			if ptr == 1 {
+				ptr = 0
+				operands[ptr] = tpath[i]
+			}
 		}
 	}
 
-	return nil
+	return lang.Constructor{
+		Operands: operands,
+		Type:     lang.TypeEither,
+	}
 }
 
 func (l *listener) ExitTypeDeclaration(ctx *TypeDeclarationContext) {
