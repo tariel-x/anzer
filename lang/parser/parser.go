@@ -178,7 +178,7 @@ func (parser *Parser) resolveFunc(f lang.Composable) (lang.Composable, error) {
 type fContainer struct {
 	f       lang.F
 	a       lang.Alias
-	refpath []lang.FRef
+	refpath []lang.Composable
 }
 
 type tContainer struct {
@@ -408,7 +408,7 @@ func (l *listener) ExitFuncDeclaration(ctx *FuncDeclarationContext) {
 
 func (l *listener) EnterLocalFuncDeclaration(ctx *LocalFuncDeclarationContext) {
 	l.parser.fc = &fContainer{
-		refpath: []lang.FRef{},
+		refpath: []lang.Composable{},
 		a:       lang.Alias{},
 	}
 	if ctx.FuncName() != nil {
@@ -418,6 +418,14 @@ func (l *listener) EnterLocalFuncDeclaration(ctx *LocalFuncDeclarationContext) {
 
 func (l *listener) EnterFuncRef(ctx *FuncRefContext) {
 	l.parser.fc.refpath = append(l.parser.fc.refpath, lang.FRef(ctx.GetText()))
+}
+
+func (l *listener) EnterFuncBind(ctx *FuncBindContext) {
+	bind := lang.Application{
+		Type:     lang.BindApplication,
+		Argument: lang.FRef(ctx.FuncApplied().GetText()),
+	}
+	l.parser.fc.refpath = append(l.parser.fc.refpath, bind)
 }
 
 func (l *listener) ExitLocalFuncDeclaration(ctx *LocalFuncDeclarationContext) {

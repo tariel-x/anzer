@@ -1,0 +1,17 @@
+type Error = String
+type A1 = String
+type A2 = Either String Error
+type B1 = String
+type B2 = Either String Error
+type C1 = Either String Error
+type C2 = String
+
+github.com/tst/a[go] :: A1 -> A2
+github.com/tst/b[go] :: B1 -> B2
+github.com/tst/c[go] :: C1 -> C2
+
+proc = a . >>= b . c
+
+invoke (
+   proc,
+)

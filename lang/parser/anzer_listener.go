@@ -104,6 +104,12 @@ type AnzerListener interface {
 	// EnterFuncRef is called when entering the funcRef production.
 	EnterFuncRef(c *FuncRefContext)
 
+	// EnterFuncBind is called when entering the funcBind production.
+	EnterFuncBind(c *FuncBindContext)
+
+	// EnterFuncApplied is called when entering the funcApplied production.
+	EnterFuncApplied(c *FuncAppliedContext)
+
 	// EnterInvokeCmd is called when entering the invokeCmd production.
 	EnterInvokeCmd(c *InvokeCmdContext)
 
@@ -205,6 +211,12 @@ type AnzerListener interface {
 
 	// ExitFuncRef is called when exiting the funcRef production.
 	ExitFuncRef(c *FuncRefContext)
+
+	// ExitFuncBind is called when exiting the funcBind production.
+	ExitFuncBind(c *FuncBindContext)
+
+	// ExitFuncApplied is called when exiting the funcApplied production.
+	ExitFuncApplied(c *FuncAppliedContext)
 
 	// ExitInvokeCmd is called when exiting the invokeCmd production.
 	ExitInvokeCmd(c *InvokeCmdContext)

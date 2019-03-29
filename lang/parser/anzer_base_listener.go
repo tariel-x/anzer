@@ -213,6 +213,18 @@ func (s *BaseAnzerListener) EnterFuncRef(ctx *FuncRefContext) {}
 // ExitFuncRef is called when production funcRef is exited.
 func (s *BaseAnzerListener) ExitFuncRef(ctx *FuncRefContext) {}
 
+// EnterFuncBind is called when production funcBind is entered.
+func (s *BaseAnzerListener) EnterFuncBind(ctx *FuncBindContext) {}
+
+// ExitFuncBind is called when production funcBind is exited.
+func (s *BaseAnzerListener) ExitFuncBind(ctx *FuncBindContext) {}
+
+// EnterFuncApplied is called when production funcApplied is entered.
+func (s *BaseAnzerListener) EnterFuncApplied(ctx *FuncAppliedContext) {}
+
+// ExitFuncApplied is called when production funcApplied is exited.
+func (s *BaseAnzerListener) ExitFuncApplied(ctx *FuncAppliedContext) {}
+
 // EnterInvokeCmd is called when production invokeCmd is entered.
 func (s *BaseAnzerListener) EnterInvokeCmd(ctx *InvokeCmdContext) {}
 
