@@ -196,3 +196,18 @@ func TestMaxStringOfConstructorIncorrect(t *testing.T) {
 		t.Error("t1 == nil")
 	}
 }
+
+func TestEitherSubtype(t *testing.T) {
+	left1 := MaxLength(TypeString, 10)
+	right1 := List(TypeInteger)
+
+	left2 := TypeString
+	right2 := List(TypeInteger)
+
+	t1 := Either(left1, right1)
+	t2 := Either(left2, right2)
+
+	if !t1.Subtype(t2) {
+		t.Error("t2 <: t2")
+	}
+}
