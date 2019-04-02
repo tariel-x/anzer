@@ -421,10 +421,7 @@ func (l *listener) EnterFuncRef(ctx *FuncRefContext) {
 }
 
 func (l *listener) EnterFuncBind(ctx *FuncBindContext) {
-	bind := lang.Application{
-		Type:     lang.BindApplication,
-		Argument: lang.FRef(ctx.FuncApplied().GetText()),
-	}
+	bind := lang.Bind(lang.FRef(ctx.FuncApplied().GetText()))
 	l.parser.fc.refpath = append(l.parser.fc.refpath, bind)
 }
 

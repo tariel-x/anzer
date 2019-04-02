@@ -9,6 +9,8 @@ import (
 
 var (
 	errTypeInconsistent = errors.New("types are not consistent")
+	ErrBindNoArg        = errors.New("bind has no argument")
+	ErrBindArgNotEither = errors.New("argument of bind has not either output type")
 )
 
 type Composable interface {
@@ -38,14 +40,14 @@ func (a Alias) GetName() string {
 
 func (a Alias) In() T {
 	if len(a.Compose) == 0 {
-		panic(fmt.Errorf("Type %s is undefined", a.Name))
+		panic(fmt.Errorf("type %s is undefined", a.Name))
 	}
 	return a.Compose[0].In()
 }
 
 func (a Alias) Out() T {
 	if len(a.Compose) == 0 {
-		panic(fmt.Errorf("Type %s is undefined", a.Name))
+		panic(fmt.Errorf("type %s is undefined", a.Name))
 	}
 	return a.Compose[len(a.Compose)-1].Out()
 }
@@ -124,34 +126,70 @@ func (f FRef) Invalid() error {
 
 type ApplicationType int
 
-const (
-	BindApplication ApplicationType = iota
-	ReturnApplication
-)
-
-type Application struct {
-	Parent   *Application
-	Type     ApplicationType
-	Name     string
+type BindApplication struct {
 	Argument Composable
 }
 
-func (a Application) Definition() string {
-	return a.GetName()
+func (b BindApplication) Definition() string {
+	return fmt.Sprint(b.GetName(), b.Argument.Definition())
 }
 
-func (a Application) GetName() string {
-	return a.Name
+func (b BindApplication) GetName() string {
+	return ">>="
 }
 
-func (a Application) In() T {
+func (b BindApplication) In() T {
+	if b.Argument == nil {
+		return nil
+	}
+	if b.Argument.In() == nil {
+		return nil
+	}
+	argOut := b.Argument.Out()
+	if out, ok := argOut.(Constructor); ok && out.Type == TypeEither && len(out.Operands) > 1 {
+		return Either(b.Argument.In(), out.Operands[1])
+	}
 	return nil
 }
 
-func (a Application) Out() T {
+func (b BindApplication) Out() T {
+	if b.Argument == nil {
+		return nil
+	}
+	if b.Argument.Out() == nil {
+		return nil
+	}
+	argOut := b.Argument.Out()
+	if out, ok := argOut.(Constructor); ok && out.Type == TypeEither {
+		return out
+	}
 	return nil
 }
 
-func (a Application) Invalid() error {
+func (b BindApplication) Invalid() error {
+	if b.Argument == nil {
+		return ErrBindNoArg
+	}
+	if b.Argument.In() == nil {
+		return ErrBindArgNotEither
+	}
+
+	argOut := b.Argument.Out()
+	if out, ok := argOut.(Constructor); ok {
+		if out.Type != TypeEither || len(out.Operands) < 2 {
+			return ErrBindArgNotEither
+		}
+	} else {
+		return ErrBindArgNotEither
+	}
+
 	return nil
 }
+
+func Bind(arg Composable) BindApplication {
+	return BindApplication{
+		Argument: arg,
+	}
+}
+
+//TODO: return function
