@@ -124,21 +124,19 @@ func (f FRef) Invalid() error {
 	return nil
 }
 
-type ApplicationType int
-
-type BindApplication struct {
+type EitherBind struct {
 	Argument Composable
 }
 
-func (b BindApplication) Definition() string {
+func (b EitherBind) Definition() string {
 	return fmt.Sprint(b.GetName(), b.Argument.Definition())
 }
 
-func (b BindApplication) GetName() string {
+func (b EitherBind) GetName() string {
 	return ">>="
 }
 
-func (b BindApplication) In() T {
+func (b EitherBind) In() T {
 	if b.Argument == nil {
 		return nil
 	}
@@ -152,7 +150,7 @@ func (b BindApplication) In() T {
 	return nil
 }
 
-func (b BindApplication) Out() T {
+func (b EitherBind) Out() T {
 	if b.Argument == nil {
 		return nil
 	}
@@ -166,7 +164,7 @@ func (b BindApplication) Out() T {
 	return nil
 }
 
-func (b BindApplication) Invalid() error {
+func (b EitherBind) Invalid() error {
 	if b.Argument == nil {
 		return ErrBindNoArg
 	}
@@ -186,10 +184,71 @@ func (b BindApplication) Invalid() error {
 	return nil
 }
 
-func Bind(arg Composable) BindApplication {
-	return BindApplication{
+func Bind(arg Composable) EitherBind {
+	return EitherBind{
 		Argument: arg,
 	}
+}
+
+type EitherReturn struct {
+	Argument Composable
+}
+
+func (r EitherReturn) Definition() string {
+	return fmt.Sprint(r.GetName(), r.Argument.Definition())
+}
+
+func (r EitherReturn) GetName() string {
+	return "return"
+	//TODO: rewrite return
+}
+
+func (r EitherReturn) In() T {
+	if r.Argument == nil {
+		return nil
+	}
+	if r.Argument.In() == nil {
+		return nil
+	}
+	argOut := r.Argument.Out()
+	if out, ok := argOut.(Constructor); ok && out.Type == TypeEither && len(out.Operands) > 1 {
+		return Either(r.Argument.In(), out.Operands[1])
+	}
+	return nil
+}
+
+func (r EitherReturn) Out() T {
+	if r.Argument == nil {
+		return nil
+	}
+	if r.Argument.Out() == nil {
+		return nil
+	}
+	argOut := r.Argument.Out()
+	if out, ok := argOut.(Constructor); ok && out.Type == TypeEither {
+		return out
+	}
+	return nil
+}
+
+func (r EitherReturn) Invalid() error {
+	if r.Argument == nil {
+		return ErrBindNoArg
+	}
+	if r.Argument.In() == nil {
+		return ErrBindArgNotEither
+	}
+
+	argOut := r.Argument.Out()
+	if out, ok := argOut.(Constructor); ok {
+		if out.Type != TypeEither || len(out.Operands) < 2 {
+			return ErrBindArgNotEither
+		}
+	} else {
+		return ErrBindArgNotEither
+	}
+
+	return nil
 }
 
 //TODO: return function
