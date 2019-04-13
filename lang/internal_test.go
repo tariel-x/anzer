@@ -274,3 +274,69 @@ func TestBindInvalid5(t *testing.T) {
 		t.Error("c must be invalid, but err is nil")
 	}
 }
+
+func TestReturnValid(t *testing.T) {
+	errT := Complex{
+		Fields: map[string]T{
+			"error": TypeString,
+			"code[": TypeInteger,
+		},
+	}
+	c := Alias{
+		Name: "c",
+		Compose: []Composable{
+			F{
+				Name:    "a",
+				TypeIn:  TypeString,
+				TypeOut: Either(TypeString, errT),
+			},
+			Return(F{
+				Name:    "b",
+				TypeIn:  TypeString,
+				TypeOut: TypeString,
+			}),
+			F{
+				Name:    "c",
+				TypeIn:  Either(TypeString, errT),
+				TypeOut: Optional(errT),
+			},
+		},
+	}
+	err := c.Invalid()
+	if err != nil {
+		t.Errorf("c must be valid, but err is %s", err)
+	}
+}
+
+func TestReturnInvalid1(t *testing.T) {
+	errT := Complex{
+		Fields: map[string]T{
+			"error": TypeString,
+			"code[": TypeInteger,
+		},
+	}
+	c := Alias{
+		Name: "c",
+		Compose: []Composable{
+			F{
+				Name:    "a",
+				TypeIn:  TypeString,
+				TypeOut: Either(TypeString, errT),
+			},
+			Return(F{
+				Name:    "b",
+				TypeIn:  TypeString,
+				TypeOut: TypeString,
+			}),
+			F{
+				Name:    "c",
+				TypeIn:  TypeString,
+				TypeOut: Optional(errT),
+			},
+		},
+	}
+	err := c.Invalid()
+	if err == nil {
+		t.Error("c must be invalid, but err is nil")
+	}
+}

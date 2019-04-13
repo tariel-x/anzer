@@ -10,6 +10,7 @@ import (
 var (
 	errTypeInconsistent = errors.New("types are not consistent")
 	ErrBindNoArg        = errors.New("bind has no argument")
+	ErrReturnNoArg      = errors.New("return has no argument")
 	ErrBindArgNotEither = errors.New("argument of bind has not either output type")
 )
 
@@ -200,7 +201,6 @@ func (r EitherReturn) Definition() string {
 
 func (r EitherReturn) GetName() string {
 	return "return"
-	//TODO: rewrite return
 }
 
 func (r EitherReturn) In() T {
@@ -210,11 +210,7 @@ func (r EitherReturn) In() T {
 	if r.Argument.In() == nil {
 		return nil
 	}
-	argOut := r.Argument.Out()
-	if out, ok := argOut.(Constructor); ok && out.Type == TypeEither && len(out.Operands) > 1 {
-		return Either(r.Argument.In(), out.Operands[1])
-	}
-	return nil
+	return r.Argument.In()
 }
 
 func (r EitherReturn) Out() T {
@@ -224,31 +220,22 @@ func (r EitherReturn) Out() T {
 	if r.Argument.Out() == nil {
 		return nil
 	}
-	argOut := r.Argument.Out()
-	if out, ok := argOut.(Constructor); ok && out.Type == TypeEither {
-		return out
-	}
-	return nil
+	return Either(r.Argument.Out(), AnyType{})
 }
 
 func (r EitherReturn) Invalid() error {
 	if r.Argument == nil {
-		return ErrBindNoArg
+		return ErrReturnNoArg
 	}
 	if r.Argument.In() == nil {
-		return ErrBindArgNotEither
+		return ErrReturnNoArg
 	}
-
-	argOut := r.Argument.Out()
-	if out, ok := argOut.(Constructor); ok {
-		if out.Type != TypeEither || len(out.Operands) < 2 {
-			return ErrBindArgNotEither
-		}
-	} else {
-		return ErrBindArgNotEither
-	}
-
+	//TODO: check that invalid function is correct
 	return nil
 }
 
-//TODO: return function
+func Return(arg Composable) EitherReturn {
+	return EitherReturn{
+		Argument: arg,
+	}
+}

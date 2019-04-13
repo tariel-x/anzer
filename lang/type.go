@@ -48,10 +48,7 @@ var (
 )
 
 func (a AnyType) Equal(to T) bool {
-	if _, ok := to.(AnyType); ok {
-		return true
-	}
-	return false
+	return true
 }
 
 func (a AnyType) Subtype(of T) bool {
