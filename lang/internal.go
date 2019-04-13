@@ -220,7 +220,7 @@ func (r EitherReturn) Out() T {
 	if r.Argument.Out() == nil {
 		return nil
 	}
-	return Either(r.Argument.Out(), AnyType{})
+	return Right(r.Argument.Out())
 }
 
 func (r EitherReturn) Invalid() error {

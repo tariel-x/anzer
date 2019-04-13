@@ -290,11 +290,11 @@ func TestReturnValid(t *testing.T) {
 				TypeIn:  TypeString,
 				TypeOut: Either(TypeString, errT),
 			},
-			Return(F{
+			Bind(Return(F{
 				Name:    "b",
 				TypeIn:  TypeString,
 				TypeOut: TypeString,
-			}),
+			})),
 			F{
 				Name:    "c",
 				TypeIn:  Either(TypeString, errT),
@@ -302,6 +302,7 @@ func TestReturnValid(t *testing.T) {
 			},
 		},
 	}
+	// TODO: either data type must be equal to Right a or Left b
 	err := c.Invalid()
 	if err != nil {
 		t.Errorf("c must be valid, but err is %s", err)
