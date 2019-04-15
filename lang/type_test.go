@@ -1,6 +1,8 @@
 package lang
 
-import "testing"
+import (
+	"testing"
+)
 
 func TestBasicNeq(t *testing.T) {
 	t1 := TypeInteger
@@ -209,5 +211,13 @@ func TestEitherSubtype(t *testing.T) {
 
 	if !t1.Subtype(t2) {
 		t.Error("t2 <: t2")
+	}
+}
+
+func TestTypeSumEqual1(t *testing.T) {
+	t1 := Sum(TypeString, TypeInteger)
+	t2 := Sum(TypeInteger, TypeString)
+	if !t1.Equal(t2) {
+		t.Error("t1 == t2")
 	}
 }

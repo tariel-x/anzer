@@ -144,6 +144,70 @@ func (c Complex) Subtype(of T) bool {
 	return true
 }
 
+type TypeSum struct {
+	Types []T
+}
+
+func (ts TypeSum) Equal(to T) bool {
+	switch t := to.(type) {
+	case TypeSum:
+		if len(ts.Types) != len(t.Types) {
+			return false
+		}
+		for _, f1 := range ts.Types {
+			existsEqual := false
+			for _, f2 := range t.Types {
+				if f1.Equal(f2) {
+					existsEqual = true
+					break
+				}
+			}
+			if !existsEqual {
+				return false
+			}
+		}
+	default:
+		return false
+	}
+	return true
+}
+
+func (ts TypeSum) Parent(of T) bool {
+	if of == nil {
+		return false
+	}
+	return of.Subtype(ts)
+}
+
+// TODO: write rest of tests
+func (ts TypeSum) Subtype(of T) bool {
+	switch t := of.(type) {
+	case TypeSum:
+
+		for _, f1 := range ts.Types {
+			existsEqual := false
+			for _, f2 := range t.Types {
+				if f1.Parent(f2) || f1.Equal(f2) {
+					existsEqual = true
+					break
+				}
+			}
+			if !existsEqual {
+				return false
+			}
+		}
+	default:
+		return false
+	}
+	return true
+}
+
+func Sum(types ...T) T {
+	return TypeSum{
+		Types: types,
+	}
+}
+
 type ConstructorType int
 
 type Constructor struct {
