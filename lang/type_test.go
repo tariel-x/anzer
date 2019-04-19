@@ -221,3 +221,51 @@ func TestTypeSumEqual1(t *testing.T) {
 		t.Error("t1 == t2")
 	}
 }
+
+func TestTypeSumEqual2(t *testing.T) {
+	t1 := Sum(TypeString, TypeInteger)
+	t2 := Sum(TypeInteger)
+	if t1.Equal(t2) {
+		t.Error("t1 != t2")
+	}
+}
+
+func TestTypeSumSubtype1(t *testing.T) {
+	t1 := Sum(TypeString, TypeInteger)
+	t2 := Sum(TypeInteger)
+	if !t1.Parent(t2) {
+		t.Error("t1 <: t2")
+	}
+}
+
+func TestTypeSumSubtype2(t *testing.T) {
+	t1 := Sum(TypeInteger)
+	t2 := Sum(TypeString, TypeInteger)
+	if t1.Parent(t2) {
+		t.Error("!(t1 <: t2)")
+	}
+}
+
+func TestTypeSumSubtype3(t *testing.T) {
+	t1 := Sum(TypeInteger)
+	t2 := Sum(TypeString, TypeInteger)
+	if t2.Subtype(t1) {
+		t.Error("!(t1 <: t2)")
+	}
+}
+
+func TestTypeSumSubtype4(t *testing.T) {
+	t1 := Sum(TypeString, TypeInteger)
+	t2 := Sum(MaxLength(TypeString, 10))
+	if !t2.Subtype(t1) {
+		t.Error("t1 <: t2")
+	}
+}
+
+func TestTypeSumSubtype5(t *testing.T) {
+	t1 := Sum(TypeString, TypeInteger)
+	t2 := TypeString
+	if !t2.Subtype(t1) {
+		t.Error("t1 <: t2")
+	}
+}

@@ -77,7 +77,12 @@ func (b Basic) Parent(of T) bool {
 }
 
 func (b Basic) Subtype(of T) bool {
-	return false
+	switch of.(type) {
+	case TypeSum:
+		return of.Parent(b)
+	default:
+		return false
+	}
 }
 
 type Ref string
@@ -176,18 +181,12 @@ func (ts TypeSum) Parent(of T) bool {
 	if of == nil {
 		return false
 	}
-	return of.Subtype(ts)
-}
-
-// TODO: write rest of tests
-func (ts TypeSum) Subtype(of T) bool {
-	switch t := of.(type) {
+	switch oft := of.(type) {
 	case TypeSum:
-
-		for _, f1 := range ts.Types {
+		for _, off := range oft.Types {
 			existsEqual := false
-			for _, f2 := range t.Types {
-				if f1.Parent(f2) || f1.Equal(f2) {
+			for _, f := range ts.Types {
+				if off.Subtype(f) || off.Equal(f) {
 					existsEqual = true
 					break
 				}
@@ -197,9 +196,19 @@ func (ts TypeSum) Subtype(of T) bool {
 			}
 		}
 	default:
+		for _, f := range ts.Types {
+			if of.Subtype(f) || of.Equal(f) {
+				return true
+			}
+		}
 		return false
 	}
 	return true
+}
+
+// TODO: write rest of tests
+func (ts TypeSum) Subtype(of T) bool {
+	return of.Parent(ts)
 }
 
 func Sum(types ...T) T {
@@ -306,7 +315,7 @@ func List(parent T) T {
 }
 
 func Optional(parent T) T {
-	return Construct([]T{parent}, TypeOptional, nil)
+	return Sum(Nothing, parent)
 }
 
 func Either(left, right T) T {
