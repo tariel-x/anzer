@@ -24,9 +24,12 @@ type Product = {
     category    :: Integer
     price       :: Float
 }
-github.com/project/prepare[go] :: Source -> Prepared
+type Error = {
+    error :: String
+}
+github.com/project/prepare[go] :: Source -> Either Prepared Error
 github.com/project/save[go] :: Prepared -> Product
-create = prepare . save
+create = prepare >>= save
 invoke(create,)
 ```
 
