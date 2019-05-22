@@ -1,5 +1,17 @@
 package lang
 
+/*
++------------------------------+
+|  ADT<---------------Basic    |
+|   ^ <-                ^      |
+|   |   \---            |      |
+|   |       \---        |      |
+|   |           \---    |      |
+|   |               \-  |      |
+|Complex<----------Constructor |
++------------------------------+
+*/
+
 type T interface {
 	Equal(to T) bool
 	Subtype(of T) bool
@@ -78,7 +90,7 @@ func (b Basic) Parent(of T) bool {
 
 func (b Basic) Subtype(of T) bool {
 	switch of.(type) {
-	case TypeSum:
+	case Sum:
 		return of.Parent(b)
 	default:
 		return false
@@ -99,17 +111,17 @@ func (r Ref) Subtype(of T) bool {
 	return false
 }
 
-type Complex struct {
+type Record struct {
 	Fields map[string]T
 }
 
-func (c Complex) Equal(to T) bool {
+func (r Record) Equal(to T) bool {
 	switch t := to.(type) {
-	case Complex:
-		if len(c.Fields) != len(t.Fields) {
+	case Record:
+		if len(r.Fields) != len(t.Fields) {
 			return false
 		}
-		for n1, f1 := range c.Fields {
+		for n1, f1 := range r.Fields {
 			if f2, ok := t.Fields[n1]; ok {
 				if !f1.Equal(f2) {
 					return false
@@ -124,17 +136,17 @@ func (c Complex) Equal(to T) bool {
 	return true
 }
 
-func (c Complex) Parent(of T) bool {
+func (r Record) Parent(of T) bool {
 	if of == nil {
 		return false
 	}
-	return of.Subtype(c)
+	return of.Subtype(r)
 }
 
-func (c Complex) Subtype(of T) bool {
+func (r Record) Subtype(of T) bool {
 	switch t := of.(type) {
-	case Complex:
-		for n1, f1 := range c.Fields {
+	case Record:
+		for n1, f1 := range r.Fields {
 			if f2, ok := t.Fields[n1]; ok {
 				if !f1.Parent(f2) && !f1.Equal(f2) {
 					return false
@@ -143,25 +155,25 @@ func (c Complex) Subtype(of T) bool {
 				return false
 			}
 		}
+	case Sum:
+		return of.Parent(r)
 	default:
 		return false
 	}
 	return true
 }
 
-type TypeSum struct {
-	Types []T
-}
+type Sum []T
 
-func (ts TypeSum) Equal(to T) bool {
+func (s Sum) Equal(to T) bool {
 	switch t := to.(type) {
-	case TypeSum:
-		if len(ts.Types) != len(t.Types) {
+	case Sum:
+		if len(s) != len(t) {
 			return false
 		}
-		for _, f1 := range ts.Types {
+		for _, f1 := range s {
 			existsEqual := false
-			for _, f2 := range t.Types {
+			for _, f2 := range t {
 				if f1.Equal(f2) {
 					existsEqual = true
 					break
@@ -177,15 +189,15 @@ func (ts TypeSum) Equal(to T) bool {
 	return true
 }
 
-func (ts TypeSum) Parent(of T) bool {
+func (s Sum) Parent(of T) bool {
 	if of == nil {
 		return false
 	}
 	switch oft := of.(type) {
-	case TypeSum:
-		for _, off := range oft.Types {
+	case Sum:
+		for _, off := range oft {
 			existsEqual := false
-			for _, f := range ts.Types {
+			for _, f := range s {
 				if off.Subtype(f) || off.Equal(f) {
 					existsEqual = true
 					break
@@ -195,26 +207,27 @@ func (ts TypeSum) Parent(of T) bool {
 				return false
 			}
 		}
+		return true
 	default:
-		for _, f := range ts.Types {
+		for _, f := range s {
 			if of.Subtype(f) || of.Equal(f) {
 				return true
 			}
 		}
 		return false
 	}
-	return true
 }
 
-// TODO: write rest of tests
-func (ts TypeSum) Subtype(of T) bool {
-	return of.Parent(ts)
-}
-
-func Sum(types ...T) T {
-	return TypeSum{
-		Types: types,
+func (s Sum) Subtype(of T) bool {
+	switch of.(type) {
+	case Sum:
+		return of.Parent(s)
 	}
+	return false
+}
+
+func NewSum(types ...T) T {
+	return Sum(types)
 }
 
 type ConstructorType int
@@ -277,12 +290,14 @@ func (c Constructor) Subtype(of T) bool {
 				return false
 			}
 		}
-	default:
+	case Basic, Record:
 		for _, op := range c.Operands {
 			if !op.Equal(of) {
 				return false
 			}
 		}
+	default:
+		return false
 	}
 
 	return true
@@ -315,7 +330,7 @@ func List(parent T) T {
 }
 
 func Optional(parent T) T {
-	return Sum(Nothing, parent)
+	return NewSum(Nothing, parent)
 }
 
 func Either(left, right T) T {

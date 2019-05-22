@@ -103,28 +103,31 @@ func (f F) Invalid() error {
 	return nil
 }
 
-type FRef string
+// InternalReference stores reference to another function in a source code.
+// Lets consider `f = a . b`. `a` and `b` would be stored in InternalReference type during parsing source code.
+type InternalReference string
 
-func (f FRef) Definition() string {
+func (f InternalReference) Definition() string {
 	return string(f)
 }
 
-func (f FRef) GetName() string {
+func (f InternalReference) GetName() string {
 	return string(f)
 }
 
-func (f FRef) In() T {
+func (f InternalReference) In() T {
 	return nil
 }
 
-func (f FRef) Out() T {
+func (f InternalReference) Out() T {
 	return nil
 }
 
-func (f FRef) Invalid() error {
+func (f InternalReference) Invalid() error {
 	return nil
 }
 
+// EitherBind is HOF that stores reference to another function.
 type EitherBind struct {
 	Argument Composable
 }
@@ -191,6 +194,7 @@ func Bind(arg Composable) EitherBind {
 	}
 }
 
+// EitherReturn is HOF that stores reference to another function.
 type EitherReturn struct {
 	Argument Composable
 }

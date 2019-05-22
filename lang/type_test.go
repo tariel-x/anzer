@@ -29,12 +29,12 @@ func TestBasicSubtype(t *testing.T) {
 }
 
 func TestComplexEq(t *testing.T) {
-	t1 := Complex{
+	t1 := Record{
 		Fields: map[string]T{
 			"a": TypeInteger,
 		},
 	}
-	t2 := Complex{
+	t2 := Record{
 		Fields: map[string]T{
 			"a": TypeInteger,
 		},
@@ -45,12 +45,12 @@ func TestComplexEq(t *testing.T) {
 }
 
 func TestComplexNeq1(t *testing.T) {
-	t1 := Complex{
+	t1 := Record{
 		Fields: map[string]T{
 			"a": TypeInteger,
 		},
 	}
-	t2 := Complex{
+	t2 := Record{
 		Fields: map[string]T{
 			"b": TypeInteger,
 		},
@@ -61,12 +61,12 @@ func TestComplexNeq1(t *testing.T) {
 }
 
 func TestComplexNeq2(t *testing.T) {
-	t1 := Complex{
+	t1 := Record{
 		Fields: map[string]T{
 			"a": TypeInteger,
 		},
 	}
-	t2 := Complex{
+	t2 := Record{
 		Fields: map[string]T{
 			"a": TypeInteger,
 			"b": TypeInteger,
@@ -78,12 +78,12 @@ func TestComplexNeq2(t *testing.T) {
 }
 
 func TestComplexParent(t *testing.T) {
-	t1 := Complex{
+	t1 := Record{
 		Fields: map[string]T{
 			"a": TypeInteger,
 		},
 	}
-	t2 := Complex{
+	t2 := Record{
 		Fields: map[string]T{
 			"a": TypeInteger,
 			"b": TypeInteger,
@@ -95,12 +95,12 @@ func TestComplexParent(t *testing.T) {
 }
 
 func TestComplexSubtype(t *testing.T) {
-	t1 := Complex{
+	t1 := Record{
 		Fields: map[string]T{
 			"a": TypeString,
 		},
 	}
-	t2 := Complex{
+	t2 := Record{
 		Fields: map[string]T{
 			"a": MaxLength(TypeString, 10),
 			"b": TypeInteger,
@@ -215,55 +215,55 @@ func TestEitherSubtype(t *testing.T) {
 }
 
 func TestTypeSumEqual1(t *testing.T) {
-	t1 := Sum(TypeString, TypeInteger)
-	t2 := Sum(TypeInteger, TypeString)
+	t1 := NewSum(TypeString, TypeInteger)
+	t2 := NewSum(TypeInteger, TypeString)
 	if !t1.Equal(t2) {
 		t.Error("t1 == t2")
 	}
 }
 
 func TestTypeSumEqual2(t *testing.T) {
-	t1 := Sum(TypeString, TypeInteger)
-	t2 := Sum(TypeInteger)
+	t1 := NewSum(TypeString, TypeInteger)
+	t2 := NewSum(TypeInteger)
 	if t1.Equal(t2) {
 		t.Error("t1 != t2")
 	}
 }
 
 func TestTypeSumSubtype1(t *testing.T) {
-	t1 := Sum(TypeString, TypeInteger)
-	t2 := Sum(TypeInteger)
+	t1 := NewSum(TypeString, TypeInteger)
+	t2 := NewSum(TypeInteger)
 	if !t1.Parent(t2) {
 		t.Error("t1 <: t2")
 	}
 }
 
 func TestTypeSumSubtype2(t *testing.T) {
-	t1 := Sum(TypeInteger)
-	t2 := Sum(TypeString, TypeInteger)
+	t1 := NewSum(TypeInteger)
+	t2 := NewSum(TypeString, TypeInteger)
 	if t1.Parent(t2) {
 		t.Error("!(t1 <: t2)")
 	}
 }
 
 func TestTypeSumSubtype3(t *testing.T) {
-	t1 := Sum(TypeInteger)
-	t2 := Sum(TypeString, TypeInteger)
+	t1 := NewSum(TypeInteger)
+	t2 := NewSum(TypeString, TypeInteger)
 	if t2.Subtype(t1) {
 		t.Error("!(t1 <: t2)")
 	}
 }
 
 func TestTypeSumSubtype4(t *testing.T) {
-	t1 := Sum(TypeString, TypeInteger)
-	t2 := Sum(MaxLength(TypeString, 10))
+	t1 := NewSum(TypeString, TypeInteger)
+	t2 := NewSum(MaxLength(TypeString, 10))
 	if !t2.Subtype(t1) {
 		t.Error("t1 <: t2")
 	}
 }
 
 func TestTypeSumSubtype5(t *testing.T) {
-	t1 := Sum(TypeString, TypeInteger)
+	t1 := NewSum(TypeString, TypeInteger)
 	t2 := TypeString
 	if !t2.Subtype(t1) {
 		t.Error("t1 <: t2")

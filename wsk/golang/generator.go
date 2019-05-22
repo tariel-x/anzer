@@ -99,10 +99,12 @@ func genTypeDef(t l.T) *j.Statement {
 		}
 	case l.Basic:
 		return basic(tt)
-	case l.Complex:
+	case l.Record:
 		return complex(tt)
 	case l.AnyType:
 		return j.Interface()
+	case l.Sum:
+		return sum(tt)
 	default:
 		return j.Interface()
 	}
@@ -123,7 +125,7 @@ func basic(tt l.Basic) *j.Statement {
 	}
 }
 
-func complex(tt l.Complex) *j.Statement {
+func complex(tt l.Record) *j.Statement {
 	keys := make([]string, 0, len(tt.Fields))
 	for key := range tt.Fields {
 		keys = append(keys, key)
@@ -146,4 +148,19 @@ func pointer(st *j.Statement) *j.Statement {
 
 func list(st *j.Statement) *j.Statement {
 	return j.Index().Add(st)
+}
+
+// sum is hack to properly convert Optional Integer into *int
+func sum(tt l.Sum) *j.Statement {
+	switch len(tt) {
+	case 0:
+		return j.Interface()
+	case 1:
+		return genTypeDef(tt[0])
+	default:
+		if tt[0] == l.Nothing {
+			return pointer(genTypeDef(tt[1]))
+		}
+	}
+	return j.Interface()
 }

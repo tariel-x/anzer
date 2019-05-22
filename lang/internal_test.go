@@ -16,7 +16,7 @@ func TestAliasValid(t *testing.T) {
 			F{
 				Name:   "b",
 				TypeIn: MaxLength(TypeString, 10),
-				TypeOut: Complex{
+				TypeOut: Record{
 					Fields: map[string]T{
 						"f1": TypeInteger,
 						"f2": TypeString,
@@ -25,7 +25,7 @@ func TestAliasValid(t *testing.T) {
 			},
 			F{
 				Name: "c",
-				TypeIn: Complex{
+				TypeIn: Record{
 					Fields: map[string]T{
 						"f1": TypeInteger,
 						"f2": TypeString,
@@ -53,7 +53,7 @@ func TestAliasInvalid(t *testing.T) {
 			F{
 				Name:   "b",
 				TypeIn: MaxLength(TypeString, 10),
-				TypeOut: Complex{
+				TypeOut: Record{
 					Fields: map[string]T{
 						"f2": TypeString,
 					},
@@ -61,7 +61,7 @@ func TestAliasInvalid(t *testing.T) {
 			},
 			F{
 				Name: "c",
-				TypeIn: Complex{
+				TypeIn: Record{
 					Fields: map[string]T{
 						"f1": TypeInteger,
 						"f2": TypeString,
@@ -78,7 +78,7 @@ func TestAliasInvalid(t *testing.T) {
 }
 
 func TestBindValid(t *testing.T) {
-	errT := Complex{
+	errT := Record{
 		Fields: map[string]T{
 			"error": TypeString,
 			"code":  TypeInteger,
@@ -111,7 +111,7 @@ func TestBindValid(t *testing.T) {
 }
 
 func TestBindInvalid1(t *testing.T) {
-	errT := Complex{
+	errT := Record{
 		Fields: map[string]T{
 			"error": TypeString,
 			"code":  TypeInteger,
@@ -144,7 +144,7 @@ func TestBindInvalid1(t *testing.T) {
 }
 
 func TestBindInvalid2(t *testing.T) {
-	errT := Complex{
+	errT := Record{
 		Fields: map[string]T{
 			"error": TypeString,
 			"code":  TypeInteger,
@@ -177,7 +177,7 @@ func TestBindInvalid2(t *testing.T) {
 }
 
 func TestBindInvalid3(t *testing.T) {
-	errT := Complex{
+	errT := Record{
 		Fields: map[string]T{
 			"error": TypeString,
 			"code":  TypeInteger,
@@ -210,7 +210,7 @@ func TestBindInvalid3(t *testing.T) {
 }
 
 func TestBindInvalid4(t *testing.T) {
-	errT := Complex{
+	errT := Record{
 		Fields: map[string]T{
 			"error": TypeString,
 			"code":  TypeInteger,
@@ -243,7 +243,7 @@ func TestBindInvalid4(t *testing.T) {
 }
 
 func TestBindInvalid5(t *testing.T) {
-	errT := Complex{
+	errT := Record{
 		Fields: map[string]T{
 			"error": TypeString,
 			"code":  TypeInteger,
@@ -276,7 +276,7 @@ func TestBindInvalid5(t *testing.T) {
 }
 
 // func TestReturnValid(t *testing.T) {
-// 	errT := Complex{
+// 	errT := Record{
 // 		Fields: map[string]T{
 // 			"error": TypeString,
 // 			"code[": TypeInteger,
@@ -310,7 +310,7 @@ func TestBindInvalid5(t *testing.T) {
 // }
 
 // func TestReturnInvalid1(t *testing.T) {
-// 	errT := Complex{
+// 	errT := Record{
 // 		Fields: map[string]T{
 // 			"error": TypeString,
 // 			"code[": TypeInteger,

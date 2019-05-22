@@ -52,7 +52,7 @@ func TestGenTypeListOptional(t *testing.T) {
 }
 
 func TestGenTypeStruct(t *testing.T) {
-	inT := l.Complex{
+	inT := l.Record{
 		Fields: map[string]l.T{
 			"f1": l.Optional(l.TypeInteger),
 			"f2": l.List(l.TypeString),
@@ -66,10 +66,10 @@ func TestGenTypeStruct(t *testing.T) {
 }
 
 /*func TestGenTypeStructListStruct(t *testing.T) {
-	inT := l.Complex{
+	inT := l.Record{
 		Fields: map[string]l.T{
 			"f1": l.Optional(l.TypeInteger),
-			"f2": l.List(l.Complex{
+			"f2": l.List(l.Record{
 				Fields: map[string]l.T{
 					"subfield": l.Optional(l.TypeInteger),
 				},

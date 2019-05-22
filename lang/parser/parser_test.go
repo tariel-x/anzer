@@ -31,7 +31,7 @@ type DeliverResult = Integer
 `
 
 	Expected = map[string]lang.T{
-		"GreetingText": lang.Complex{
+		"GreetingText": lang.Record{
 			Fields: map[string]lang.T{
 				"text": lang.TypeString,
 				"formatting": lang.Constructor{
@@ -53,9 +53,9 @@ type DeliverResult = Integer
 				},
 			},
 		},
-		"Gift": lang.Complex{
+		"Gift": lang.Record{
 			Fields: map[string]lang.T{
-				"gift": lang.Complex{
+				"gift": lang.Record{
 					Fields: map[string]lang.T{
 						"name": lang.TypeString,
 						"size": lang.TypeInteger,
@@ -68,10 +68,10 @@ type DeliverResult = Integer
 				},
 				"greeting": lang.Constructor{
 					Operands: []lang.T{
-						lang.Complex{
+						lang.Record{
 							Fields: map[string]lang.T{
 								"author": lang.TypeString,
-								"text": lang.Complex{
+								"text": lang.Record{
 									Fields: map[string]lang.T{
 										"text": lang.TypeString,
 										"formatting": lang.Constructor{

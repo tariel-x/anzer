@@ -27,7 +27,7 @@ type Parser struct {
 	source  string
 	types   map[string]lang.T
 	funcs   map[string]lang.Composable
-	invokes []lang.FRef
+	invokes []lang.InternalReference
 	tc      *tContainer
 	fc      *fContainer
 }
@@ -38,7 +38,7 @@ func New(source string) Parser {
 		source:  source,
 		types:   map[string]lang.T{},
 		funcs:   map[string]lang.Composable{},
-		invokes: []lang.FRef{},
+		invokes: []lang.InternalReference{},
 	}
 }
 
@@ -103,7 +103,7 @@ func (parser *Parser) resolveTypes(types map[string]lang.T) (map[string]lang.T, 
 
 func (parser *Parser) resolveType(t lang.T) (lang.T, error) {
 	switch tt := t.(type) {
-	case lang.Complex:
+	case lang.Record:
 		for fname, ft := range tt.Fields {
 			ftr, err := parser.resolveType(ft)
 			if err != nil {
@@ -155,7 +155,7 @@ func (parser *Parser) resolveFunc(f lang.Composable) (lang.Composable, error) {
 			ff.Compose[idx] = fr
 		}
 		return ff, nil
-	case lang.FRef:
+	case lang.InternalReference:
 		if target, ok := parser.funcs[string(ff)]; ok {
 			return parser.resolveFunc(target)
 		}
@@ -229,7 +229,7 @@ func (l *listener) EnterTypeDeclaration(ctx *TypeDeclarationContext) {
 }
 
 func (l *listener) EnterTypeComplexDefinition(ctx *TypeComplexDefinitionContext) {
-	l.parser.tc.t = lang.Complex{
+	l.parser.tc.t = lang.Record{
 		Fields: map[string]lang.T{},
 	}
 }
@@ -246,7 +246,7 @@ func (l *listener) EnterFieldName(ctx *FieldNameContext) {
 
 func (l *listener) ExitTypeField(ctx *TypeFieldContext) {
 	parentc := l.parser.tc.parent
-	if complext, ok := parentc.t.(lang.Complex); ok {
+	if complext, ok := parentc.t.(lang.Record); ok {
 		fieldName := ctx.FieldName().GetText()
 		complext.Fields[fieldName] = l.parser.tc.t
 	}
@@ -417,11 +417,11 @@ func (l *listener) EnterLocalFuncDeclaration(ctx *LocalFuncDeclarationContext) {
 }
 
 func (l *listener) EnterFuncRef(ctx *FuncRefContext) {
-	l.parser.fc.refpath = append(l.parser.fc.refpath, lang.FRef(ctx.GetText()))
+	l.parser.fc.refpath = append(l.parser.fc.refpath, lang.InternalReference(ctx.GetText()))
 }
 
 func (l *listener) EnterFuncBind(ctx *FuncBindContext) {
-	bind := lang.Bind(lang.FRef(ctx.FuncApplied().GetText()))
+	bind := lang.Bind(lang.InternalReference(ctx.FuncApplied().GetText()))
 	l.parser.fc.refpath = append(l.parser.fc.refpath, bind)
 }
 
@@ -436,5 +436,5 @@ func (l *listener) ExitLocalFuncDeclaration(ctx *LocalFuncDeclarationContext) {
 }
 
 func (l *listener) EnterInvokeFuncName(ctx *InvokeFuncNameContext) {
-	l.parser.invokes = append(l.parser.invokes, lang.FRef(ctx.GetText()))
+	l.parser.invokes = append(l.parser.invokes, lang.InternalReference(ctx.GetText()))
 }
