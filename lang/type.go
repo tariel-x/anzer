@@ -338,6 +338,13 @@ func (c Constructor) Type() Type {
 	return Type(c.ConstructType)
 }
 
+func (c Constructor) FirstOperand() T {
+	if len(c.Operands) == 0 {
+		return nil
+	}
+	return c.Operands[0]
+}
+
 func MaxLength(parent T, length int) T {
 	if parent.Subtype(TypeString) || parent.Equal(TypeString) {
 		return Construct([]T{parent}, TypeMaxLength, []interface{}{length})

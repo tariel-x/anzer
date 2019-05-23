@@ -149,7 +149,7 @@ func (b EitherBind) In() T {
 	}
 	argOut := b.Argument.Out()
 	if IsEither(argOut) {
-		return Either(b.Argument.In(), argOut.(Sum)[1])
+		return Either(b.Argument.In(), argOut.(Sum)[1].(Constructor).FirstOperand())
 	}
 	return nil
 }
