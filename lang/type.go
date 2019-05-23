@@ -12,7 +12,6 @@ package lang
 +------------------------------+
 */
 
-// TODO: add returning of type name
 type T interface {
 	Equal(to T) bool
 	Subtype(of T) bool

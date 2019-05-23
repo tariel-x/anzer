@@ -129,6 +129,15 @@ func (parser *Parser) resolveType(t lang.T) (lang.T, error) {
 			return parser.resolveType(target)
 		}
 		return nil, errors.Wrap(ErrTypeRefUnreachable, string(tt))
+	case lang.Sum:
+		for i, ft := range tt {
+			ftr, err := parser.resolveType(ft)
+			if err != nil {
+				return nil, err
+			}
+			tt[i] = ftr
+		}
+		return tt, nil
 	}
 	return t, nil
 }
@@ -170,6 +179,13 @@ func (parser *Parser) resolveFunc(f lang.Composable) (lang.Composable, error) {
 		if err != nil {
 			return nil, errors.Wrap(ErrFuncTypeIncorrect, ff.Name)
 		}
+		return ff, nil
+	case lang.EitherBind:
+		argF, err := parser.resolveFunc(ff.Argument)
+		if err != nil {
+			return nil, errors.Wrap(ErrFuncTypeIncorrect, ">>= "+ff.Argument.GetName())
+		}
+		ff.Argument = argF
 		return ff, nil
 	}
 	return f, nil

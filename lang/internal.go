@@ -59,7 +59,12 @@ func (a Alias) Invalid() error {
 	}
 	previous := a.Compose[0]
 	for _, c := range a.Compose[1:] {
-		if !c.In().Equal(previous.Out()) && !c.In().Parent(previous.Out()) {
+		cIn := c.In()
+		if cIn == nil {
+			return errTypeInconsistent
+		}
+		previousOut := previous.Out()
+		if !cIn.Equal(previousOut) && !cIn.Parent(previousOut) {
 			return errTypeInconsistent
 		}
 		previous = c

@@ -8,7 +8,7 @@ import (
 )
 
 var (
-	Source = `
+	SourceType = `
 type GreetingText = {
     text       :: String
     formatting :: *String
@@ -30,7 +30,7 @@ type Gift = {
 type DeliverResult = Integer
 `
 
-	Expected = map[string]lang.T{
+	ExpectedType = map[string]lang.T{
 		"GreetingText": lang.Record{
 			Fields: map[string]lang.T{
 				"text": lang.TypeString,
@@ -73,13 +73,13 @@ type DeliverResult = Integer
 )
 
 func TestParseType(t *testing.T) {
-	parser := New(Source)
+	parser := New(SourceType)
 	result, err := parser.ParseTypes()
 	if err != nil {
 		t.Error(err)
 	}
 
-	if diff := deep.Equal(result, Expected); diff != nil {
+	if diff := deep.Equal(result, ExpectedType); diff != nil {
 		t.Error(diff)
 	}
 }
