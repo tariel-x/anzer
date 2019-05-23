@@ -148,8 +148,8 @@ func (b EitherBind) In() T {
 		return nil
 	}
 	argOut := b.Argument.Out()
-	if out, ok := argOut.(Constructor); ok && out.Type == TypeEither && len(out.Operands) > 1 {
-		return Either(b.Argument.In(), out.Operands[1])
+	if IsEither(argOut) {
+		return Either(b.Argument.In(), argOut.(Sum)[1])
 	}
 	return nil
 }
@@ -162,8 +162,8 @@ func (b EitherBind) Out() T {
 		return nil
 	}
 	argOut := b.Argument.Out()
-	if out, ok := argOut.(Constructor); ok && out.Type == TypeEither {
-		return out
+	if IsEither(argOut) {
+		return argOut
 	}
 	return nil
 }
@@ -177,11 +177,8 @@ func (b EitherBind) Invalid() error {
 	}
 
 	argOut := b.Argument.Out()
-	if out, ok := argOut.(Constructor); ok {
-		if out.Type != TypeEither || len(out.Operands) < 2 {
-			return ErrBindArgNotEither
-		}
-	} else {
+
+	if !IsEither(argOut) {
 		return ErrBindArgNotEither
 	}
 

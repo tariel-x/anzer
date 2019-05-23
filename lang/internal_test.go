@@ -106,7 +106,7 @@ func TestBindValid(t *testing.T) {
 	}
 	err := c.Invalid()
 	if err != nil {
-		t.Errorf("c must be valid, but err is %s", err)
+		t.Errorf("c must be valid, but err is %q", err)
 	}
 }
 

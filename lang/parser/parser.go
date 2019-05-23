@@ -113,7 +113,7 @@ func (parser *Parser) resolveType(t lang.T) (lang.T, error) {
 		}
 		return tt, nil
 	case lang.Constructor:
-		if tt.Type != lang.TypeEither {
+		if !lang.IsEither(tt) {
 			if len(tt.Operands) == 0 {
 				return nil, errors.New("constructor without operands")
 			}
@@ -205,6 +205,21 @@ func (c *tContainer) appendT(t lang.T) {
 	c.tpath = append(c.tpath, t)
 }
 
+const (
+	modeOptional int = iota
+	modeEither
+)
+
+type gadtContainer struct {
+	mode    int
+	parents []lang.T
+}
+
+func (gc gadtContainer) Equal(to lang.T) bool   { return false }
+func (gc gadtContainer) Subtype(of lang.T) bool { return false }
+func (gc gadtContainer) Parent(of lang.T) bool  { return false }
+func (gc gadtContainer) Type() lang.Type        { return -1 }
+
 type listener struct {
 	*BaseAnzerListener
 	parser *Parser
@@ -266,7 +281,7 @@ func (l *listener) EnterTypeMaxLength(ctx *TypeMaxLengthContext) {
 }
 
 func (l *listener) EnterTypeOptional(ctx *TypeOptionalContext) {
-	t := lang.Construct(nil, lang.TypeOptional, nil)
+	t := gadtContainer{mode: modeOptional}
 	l.parser.tc.appendT(t)
 }
 
@@ -276,7 +291,7 @@ func (l *listener) EnterTypeList(ctx *TypeListContext) {
 }
 
 func (l *listener) EnterTypeEither(ctx *TypeEitherContext) {
-	t := lang.Construct(nil, lang.TypeEither, nil)
+	t := gadtContainer{mode: modeEither}
 	l.parser.tc.appendT(t)
 }
 
@@ -309,8 +324,9 @@ func (l *listener) reduceTpath(tpath []lang.T) lang.T {
 	if len(tpath) == 0 {
 		return nil
 	}
-	if either, ok := tpath[0].(lang.Constructor); ok {
-		if either.Type == lang.TypeEither {
+
+	if gc, ok := tpath[0].(gadtContainer); ok {
+		if gc.mode == modeEither {
 			return l.reduceEitherTpath(tpath)
 		}
 	}
@@ -352,10 +368,7 @@ func (l *listener) reduceEitherTpath(tpath []lang.T) lang.T {
 		}
 	}
 
-	return lang.Constructor{
-		Operands: operands,
-		Type:     lang.TypeEither,
-	}
+	return lang.Either(operands[0], operands[1])
 }
 
 func (l *listener) ExitTypeDeclaration(ctx *TypeDeclarationContext) {

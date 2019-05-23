@@ -12,13 +12,19 @@ package lang
 +------------------------------+
 */
 
+// TODO: add returning of type name
 type T interface {
 	Equal(to T) bool
 	Subtype(of T) bool
 	Parent(of T) bool
+	Type() Type
 }
 
 const (
+	TypeNothing Type = iota
+	TypeAny
+	TypeRecord
+	TypeSum
 	TypeString Basic = iota
 	TypeInteger
 	TypeFloat
@@ -27,10 +33,11 @@ const (
 	TypeMinLength
 	TypeRight
 	TypeLeft
+	TypeJust
 	TypeList
-	TypeOptional
-	TypeEither
 )
+
+type Type int
 
 type NothingType struct{}
 
@@ -53,6 +60,10 @@ func (n NothingType) Parent(of T) bool {
 	return false
 }
 
+func (n NothingType) Type() Type {
+	return TypeNothing
+}
+
 type AnyType struct{}
 
 var (
@@ -71,7 +82,11 @@ func (a AnyType) Parent(of T) bool {
 	return true
 }
 
-type Basic int
+func (a AnyType) Type() Type {
+	return TypeAny
+}
+
+type Basic Type
 
 func (b Basic) Equal(to T) bool {
 	switch t := to.(type) {
@@ -97,6 +112,10 @@ func (b Basic) Subtype(of T) bool {
 	}
 }
 
+func (b Basic) Type() Type {
+	return Type(b)
+}
+
 type Ref string
 
 func (r Ref) Equal(to T) bool {
@@ -109,6 +128,10 @@ func (r Ref) Parent(of T) bool {
 
 func (r Ref) Subtype(of T) bool {
 	return false
+}
+
+func (r Ref) Type() Type {
+	return -1
 }
 
 type Record struct {
@@ -161,6 +184,10 @@ func (r Record) Subtype(of T) bool {
 		return false
 	}
 	return true
+}
+
+func (r Record) Type() Type {
+	return TypeRecord
 }
 
 type Sum []T
@@ -226,23 +253,27 @@ func (s Sum) Subtype(of T) bool {
 	return false
 }
 
+func (s Sum) Type() Type {
+	return TypeSum
+}
+
 func NewSum(types ...T) T {
 	return Sum(types)
 }
 
-type ConstructorType int
+type ConstructorType Type
 
 type Constructor struct {
-	Operands  []T
-	Type      ConstructorType
-	Arguments []interface{}
+	Operands      []T
+	ConstructType ConstructorType
+	Arguments     []interface{}
 }
 
 func Construct(parents []T, constructor ConstructorType, arguments []interface{}) T {
 	return Constructor{
-		Operands:  parents,
-		Type:      constructor,
-		Arguments: arguments,
+		Operands:      parents,
+		ConstructType: constructor,
+		Arguments:     arguments,
 	}
 }
 
@@ -254,7 +285,7 @@ func (c Constructor) Equal(to T) bool {
 		}
 		for i, op1 := range c.Operands {
 			if !op1.Equal(t.Operands[i]) ||
-				c.Type != t.Type {
+				c.Type() != t.Type() {
 				return false
 			}
 		}
@@ -303,6 +334,10 @@ func (c Constructor) Subtype(of T) bool {
 	return true
 }
 
+func (c Constructor) Type() Type {
+	return Type(c.ConstructType)
+}
+
 func MaxLength(parent T, length int) T {
 	if parent.Subtype(TypeString) || parent.Equal(TypeString) {
 		return Construct([]T{parent}, TypeMaxLength, []interface{}{length})
@@ -329,10 +364,28 @@ func List(parent T) T {
 	return Construct([]T{parent}, TypeList, nil)
 }
 
+func Just(parent T) T {
+	return Construct([]T{parent}, TypeJust, nil)
+}
+
 func Optional(parent T) T {
-	return NewSum(Nothing, parent)
+	return NewSum(Nothing, Just(parent))
+}
+
+func IsOptional(t T) bool {
+	if tt, ok := t.(Sum); ok && len(tt) > 1 && tt[0].Type() == TypeNothing && tt[1].Type() == Type(TypeJust) {
+		return true
+	}
+	return false
 }
 
 func Either(left, right T) T {
-	return Construct([]T{left, right}, TypeEither, nil)
+	return NewSum(Left(left), Right(right))
+}
+
+func IsEither(t T) bool {
+	if tt, ok := t.(Sum); ok && len(tt) > 1 && tt[0].Type() == Type(TypeLeft) && tt[1].Type() == Type(TypeRight) {
+		return true
+	}
+	return false
 }

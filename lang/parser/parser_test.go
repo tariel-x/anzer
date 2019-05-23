@@ -34,22 +34,13 @@ type DeliverResult = Integer
 		"GreetingText": lang.Record{
 			Fields: map[string]lang.T{
 				"text": lang.TypeString,
-				"formatting": lang.Constructor{
-					Operands:  []lang.T{lang.TypeString},
-					Type:      lang.TypeOptional,
-					Arguments: []interface{}(nil),
+				"formatting": lang.Sum{
+					lang.NothingType{},
+					lang.Just(lang.TypeString),
 				},
-				"err": lang.Constructor{
-					Operands: []lang.T{
-						lang.Constructor{
-							Operands:  []lang.T{lang.TypeString},
-							Type:      lang.TypeMaxLength,
-							Arguments: []interface{}{20},
-						},
-						lang.TypeInteger,
-					},
-					Type:      lang.TypeEither,
-					Arguments: []interface{}(nil),
+				"err": lang.Sum{
+					lang.Left(lang.MaxLength(lang.TypeString, 20)),
+					lang.Right(lang.TypeInteger),
 				},
 			},
 		},
@@ -59,46 +50,21 @@ type DeliverResult = Integer
 					Fields: map[string]lang.T{
 						"name": lang.TypeString,
 						"size": lang.TypeInteger,
-						"age": lang.Constructor{
-							Operands:  []lang.T{lang.TypeInteger},
-							Type:      lang.TypeOptional,
-							Arguments: []interface{}(nil),
-						},
+						"age":  lang.Optional(lang.TypeInteger),
 					},
 				},
-				"greeting": lang.Constructor{
-					Operands: []lang.T{
-						lang.Record{
+				"greeting": lang.List(lang.Record{
+					Fields: map[string]lang.T{
+						"author": lang.TypeString,
+						"text": lang.Record{
 							Fields: map[string]lang.T{
-								"author": lang.TypeString,
-								"text": lang.Record{
-									Fields: map[string]lang.T{
-										"text": lang.TypeString,
-										"formatting": lang.Constructor{
-											Operands:  []lang.T{lang.TypeString},
-											Type:      lang.TypeOptional,
-											Arguments: []interface{}(nil),
-										},
-										"err": lang.Constructor{
-											Operands: []lang.T{
-												lang.Constructor{
-													Operands:  []lang.T{lang.TypeString},
-													Type:      lang.TypeMaxLength,
-													Arguments: []interface{}{20},
-												},
-												lang.TypeInteger,
-											},
-											Type:      lang.TypeEither,
-											Arguments: []interface{}(nil),
-										},
-									},
-								},
+								"text":       lang.TypeString,
+								"formatting": lang.Optional(lang.TypeString),
+								"err":        lang.Either(lang.MaxLength(lang.TypeString, 20), lang.TypeInteger),
 							},
 						},
 					},
-					Type:      lang.TypeList,
-					Arguments: []interface{}(nil),
-				},
+				}),
 				"address": lang.MinLength(lang.MaxLength(lang.TypeString, 20), 10),
 			},
 		},

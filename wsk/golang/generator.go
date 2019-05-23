@@ -89,14 +89,13 @@ func genTypeDef(t l.T) *j.Statement {
 		if len(tt.Operands) == 0 {
 			return nil
 		}
-		switch tt.Type {
-		case l.TypeList:
-			return list(genTypeDef(tt.Operands[0]))
-		case l.TypeOptional:
+		if l.IsOptional(tt) {
 			return pointer(genTypeDef(tt.Operands[0]))
-		default:
-			return genTypeDef(tt.Operands[0])
+		} else if tt.Type() == l.Type(l.TypeList) {
+			return list(genTypeDef(tt.Operands[0]))
 		}
+		return genTypeDef(tt.Operands[0])
+
 	case l.Basic:
 		return basic(tt)
 	case l.Record:
