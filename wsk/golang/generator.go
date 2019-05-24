@@ -157,8 +157,15 @@ func sum(tt l.Sum) *j.Statement {
 	case 1:
 		return genTypeDef(tt[0])
 	default:
-		if tt[0] == l.Nothing {
+		switch {
+		case l.IsOptional(tt):
 			return pointer(genTypeDef(tt[1]))
+		case l.IsEither(tt):
+			leftType := pointer(genTypeDef(tt[0]).Tag(map[string]string{"json": "left"}))
+			rightType := pointer(genTypeDef(tt[1]).Tag(map[string]string{"json": "right"}))
+			left := j.Id(strings.Title("Left")).Add(leftType)
+			right := j.Id(strings.Title("Right")).Add(rightType)
+			return j.Struct(left, right)
 		}
 	}
 	return j.Interface()
