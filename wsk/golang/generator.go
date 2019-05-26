@@ -21,8 +21,8 @@ func NewGenerator() Generator {
 	return Generator{}
 }
 
-func (g Generator) Generate(inT, outT l.T, link l.FunctionLink) (string, error) {
-	packagePath := string(link)
+func (g Generator) Generate(f l.Runnable) (string, error) {
+	packagePath := string(f.GetLink())
 	packageElements := strings.Split(packagePath, "/")
 	if len(packageElements) == 0 {
 		return "", errInvalidPackage
@@ -38,13 +38,19 @@ func (g Generator) Generate(inT, outT l.T, link l.FunctionLink) (string, error) 
 		Package     string
 	}{
 		Timestamp:   time.Now(),
-		AnzerIn:     genType(inT, "AnzerIn"),
-		AnzerOut:    genType(outT, "AnzerOut"),
+		AnzerIn:     genType(f.In(), "AnzerIn"),
+		AnzerOut:    genType(f.Out(), "AnzerOut"),
 		PackagePath: packagePath,
 		Package:     packageElements[len(packageElements)-1],
 	}
 
-	err := execTemplate.Execute(&result, templateArgs)
+	var err error
+	if !f.IsEither() {
+		err = execTemplate.Execute(&result, templateArgs)
+	} else {
+		err = execTemplateEither.Execute(&result, templateArgs)
+	}
+
 	return result.String(), err
 }
 
