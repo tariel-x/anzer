@@ -14,6 +14,7 @@ var (
 	errOutputUndefined   = errors.New("output is undefined")
 	errFunctionUndefined = errors.New("function is undefined")
 	errNoInput           = errors.New("no input")
+	errNoOutput          = errors.New("no output")
 )
 
 func main() {
