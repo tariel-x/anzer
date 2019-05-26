@@ -12,6 +12,7 @@ var (
 	ErrBindNoArg        = errors.New("bind has no argument")
 	ErrReturnNoArg      = errors.New("return has no argument")
 	ErrBindArgNotEither = errors.New("argument of bind has not either output type")
+	ErrBindArgNotF      = errors.New("argument of bind is not a function")
 )
 
 type Composable interface {
@@ -20,6 +21,15 @@ type Composable interface {
 	In() T
 	Out() T
 	Invalid() error
+}
+
+type Runnable interface {
+	Definition() string
+	GetName() string
+	GetLink() FunctionLink
+	GetRuntime() string
+	In() T
+	Out() T
 }
 
 type Alias struct {
@@ -108,6 +118,14 @@ func (f F) Invalid() error {
 	return nil
 }
 
+func (f F) GetLink() FunctionLink {
+	return f.Link
+}
+
+func (f F) GetRuntime() string {
+	return f.Runtime
+}
+
 // InternalReference stores reference to another function in a source code.
 // Lets consider `f = a . b`. `a` and `b` would be stored in InternalReference type during parsing source code.
 type InternalReference string
@@ -138,7 +156,7 @@ type EitherBind struct {
 }
 
 func (b EitherBind) Definition() string {
-	return fmt.Sprint(b.GetName(), b.Argument.Definition())
+	return fmt.Sprint(b.GetName(), " ", b.Argument.Definition())
 }
 
 func (b EitherBind) GetName() string {
@@ -177,6 +195,9 @@ func (b EitherBind) Invalid() error {
 	if b.Argument == nil {
 		return ErrBindNoArg
 	}
+	if _, ok := b.Argument.(F); !ok {
+		return ErrBindArgNotF
+	}
 	if b.Argument.In() == nil {
 		return ErrBindArgNotEither
 	}
@@ -188,6 +209,20 @@ func (b EitherBind) Invalid() error {
 	}
 
 	return nil
+}
+
+func (b EitherBind) GetLink() FunctionLink {
+	if f, ok := b.Argument.(F); ok {
+		return f.Link
+	}
+	return ""
+}
+
+func (b EitherBind) GetRuntime() string {
+	if f, ok := b.Argument.(F); ok {
+		return f.Runtime
+	}
+	return ""
 }
 
 func Bind(arg Composable) EitherBind {

@@ -75,7 +75,7 @@ type whiskOutput json.RawMessage
 type rawInput map[string]interface{}
 
 func main() {
-	// debucging
+	// debugging
 	var debug = os.Getenv("OW_DEBUG") != ""
 
 	if debug {

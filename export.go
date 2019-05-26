@@ -57,12 +57,12 @@ func Export(c *cli.Context) error {
 	return nil
 }
 
-func exportFunc(f l.F, debug bool, output string) error {
-	dockerGenerator, err := platform.GetDockerGenerator(f.Runtime)
+func exportFunc(f l.Runnable, debug bool, output string) error {
+	dockerGenerator, err := platform.GetDockerGenerator(f.GetRuntime())
 	if err != nil {
 		return err
 	}
-	opts, err := dockerGenerator.GetBuildOptions(f.Link, f.In(), f.Out(), debug)
+	opts, err := dockerGenerator.GetBuildOptions(f.GetLink(), f.In(), f.Out(), debug)
 	if err != nil {
 		return err
 	}
@@ -72,7 +72,7 @@ func exportFunc(f l.F, debug bool, output string) error {
 		return err
 	}
 
-	action, err := builder.BuildWithImage(opts, f.Link)
+	action, err := builder.BuildWithImage(opts, f.GetLink())
 	if err != nil {
 		return err
 	}
@@ -81,7 +81,7 @@ func exportFunc(f l.F, debug bool, output string) error {
 		return err
 	}
 
-	name := strings.Replace(string(f.Link), "/", "_", -1)
+	name := strings.Replace(string(f.GetLink()), "/", "_", -1)
 
 	return ioutil.WriteFile(fmt.Sprintf("%s/%s.zip", output, name), zipFile, 0666)
 }
