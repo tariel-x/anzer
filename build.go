@@ -101,7 +101,7 @@ func buildFunc(f l.Runnable, plat platform.Platform) (models.PublishedFunction, 
 	if err != nil {
 		return models.PublishedFunction{}, err
 	}
-	opts, err := dockerGenerator.GetBuildOptions(f.GetLink(), f.In(), f.Out(), false)
+	opts, err := dockerGenerator.GetBuildOptions(f, false)
 	if err != nil {
 		return models.PublishedFunction{}, err
 	}

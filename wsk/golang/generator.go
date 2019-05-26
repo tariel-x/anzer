@@ -29,7 +29,8 @@ func (g Generator) Generate(inT, outT l.T, link l.FunctionLink) (string, error) 
 	}
 
 	var result bytes.Buffer
-	err := execTemplate.Execute(&result, struct {
+
+	templateArgs := struct {
 		Timestamp   time.Time
 		AnzerIn     string
 		AnzerOut    string
@@ -41,7 +42,9 @@ func (g Generator) Generate(inT, outT l.T, link l.FunctionLink) (string, error) 
 		AnzerOut:    genType(outT, "AnzerOut"),
 		PackagePath: packagePath,
 		Package:     packageElements[len(packageElements)-1],
-	})
+	}
+
+	err := execTemplate.Execute(&result, templateArgs)
 	return result.String(), err
 }
 

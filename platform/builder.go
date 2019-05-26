@@ -24,7 +24,7 @@ var (
 )
 
 type DockerGenerator interface {
-	GetBuildOptions(link l.FunctionLink, inT, outT l.T, debug bool) (*models.BuildWithImageOpts, error)
+	GetBuildOptions(f l.Runnable, debug bool) (*models.BuildWithImageOpts, error)
 }
 
 func GetDockerGenerator(runtime string) (DockerGenerator, error) {

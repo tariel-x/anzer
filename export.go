@@ -62,7 +62,7 @@ func exportFunc(f l.Runnable, debug bool, output string) error {
 	if err != nil {
 		return err
 	}
-	opts, err := dockerGenerator.GetBuildOptions(f.GetLink(), f.In(), f.Out(), debug)
+	opts, err := dockerGenerator.GetBuildOptions(f, debug)
 	if err != nil {
 		return err
 	}

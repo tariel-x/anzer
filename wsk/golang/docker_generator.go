@@ -22,8 +22,8 @@ func NewDockerGenerator() DockerGenerator {
 	}
 }
 
-func (dg DockerGenerator) GetBuildOptions(link l.FunctionLink, inT, outT l.T, debug bool) (*models.BuildWithImageOpts, error) {
-	generated, err := dg.generator.Generate(inT, outT, link)
+func (dg DockerGenerator) GetBuildOptions(f l.Runnable, debug bool) (*models.BuildWithImageOpts, error) {
+	generated, err := dg.generator.Generate(f.In(), f.Out(), f.GetLink())
 	if err != nil {
 		return nil, err
 	}

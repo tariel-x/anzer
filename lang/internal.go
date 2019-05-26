@@ -30,6 +30,7 @@ type Runnable interface {
 	GetRuntime() string
 	In() T
 	Out() T
+	IsEither() bool
 }
 
 type Alias struct {
@@ -124,6 +125,10 @@ func (f F) GetLink() FunctionLink {
 
 func (f F) GetRuntime() string {
 	return f.Runtime
+}
+
+func (f F) IsEither() bool {
+	return false
 }
 
 // InternalReference stores reference to another function in a source code.
@@ -223,6 +228,10 @@ func (b EitherBind) GetRuntime() string {
 		return f.Runtime
 	}
 	return ""
+}
+
+func (b EitherBind) IsEither() bool {
+	return true
 }
 
 func Bind(arg Composable) EitherBind {
