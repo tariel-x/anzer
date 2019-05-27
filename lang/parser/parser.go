@@ -95,6 +95,7 @@ func (parser *Parser) SetLogger(logger Logger) {
 	parser.logger = logger
 }
 
+// resolveTypes goes over types list and finds type definition for every type reference
 func (parser *Parser) resolveTypes(types map[string]lang.T) (map[string]lang.T, error) {
 	for name, t := range types {
 		tr, err := parser.resolveType(t)
@@ -106,6 +107,7 @@ func (parser *Parser) resolveTypes(types map[string]lang.T) (map[string]lang.T, 
 	return types, nil
 }
 
+// resolveType finds type definition for type reference
 func (parser *Parser) resolveType(t lang.T) (lang.T, error) {
 	switch tt := t.(type) {
 	case lang.Record:
@@ -202,6 +204,7 @@ type fContainer struct {
 	refpath []lang.Composable
 }
 
+// tContainer is temporary type storage
 type tContainer struct {
 	t      lang.T
 	tpath  []lang.T
@@ -226,6 +229,7 @@ func (c *tContainer) appendT(t lang.T) {
 	c.tpath = append(c.tpath, t)
 }
 
+// gadtContainer is temporary storage for building ADT types from AST to internal representation.
 type gadtContainer int
 
 const (

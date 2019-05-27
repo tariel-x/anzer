@@ -27,6 +27,7 @@ type DockerGenerator interface {
 	GetBuildOptions(f l.Runnable, debug bool) (*models.BuildWithImageOpts, error)
 }
 
+// GetDockerGenerator returns suitable FaaS and language specific generator for Dockerfile
 func GetDockerGenerator(runtime string) (DockerGenerator, error) {
 	switch runtime {
 	case "go":
