@@ -1,15 +1,16 @@
+// package lang contains definitions of types, functions and all logic for Anzer code validation
 package lang
 
 /*
-+------------------------------+
-|  ADT<---------------Basic    |
-|   ^ <-                ^      |
-|   |   \---            |      |
-|   |       \---        |      |
-|   |           \---    |      |
-|   |               \-  |      |
-|Complex<----------Constructor |
-+------------------------------+
++----------------------------+
+|  ADT<---------------Basic  |
+|   ^ <-                ^    |
+|   |   \---            |    |
+|   |       \---        |    |
+|   |           \---    |    |
+|   |               \-  |    |
+|Complex<-----------Container|
++----------------------------+
 */
 
 type T interface {
@@ -28,7 +29,7 @@ const (
 	TypeInteger
 	TypeFloat
 	TypeBool
-	TypeMaxLength ConstructorType = iota
+	TypeMaxLength ContainerType = iota
 	TypeMinLength
 	TypeRight
 	TypeLeft
@@ -40,9 +41,7 @@ type Type int
 
 type NothingType struct{}
 
-var (
-	Nothing NothingType = NothingType{}
-)
+var Nothing NothingType = NothingType{}
 
 func (n NothingType) Equal(to T) bool {
 	if _, ok := to.(NothingType); ok {
@@ -65,9 +64,7 @@ func (n NothingType) Type() Type {
 
 type AnyType struct{}
 
-var (
-	Any AnyType = AnyType{}
-)
+var Any AnyType = AnyType{}
 
 func (a AnyType) Equal(to T) bool {
 	return true
@@ -260,25 +257,25 @@ func NewSum(types ...T) T {
 	return Sum(types)
 }
 
-type ConstructorType Type
+type ContainerType Type
 
-type Constructor struct {
-	Operands      []T
-	ConstructType ConstructorType
-	Arguments     []interface{}
+type Container struct {
+	Operands    []T
+	ContainType ContainerType
+	Arguments   []interface{}
 }
 
-func Construct(parents []T, constructor ConstructorType, arguments []interface{}) T {
-	return Constructor{
-		Operands:      parents,
-		ConstructType: constructor,
-		Arguments:     arguments,
+func Contain(parents []T, containType ContainerType, arguments []interface{}) T {
+	return Container{
+		Operands:    parents,
+		ContainType: containType,
+		Arguments:   arguments,
 	}
 }
 
-func (c Constructor) Equal(to T) bool {
+func (c Container) Equal(to T) bool {
 	switch t := to.(type) {
-	case Constructor:
+	case Container:
 		if len(c.Operands) != len(t.Operands) {
 			return false
 		}
@@ -302,16 +299,16 @@ func (c Constructor) Equal(to T) bool {
 	return false
 }
 
-func (c Constructor) Parent(of T) bool {
+func (c Container) Parent(of T) bool {
 	if of == nil {
 		return false
 	}
 	return of.Subtype(c)
 }
 
-func (c Constructor) Subtype(of T) bool {
+func (c Container) Subtype(of T) bool {
 	switch t := of.(type) {
-	case Constructor:
+	case Container:
 		if c.Equal(t) {
 			return false
 		}
@@ -333,11 +330,11 @@ func (c Constructor) Subtype(of T) bool {
 	return true
 }
 
-func (c Constructor) Type() Type {
-	return Type(c.ConstructType)
+func (c Container) Type() Type {
+	return Type(c.ContainType)
 }
 
-func (c Constructor) FirstOperand() T {
+func (c Container) FirstOperand() T {
 	if len(c.Operands) == 0 {
 		return nil
 	}
@@ -346,32 +343,32 @@ func (c Constructor) FirstOperand() T {
 
 func MaxLength(parent T, length int) T {
 	if parent.Subtype(TypeString) || parent.Equal(TypeString) {
-		return Construct([]T{parent}, TypeMaxLength, []interface{}{length})
+		return Contain([]T{parent}, TypeMaxLength, []interface{}{length})
 	}
 	return nil
 }
 
 func MinLength(parent T, length int) T {
 	if parent.Subtype(TypeString) || parent.Equal(TypeString) {
-		return Construct([]T{parent}, TypeMinLength, []interface{}{length})
+		return Contain([]T{parent}, TypeMinLength, []interface{}{length})
 	}
 	return nil
 }
 
 func Right(parent T) T {
-	return Construct([]T{parent}, TypeRight, nil)
+	return Contain([]T{parent}, TypeRight, nil)
 }
 
 func Left(parent T) T {
-	return Construct([]T{parent}, TypeLeft, nil)
+	return Contain([]T{parent}, TypeLeft, nil)
 }
 
 func List(parent T) T {
-	return Construct([]T{parent}, TypeList, nil)
+	return Contain([]T{parent}, TypeList, nil)
 }
 
 func Just(parent T) T {
-	return Construct([]T{parent}, TypeJust, nil)
+	return Contain([]T{parent}, TypeJust, nil)
 }
 
 func Optional(parent T) T {

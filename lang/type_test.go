@@ -168,7 +168,7 @@ func TestConstructorNotparent(t *testing.T) {
 }
 
 func TestMinLength(t *testing.T) {
-	t1 := Construct([]T{TypeString}, TypeMinLength, []interface{}{10})
+	t1 := Contain([]T{TypeString}, TypeMinLength, []interface{}{10})
 	t2 := MinLength(TypeString, 10)
 	if !t1.Equal(t2) {
 		t.Error("t1 == t2")
@@ -186,7 +186,7 @@ func TestMinLengthIncorrect(t *testing.T) {
 func TestMaxStringOfConstructor(t *testing.T) {
 	embedded := MinLength(TypeString, 2)
 	t1 := MaxLength(embedded, 10)
-	t2 := Construct([]T{MinLength(TypeString, 2)}, TypeMaxLength, []interface{}{10})
+	t2 := Contain([]T{MinLength(TypeString, 2)}, TypeMaxLength, []interface{}{10})
 	if !t1.Equal(t2) {
 		t.Error("t1 == t2")
 	}

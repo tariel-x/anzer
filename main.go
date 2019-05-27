@@ -19,9 +19,9 @@ var (
 
 func main() {
 	app := cli.NewApp()
-	app.Name = "Anzer CLI tool"
+	app.Name = "Anzer"
 	app.Version = "2.0"
-	app.Usage = "generate new functions and build serverless system"
+	app.Usage = "generate new functions and build typesafe serverless system"
 
 	inputFlag := cli.StringFlag{
 		Name:  "input, i",

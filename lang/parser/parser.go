@@ -1,3 +1,4 @@
+//package parser contains both ANTLR-generated files and parser logic.
 package parser
 
 import (
@@ -22,6 +23,7 @@ var (
 	ErrFuncTypeIncorrect  = errors.New("Func type is incorrect")
 )
 
+// Parser contains source code and temporary internal representation which is used to build final internal representation.
 type Parser struct {
 	logger  Logger
 	source  string
@@ -42,6 +44,7 @@ func New(source string) Parser {
 	}
 }
 
+// ParseLazy returns internal representation only for types and functions that are mentioned in the `invoke` instruction.
 func (parser *Parser) ParseLazy() ([]lang.Composable, error) {
 	parser.buildTree()
 
@@ -56,6 +59,7 @@ func (parser *Parser) ParseLazy() ([]lang.Composable, error) {
 	return result, nil
 }
 
+// ParseAll returns internal representation for all types and functions from the source code.
 func (parser *Parser) ParseAll() ([]lang.Composable, error) {
 	parser.buildTree()
 
@@ -70,6 +74,7 @@ func (parser *Parser) ParseAll() ([]lang.Composable, error) {
 	return composes, nil
 }
 
+// ParseTypes returns only parsed types
 func (parser *Parser) ParseTypes() (map[string]lang.T, error) {
 	parser.buildTree()
 	return parser.resolveTypes(parser.types)
@@ -112,10 +117,10 @@ func (parser *Parser) resolveType(t lang.T) (lang.T, error) {
 			tt.Fields[fname] = ftr
 		}
 		return tt, nil
-	case lang.Constructor:
+	case lang.Container:
 		if !lang.IsEither(tt) {
 			if len(tt.Operands) == 0 {
-				return nil, errors.New("constructor without operands")
+				return nil, errors.New("container without operands")
 			}
 			opr, err := parser.resolveType(tt.Operands[0])
 			if err != nil {
@@ -283,13 +288,13 @@ func (l *listener) ExitTypeField(ctx *TypeFieldContext) {
 
 func (l *listener) EnterTypeMinLength(ctx *TypeMinLengthContext) {
 	arg, _ := strconv.Atoi(ctx.ConstructorArg().GetText())
-	t := lang.Construct(nil, lang.TypeMinLength, []interface{}{arg})
+	t := lang.Contain(nil, lang.TypeMinLength, []interface{}{arg})
 	l.parser.tc.appendT(t)
 }
 
 func (l *listener) EnterTypeMaxLength(ctx *TypeMaxLengthContext) {
 	arg, _ := strconv.Atoi(ctx.ConstructorArg().GetText())
-	t := lang.Construct(nil, lang.TypeMaxLength, []interface{}{arg})
+	t := lang.Contain(nil, lang.TypeMaxLength, []interface{}{arg})
 	l.parser.tc.appendT(t)
 }
 
@@ -298,7 +303,7 @@ func (l *listener) EnterTypeOptional(ctx *TypeOptionalContext) {
 }
 
 func (l *listener) EnterTypeList(ctx *TypeListContext) {
-	t := lang.Construct(nil, lang.TypeList, nil)
+	t := lang.Contain(nil, lang.TypeList, nil)
 	l.parser.tc.appendT(t)
 }
 
@@ -346,9 +351,9 @@ func (l *listener) reduceTpath(tpath []lang.T) lang.T {
 			finalT = tpath[i]
 			continue
 		}
-		if constructor, ok := tpath[i].(lang.Constructor); ok {
-			constructor.Operands = []lang.T{finalT}
-			finalT = constructor
+		if container, ok := tpath[i].(lang.Container); ok {
+			container.Operands = []lang.T{finalT}
+			finalT = container
 		}
 	}
 
@@ -371,9 +376,9 @@ func (l *listener) reduceEitherTpath(tpath []lang.T) lang.T {
 			operands[ptr] = tpath[i]
 			continue
 		}
-		if constructor, ok := tpath[i].(lang.Constructor); ok {
-			constructor.Operands = []lang.T{operands[ptr]}
-			operands[ptr] = constructor
+		if container, ok := tpath[i].(lang.Container); ok {
+			container.Operands = []lang.T{operands[ptr]}
+			operands[ptr] = container
 		} else {
 			if ptr == 1 {
 				ptr = 0

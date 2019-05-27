@@ -94,7 +94,7 @@ func genType(t l.T, name string) string {
 
 func genTypeDef(t l.T) *j.Statement {
 	switch tt := t.(type) {
-	case l.Constructor:
+	case l.Container:
 		if len(tt.Operands) == 0 {
 			return nil
 		}
