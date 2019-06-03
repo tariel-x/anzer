@@ -21,15 +21,16 @@ func NewGenerator() Generator {
 	return Generator{}
 }
 
-func (g Generator) Generate(inT, outT l.T, link l.FunctionLink) (string, error) {
-	packagePath := string(link)
+func (g Generator) Generate(f l.Runnable) (string, error) {
+	packagePath := string(f.GetLink())
 	packageElements := strings.Split(packagePath, "/")
 	if len(packageElements) == 0 {
 		return "", errInvalidPackage
 	}
 
 	var result bytes.Buffer
-	err := execTemplate.Execute(&result, struct {
+
+	templateArgs := struct {
 		Timestamp   time.Time
 		AnzerIn     string
 		AnzerOut    string
@@ -37,11 +38,19 @@ func (g Generator) Generate(inT, outT l.T, link l.FunctionLink) (string, error) 
 		Package     string
 	}{
 		Timestamp:   time.Now(),
-		AnzerIn:     genType(inT, "AnzerIn"),
-		AnzerOut:    genType(outT, "AnzerOut"),
+		AnzerIn:     genType(f.In(), "AnzerIn"),
+		AnzerOut:    genType(f.Out(), "AnzerOut"),
 		PackagePath: packagePath,
 		Package:     packageElements[len(packageElements)-1],
-	})
+	}
+
+	var err error
+	if !f.IsEither() {
+		err = execTemplate.Execute(&result, templateArgs)
+	} else {
+		err = execTemplateEither.Execute(&result, templateArgs)
+	}
+
 	return result.String(), err
 }
 
@@ -85,21 +94,25 @@ func genType(t l.T, name string) string {
 
 func genTypeDef(t l.T) *j.Statement {
 	switch tt := t.(type) {
-	case l.Constructor:
-		switch tt.Type {
-		case l.TypeList:
-			return list(genTypeDef(tt.Operand))
-		case l.TypeOptional:
-			return pointer(genTypeDef(tt.Operand))
-		default:
-			return genTypeDef(tt.Operand)
+	case l.Container:
+		if len(tt.Operands) == 0 {
+			return nil
 		}
+		if l.IsOptional(tt) {
+			return pointer(genTypeDef(tt.Operands[0]))
+		} else if tt.Type() == l.Type(l.TypeList) {
+			return list(genTypeDef(tt.Operands[0]))
+		}
+		return genTypeDef(tt.Operands[0])
+
 	case l.Basic:
 		return basic(tt)
-	case l.Complex:
+	case l.Record:
 		return complex(tt)
 	case l.AnyType:
 		return j.Interface()
+	case l.Sum:
+		return sum(tt)
 	default:
 		return j.Interface()
 	}
@@ -120,7 +133,7 @@ func basic(tt l.Basic) *j.Statement {
 	}
 }
 
-func complex(tt l.Complex) *j.Statement {
+func complex(tt l.Record) *j.Statement {
 	keys := make([]string, 0, len(tt.Fields))
 	for key := range tt.Fields {
 		keys = append(keys, key)
@@ -143,4 +156,26 @@ func pointer(st *j.Statement) *j.Statement {
 
 func list(st *j.Statement) *j.Statement {
 	return j.Index().Add(st)
+}
+
+// sum is hack to properly convert Optional Integer into *int
+func sum(tt l.Sum) *j.Statement {
+	switch len(tt) {
+	case 0:
+		return j.Interface()
+	case 1:
+		return genTypeDef(tt[0])
+	default:
+		switch {
+		case l.IsOptional(tt):
+			return pointer(genTypeDef(tt[1]))
+		case l.IsEither(tt):
+			leftType := pointer(genTypeDef(tt[0]).Tag(map[string]string{"json": "left"}))
+			rightType := pointer(genTypeDef(tt[1]).Tag(map[string]string{"json": "right"}))
+			left := j.Id(strings.Title("Left")).Add(leftType)
+			right := j.Id(strings.Title("Right")).Add(rightType)
+			return j.Struct(left, right)
+		}
+	}
+	return j.Interface()
 }

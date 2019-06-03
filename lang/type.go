@@ -1,29 +1,47 @@
+// package lang contains definitions of types, functions and all logic for Anzer code validation
 package lang
+
+/*
++----------------------------+
+|  ADT<---------------Basic  |
+|   ^ <-                ^    |
+|   |   \---            |    |
+|   |       \---        |    |
+|   |           \---    |    |
+|   |               \-  |    |
+|Complex<-----------Container|
++----------------------------+
+*/
 
 type T interface {
 	Equal(to T) bool
 	Subtype(of T) bool
 	Parent(of T) bool
+	Type() Type
 }
 
 const (
+	TypeNothing Type = iota
+	TypeAny
+	TypeRecord
+	TypeSum
 	TypeString Basic = iota
 	TypeInteger
 	TypeFloat
 	TypeBool
-	TypeMaxLength ConstructorType = iota
+	TypeMaxLength ContainerType = iota
 	TypeMinLength
 	TypeRight
 	TypeLeft
+	TypeJust
 	TypeList
-	TypeOptional
 )
+
+type Type int
 
 type NothingType struct{}
 
-var (
-	Nothing NothingType = NothingType{}
-)
+var Nothing NothingType = NothingType{}
 
 func (n NothingType) Equal(to T) bool {
 	if _, ok := to.(NothingType); ok {
@@ -40,17 +58,16 @@ func (n NothingType) Parent(of T) bool {
 	return false
 }
 
+func (n NothingType) Type() Type {
+	return TypeNothing
+}
+
 type AnyType struct{}
 
-var (
-	Any AnyType = AnyType{}
-)
+var Any AnyType = AnyType{}
 
 func (a AnyType) Equal(to T) bool {
-	if _, ok := to.(AnyType); ok {
-		return true
-	}
-	return false
+	return true
 }
 
 func (a AnyType) Subtype(of T) bool {
@@ -61,7 +78,11 @@ func (a AnyType) Parent(of T) bool {
 	return true
 }
 
-type Basic int
+func (a AnyType) Type() Type {
+	return TypeAny
+}
+
+type Basic Type
 
 func (b Basic) Equal(to T) bool {
 	switch t := to.(type) {
@@ -79,7 +100,16 @@ func (b Basic) Parent(of T) bool {
 }
 
 func (b Basic) Subtype(of T) bool {
-	return false
+	switch of.(type) {
+	case Sum:
+		return of.Parent(b)
+	default:
+		return false
+	}
+}
+
+func (b Basic) Type() Type {
+	return Type(b)
 }
 
 type Ref string
@@ -96,17 +126,21 @@ func (r Ref) Subtype(of T) bool {
 	return false
 }
 
-type Complex struct {
+func (r Ref) Type() Type {
+	return -1
+}
+
+type Record struct {
 	Fields map[string]T
 }
 
-func (c Complex) Equal(to T) bool {
+func (r Record) Equal(to T) bool {
 	switch t := to.(type) {
-	case Complex:
-		if len(c.Fields) != len(t.Fields) {
+	case Record:
+		if len(r.Fields) != len(t.Fields) {
 			return false
 		}
-		for n1, f1 := range c.Fields {
+		for n1, f1 := range r.Fields {
 			if f2, ok := t.Fields[n1]; ok {
 				if !f1.Equal(f2) {
 					return false
@@ -121,22 +155,54 @@ func (c Complex) Equal(to T) bool {
 	return true
 }
 
-func (c Complex) Parent(of T) bool {
+func (r Record) Parent(of T) bool {
 	if of == nil {
 		return false
 	}
-	return of.Subtype(c)
+	return of.Subtype(r)
 }
 
-func (c Complex) Subtype(of T) bool {
+func (r Record) Subtype(of T) bool {
 	switch t := of.(type) {
-	case Complex:
-		for n1, f1 := range c.Fields {
+	case Record:
+		for n1, f1 := range r.Fields {
 			if f2, ok := t.Fields[n1]; ok {
 				if !f1.Parent(f2) && !f1.Equal(f2) {
 					return false
 				}
 			} else {
+				return false
+			}
+		}
+	case Sum:
+		return of.Parent(r)
+	default:
+		return false
+	}
+	return true
+}
+
+func (r Record) Type() Type {
+	return TypeRecord
+}
+
+type Sum []T
+
+func (s Sum) Equal(to T) bool {
+	switch t := to.(type) {
+	case Sum:
+		if len(s) != len(t) {
+			return false
+		}
+		for _, f1 := range s {
+			existsEqual := false
+			for _, f2 := range t {
+				if f1.Equal(f2) {
+					existsEqual = true
+					break
+				}
+			}
+			if !existsEqual {
 				return false
 			}
 		}
@@ -146,28 +212,78 @@ func (c Complex) Subtype(of T) bool {
 	return true
 }
 
-type ConstructorType int
-
-type Constructor struct {
-	Operand   T
-	Type      ConstructorType
-	Arguments []interface{}
-}
-
-func Construct(parent T, constructor ConstructorType, arguments []interface{}) T {
-	return Constructor{
-		Operand:   parent,
-		Type:      constructor,
-		Arguments: arguments,
+func (s Sum) Parent(of T) bool {
+	if of == nil {
+		return false
+	}
+	switch oft := of.(type) {
+	case Sum:
+		for _, off := range oft {
+			existsEqual := false
+			for _, f := range s {
+				if off.Subtype(f) || off.Equal(f) {
+					existsEqual = true
+					break
+				}
+			}
+			if !existsEqual {
+				return false
+			}
+		}
+		return true
+	default:
+		for _, f := range s {
+			if of.Subtype(f) || of.Equal(f) {
+				return true
+			}
+		}
+		return false
 	}
 }
 
-func (c Constructor) Equal(to T) bool {
+func (s Sum) Subtype(of T) bool {
+	switch of.(type) {
+	case Sum:
+		return of.Parent(s)
+	}
+	return false
+}
+
+func (s Sum) Type() Type {
+	return TypeSum
+}
+
+func NewSum(types ...T) T {
+	return Sum(types)
+}
+
+type ContainerType Type
+
+type Container struct {
+	Operands    []T
+	ContainType ContainerType
+	Arguments   []interface{}
+}
+
+func Contain(parents []T, containType ContainerType, arguments []interface{}) T {
+	return Container{
+		Operands:    parents,
+		ContainType: containType,
+		Arguments:   arguments,
+	}
+}
+
+func (c Container) Equal(to T) bool {
 	switch t := to.(type) {
-	case Constructor:
-		if !c.Operand.Equal(t.Operand) ||
-			c.Type != t.Type {
+	case Container:
+		if len(c.Operands) != len(t.Operands) {
 			return false
+		}
+		for i, op1 := range c.Operands {
+			if !op1.Equal(t.Operands[i]) ||
+				c.Type() != t.Type() {
+				return false
+			}
 		}
 		if len(c.Arguments) != len(t.Arguments) {
 			return false
@@ -183,57 +299,96 @@ func (c Constructor) Equal(to T) bool {
 	return false
 }
 
-func (c Constructor) Parent(of T) bool {
+func (c Container) Parent(of T) bool {
 	if of == nil {
 		return false
 	}
 	return of.Subtype(c)
 }
 
-func (c Constructor) Subtype(of T) bool {
+func (c Container) Subtype(of T) bool {
 	switch t := of.(type) {
-	case Constructor:
+	case Container:
 		if c.Equal(t) {
 			return false
 		}
-		if c.Equal(t.Operand) || c.Subtype(t.Operand) {
-			return true
+		for i, op1 := range c.Operands {
+			if !op1.Equal(t.Operands[i]) && !op1.Subtype(t.Operands[i]) {
+				return false
+			}
+		}
+	case Basic, Record:
+		for _, op := range c.Operands {
+			if !op.Equal(of) {
+				return false
+			}
 		}
 	default:
-		if c.Operand.Equal(of) {
-			return true
-		}
+		return false
 	}
 
-	return false
+	return true
+}
+
+func (c Container) Type() Type {
+	return Type(c.ContainType)
+}
+
+func (c Container) FirstOperand() T {
+	if len(c.Operands) == 0 {
+		return nil
+	}
+	return c.Operands[0]
 }
 
 func MaxLength(parent T, length int) T {
 	if parent.Subtype(TypeString) || parent.Equal(TypeString) {
-		return Construct(parent, TypeMaxLength, []interface{}{length})
+		return Contain([]T{parent}, TypeMaxLength, []interface{}{length})
 	}
 	return nil
 }
 
 func MinLength(parent T, length int) T {
 	if parent.Subtype(TypeString) || parent.Equal(TypeString) {
-		return Construct(parent, TypeMinLength, []interface{}{length})
+		return Contain([]T{parent}, TypeMinLength, []interface{}{length})
 	}
 	return nil
 }
 
 func Right(parent T) T {
-	return Construct(parent, TypeRight, nil)
+	return Contain([]T{parent}, TypeRight, nil)
 }
 
 func Left(parent T) T {
-	return Construct(parent, TypeLeft, nil)
+	return Contain([]T{parent}, TypeLeft, nil)
 }
 
 func List(parent T) T {
-	return Construct(parent, TypeList, nil)
+	return Contain([]T{parent}, TypeList, nil)
+}
+
+func Just(parent T) T {
+	return Contain([]T{parent}, TypeJust, nil)
 }
 
 func Optional(parent T) T {
-	return Construct(parent, TypeOptional, nil)
+	return NewSum(Nothing, Just(parent))
+}
+
+func IsOptional(t T) bool {
+	if tt, ok := t.(Sum); ok && len(tt) > 1 && tt[0].Type() == TypeNothing && tt[1].Type() == Type(TypeJust) {
+		return true
+	}
+	return false
+}
+
+func Either(left, right T) T {
+	return NewSum(Left(left), Right(right))
+}
+
+func IsEither(t T) bool {
+	if tt, ok := t.(Sum); ok && len(tt) > 1 && tt[0].Type() == Type(TypeLeft) && tt[1].Type() == Type(TypeRight) {
+		return true
+	}
+	return false
 }

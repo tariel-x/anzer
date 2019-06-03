@@ -8,10 +8,11 @@ import (
 )
 
 var (
-	Source = `
+	SourceType = `
 type GreetingText = {
     text       :: String
     formatting :: *String
+	err        :: Either MaxLength 20 String Integer
 }
 //Comment for testing
 type Gift = {
@@ -29,58 +30,42 @@ type Gift = {
 type DeliverResult = Integer
 `
 
-	Expected = map[string]lang.T{
-		"GreetingText": lang.Complex{
+	ExpectedType = map[string]lang.T{
+		"GreetingText": lang.Record{
 			Fields: map[string]lang.T{
 				"text": lang.TypeString,
-				"formatting": lang.Constructor{
-					Operand:   lang.TypeString,
-					Type:      lang.TypeOptional,
-					Arguments: []interface{}(nil),
+				"formatting": lang.Sum{
+					lang.NothingType{},
+					lang.Just(lang.TypeString),
+				},
+				"err": lang.Sum{
+					lang.Left(lang.MaxLength(lang.TypeString, 20)),
+					lang.Right(lang.TypeInteger),
 				},
 			},
 		},
-		"Gift": lang.Complex{
+		"Gift": lang.Record{
 			Fields: map[string]lang.T{
-				"gift": lang.Complex{
+				"gift": lang.Record{
 					Fields: map[string]lang.T{
 						"name": lang.TypeString,
 						"size": lang.TypeInteger,
-						"age": lang.Constructor{
-							Operand:   lang.TypeInteger,
-							Type:      lang.TypeOptional,
-							Arguments: []interface{}(nil),
-						},
+						"age":  lang.Optional(lang.TypeInteger),
 					},
 				},
-				"greeting": lang.Constructor{
-					Operand: lang.Complex{
-						Fields: map[string]lang.T{
-							"author": lang.TypeString,
-							"text": lang.Complex{
-								Fields: map[string]lang.T{
-									"text": lang.TypeString,
-									"formatting": lang.Constructor{
-										Operand:   lang.TypeString,
-										Type:      lang.TypeOptional,
-										Arguments: []interface{}(nil),
-									},
-								},
+				"greeting": lang.List(lang.Record{
+					Fields: map[string]lang.T{
+						"author": lang.TypeString,
+						"text": lang.Record{
+							Fields: map[string]lang.T{
+								"text":       lang.TypeString,
+								"formatting": lang.Optional(lang.TypeString),
+								"err":        lang.Either(lang.MaxLength(lang.TypeString, 20), lang.TypeInteger),
 							},
 						},
 					},
-					Type:      lang.TypeList,
-					Arguments: []interface{}(nil),
-				},
-				"address": lang.Constructor{
-					Operand: lang.Constructor{
-						Operand:   lang.TypeString,
-						Type:      lang.TypeMaxLength,
-						Arguments: []interface{}{20},
-					},
-					Type:      lang.TypeMinLength,
-					Arguments: []interface{}{10},
-				},
+				}),
+				"address": lang.MinLength(lang.MaxLength(lang.TypeString, 20), 10),
 			},
 		},
 		"DeliverResult": lang.TypeInteger,
@@ -88,13 +73,13 @@ type DeliverResult = Integer
 )
 
 func TestParseType(t *testing.T) {
-	parser := New(Source)
-	result, err := parser.Parse()
+	parser := New(SourceType)
+	result, err := parser.ParseTypes()
 	if err != nil {
 		t.Error(err)
 	}
 
-	if diff := deep.Equal(result.Types, Expected); diff != nil {
+	if diff := deep.Equal(result, ExpectedType); diff != nil {
 		t.Error(diff)
 	}
 }

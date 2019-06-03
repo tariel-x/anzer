@@ -11,12 +11,12 @@ func TestAliasValid(t *testing.T) {
 			F{
 				Name:    "a",
 				TypeIn:  TypeString,
-				TypeOut: Construct(TypeString, TypeMaxLength, []interface{}{10}),
+				TypeOut: MaxLength(TypeString, 10),
 			},
 			F{
 				Name:   "b",
-				TypeIn: Construct(TypeString, TypeMaxLength, []interface{}{10}),
-				TypeOut: Complex{
+				TypeIn: MaxLength(TypeString, 10),
+				TypeOut: Record{
 					Fields: map[string]T{
 						"f1": TypeInteger,
 						"f2": TypeString,
@@ -25,7 +25,7 @@ func TestAliasValid(t *testing.T) {
 			},
 			F{
 				Name: "c",
-				TypeIn: Complex{
+				TypeIn: Record{
 					Fields: map[string]T{
 						"f1": TypeInteger,
 						"f2": TypeString,
@@ -52,8 +52,8 @@ func TestAliasInvalid(t *testing.T) {
 			},
 			F{
 				Name:   "b",
-				TypeIn: Construct(TypeString, TypeMaxLength, []interface{}{10}),
-				TypeOut: Complex{
+				TypeIn: MaxLength(TypeString, 10),
+				TypeOut: Record{
 					Fields: map[string]T{
 						"f2": TypeString,
 					},
@@ -61,7 +61,7 @@ func TestAliasInvalid(t *testing.T) {
 			},
 			F{
 				Name: "c",
-				TypeIn: Complex{
+				TypeIn: Record{
 					Fields: map[string]T{
 						"f1": TypeInteger,
 						"f2": TypeString,
@@ -76,3 +76,268 @@ func TestAliasInvalid(t *testing.T) {
 		t.Error("c must be invalid, but err is nil")
 	}
 }
+
+func TestBindValid(t *testing.T) {
+	errT := Record{
+		Fields: map[string]T{
+			"error": TypeString,
+			"code":  TypeInteger,
+		},
+	}
+	c := Alias{
+		Name: "c",
+		Compose: []Composable{
+			F{
+				Name:    "a",
+				TypeIn:  TypeString,
+				TypeOut: Either(TypeString, errT),
+			},
+			Bind(F{
+				Name:    "b",
+				TypeIn:  TypeString,
+				TypeOut: Either(TypeString, errT),
+			}),
+			F{
+				Name:    "c",
+				TypeIn:  Either(TypeString, errT),
+				TypeOut: Optional(errT),
+			},
+		},
+	}
+	err := c.Invalid()
+	if err != nil {
+		t.Errorf("c must be valid, but err is %q", err)
+	}
+}
+
+func TestBindInvalid1(t *testing.T) {
+	errT := Record{
+		Fields: map[string]T{
+			"error": TypeString,
+			"code":  TypeInteger,
+		},
+	}
+	c := Alias{
+		Name: "c",
+		Compose: []Composable{
+			F{
+				Name:    "a",
+				TypeIn:  TypeString,
+				TypeOut: Either(TypeString, errT),
+			},
+			Bind(F{
+				Name:    "b",
+				TypeIn:  TypeString,
+				TypeOut: Either(TypeString, errT),
+			}),
+			F{
+				Name:    "c",
+				TypeIn:  Either(TypeInteger, errT),
+				TypeOut: Optional(errT),
+			},
+		},
+	}
+	err := c.Invalid()
+	if err == nil {
+		t.Error("c must be invalid, but err is nil")
+	}
+}
+
+func TestBindInvalid2(t *testing.T) {
+	errT := Record{
+		Fields: map[string]T{
+			"error": TypeString,
+			"code":  TypeInteger,
+		},
+	}
+	c := Alias{
+		Name: "c",
+		Compose: []Composable{
+			F{
+				Name:    "a",
+				TypeIn:  TypeString,
+				TypeOut: Either(TypeString, errT),
+			},
+			Bind(F{
+				Name:    "b",
+				TypeIn:  TypeString,
+				TypeOut: Either(TypeString, errT),
+			}),
+			F{
+				Name:    "c",
+				TypeIn:  TypeString,
+				TypeOut: Optional(errT),
+			},
+		},
+	}
+	err := c.Invalid()
+	if err == nil {
+		t.Error("c must be invalid, but err is nil")
+	}
+}
+
+func TestBindInvalid3(t *testing.T) {
+	errT := Record{
+		Fields: map[string]T{
+			"error": TypeString,
+			"code":  TypeInteger,
+		},
+	}
+	c := Alias{
+		Name: "c",
+		Compose: []Composable{
+			F{
+				Name:    "a",
+				TypeIn:  TypeString,
+				TypeOut: Either(TypeString, errT),
+			},
+			Bind(F{
+				Name:    "b",
+				TypeIn:  TypeString,
+				TypeOut: Either(TypeString, TypeInteger),
+			}),
+			F{
+				Name:    "c",
+				TypeIn:  Either(TypeString, errT),
+				TypeOut: Optional(errT),
+			},
+		},
+	}
+	err := c.Invalid()
+	if err == nil {
+		t.Error("c must be invalid, but err is nil")
+	}
+}
+
+func TestBindInvalid4(t *testing.T) {
+	errT := Record{
+		Fields: map[string]T{
+			"error": TypeString,
+			"code":  TypeInteger,
+		},
+	}
+	c := Alias{
+		Name: "c",
+		Compose: []Composable{
+			F{
+				Name:    "a",
+				TypeIn:  TypeString,
+				TypeOut: Either(TypeString, TypeInteger),
+			},
+			Bind(F{
+				Name:    "b",
+				TypeIn:  TypeString,
+				TypeOut: Either(TypeString, errT),
+			}),
+			F{
+				Name:    "c",
+				TypeIn:  Either(TypeString, errT),
+				TypeOut: Optional(errT),
+			},
+		},
+	}
+	err := c.Invalid()
+	if err == nil {
+		t.Error("c must be invalid, but err is nil")
+	}
+}
+
+func TestBindInvalid5(t *testing.T) {
+	errT := Record{
+		Fields: map[string]T{
+			"error": TypeString,
+			"code":  TypeInteger,
+		},
+	}
+	c := Alias{
+		Name: "c",
+		Compose: []Composable{
+			F{
+				Name:    "a",
+				TypeIn:  TypeString,
+				TypeOut: TypeString,
+			},
+			Bind(F{
+				Name:    "b",
+				TypeIn:  TypeString,
+				TypeOut: Either(TypeString, errT),
+			}),
+			F{
+				Name:    "c",
+				TypeIn:  Either(TypeString, errT),
+				TypeOut: Optional(errT),
+			},
+		},
+	}
+	err := c.Invalid()
+	if err == nil {
+		t.Error("c must be invalid, but err is nil")
+	}
+}
+
+// func TestReturnValid(t *testing.T) {
+// 	errT := Record{
+// 		Fields: map[string]T{
+// 			"error": TypeString,
+// 			"code[": TypeInteger,
+// 		},
+// 	}
+// 	c := Alias{
+// 		Name: "c",
+// 		Compose: []Composable{
+// 			F{
+// 				Name:    "a",
+// 				TypeIn:  TypeString,
+// 				TypeOut: Either(TypeString, errT),
+// 			},
+// 			Bind(Return(F{
+// 				Name:    "b",
+// 				TypeIn:  TypeString,
+// 				TypeOut: TypeString,
+// 			})),
+// 			F{
+// 				Name:    "c",
+// 				TypeIn:  Either(TypeString, errT),
+// 				TypeOut: Optional(errT),
+// 			},
+// 		},
+// 	}
+// 	// TODO: either data type must be equal to Right a or Left b
+// 	err := c.Invalid()
+// 	if err != nil {
+// 		t.Errorf("c must be valid, but err is %s", err)
+// 	}
+// }
+
+// func TestReturnInvalid1(t *testing.T) {
+// 	errT := Record{
+// 		Fields: map[string]T{
+// 			"error": TypeString,
+// 			"code[": TypeInteger,
+// 		},
+// 	}
+// 	c := Alias{
+// 		Name: "c",
+// 		Compose: []Composable{
+// 			F{
+// 				Name:    "a",
+// 				TypeIn:  TypeString,
+// 				TypeOut: Either(TypeString, errT),
+// 			},
+// 			Return(F{
+// 				Name:    "b",
+// 				TypeIn:  TypeString,
+// 				TypeOut: TypeString,
+// 			}),
+// 			F{
+// 				Name:    "c",
+// 				TypeIn:  TypeString,
+// 				TypeOut: Optional(errT),
+// 			},
+// 		},
+// 	}
+// 	err := c.Invalid()
+// 	if err == nil {
+// 		t.Error("c must be invalid, but err is nil")
+// 	}
+// }

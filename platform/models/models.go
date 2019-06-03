@@ -1,3 +1,4 @@
+// package models stores types that are using in both platform package and FaaS-specific implementation package
 package models
 
 import "io"

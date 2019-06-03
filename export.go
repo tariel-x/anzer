@@ -20,6 +20,12 @@ func Export(c *cli.Context) error {
 	if input == "" {
 		return errNoInput
 	}
+
+	output := strings.TrimRight(c.String("output"), "/")
+	if output == "" {
+		output = "."
+	}
+
 	f, err := os.Open(input)
 	if err != nil {
 		return err
@@ -43,7 +49,7 @@ func Export(c *cli.Context) error {
 
 		for _, el := range chain {
 			log.Printf("build function %s", el.Definition())
-			if err := exportFunc(el, debug); err != nil {
+			if err := exportFunc(el, debug, output); err != nil {
 				return errors.Wrap(err, fmt.Sprintf("build function %s", el.Definition()))
 			}
 		}
@@ -51,12 +57,12 @@ func Export(c *cli.Context) error {
 	return nil
 }
 
-func exportFunc(f l.F, debug bool) error {
-	dockerGenerator, err := platform.GetDockerGenerator(f.Runtime)
+func exportFunc(f l.Runnable, debug bool, output string) error {
+	dockerGenerator, err := platform.GetDockerGenerator(f.GetRuntime())
 	if err != nil {
 		return err
 	}
-	opts, err := dockerGenerator.GetBuildOptions(f.Link, f.In(), f.Out(), debug)
+	opts, err := dockerGenerator.GetBuildOptions(f, debug)
 	if err != nil {
 		return err
 	}
@@ -66,7 +72,7 @@ func exportFunc(f l.F, debug bool) error {
 		return err
 	}
 
-	action, err := builder.BuildWithImage(opts, f.Link)
+	action, err := builder.BuildWithImage(opts, f.GetLink())
 	if err != nil {
 		return err
 	}
@@ -75,7 +81,7 @@ func exportFunc(f l.F, debug bool) error {
 		return err
 	}
 
-	name := strings.Replace(string(f.Link), "/", "_", -1)
+	name := strings.Replace(string(f.GetLink()), "/", "_", -1)
 
-	return ioutil.WriteFile(name+".zip", zipFile, 0666)
+	return ioutil.WriteFile(fmt.Sprintf("%s/%s.zip", output, name), zipFile, 0666)
 }

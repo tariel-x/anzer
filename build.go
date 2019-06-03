@@ -77,8 +77,8 @@ func buildCompose(compose l.Composable, plat platform.Platform) error {
 	return nil
 }
 
-func toChain(f l.Composable) ([]l.F, error) {
-	chain := []l.F{}
+func toChain(f l.Composable) ([]l.Runnable, error) {
+	chain := []l.Runnable{}
 	switch ft := f.(type) {
 	case l.Alias:
 		for _, sf := range ft.Compose {
@@ -90,16 +90,18 @@ func toChain(f l.Composable) ([]l.F, error) {
 		}
 	case l.F:
 		chain = append(chain, ft)
+	case l.EitherBind:
+		chain = append(chain, ft)
 	}
 	return chain, nil
 }
 
-func buildFunc(f l.F, plat platform.Platform) (models.PublishedFunction, error) {
-	dockerGenerator, err := platform.GetDockerGenerator(f.Runtime)
+func buildFunc(f l.Runnable, plat platform.Platform) (models.PublishedFunction, error) {
+	dockerGenerator, err := platform.GetDockerGenerator(f.GetRuntime())
 	if err != nil {
 		return models.PublishedFunction{}, err
 	}
-	opts, err := dockerGenerator.GetBuildOptions(f.Link, f.In(), f.Out(), false)
+	opts, err := dockerGenerator.GetBuildOptions(f, false)
 	if err != nil {
 		return models.PublishedFunction{}, err
 	}
@@ -109,13 +111,13 @@ func buildFunc(f l.F, plat platform.Platform) (models.PublishedFunction, error) 
 		return models.PublishedFunction{}, err
 	}
 
-	action, err := builder.BuildWithImage(opts, f.Link)
+	action, err := builder.BuildWithImage(opts, f.GetLink())
 	if err != nil {
 		return models.PublishedFunction{}, err
 	}
 
-	name := strings.Replace(string(f.Link), "/", "_", -1)
-	function, err := plat.Create(action, name, f.Runtime)
+	name := strings.Replace(string(f.GetLink()), "/", "_", -1)
+	function, err := plat.Create(action, name, f.GetRuntime())
 	if err != nil {
 		return models.PublishedFunction{}, err
 	}

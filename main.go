@@ -14,13 +14,14 @@ var (
 	errOutputUndefined   = errors.New("output is undefined")
 	errFunctionUndefined = errors.New("function is undefined")
 	errNoInput           = errors.New("no input")
+	errNoOutput          = errors.New("no output")
 )
 
 func main() {
 	app := cli.NewApp()
-	app.Name = "Anzer CLI tool"
+	app.Name = "Anzer"
 	app.Version = "2.0"
-	app.Usage = "generate new functions and build system"
+	app.Usage = "generate new functions and build typesafe serverless system"
 
 	inputFlag := cli.StringFlag{
 		Name:  "input, i",
@@ -82,6 +83,15 @@ func main() {
 				inputFlag,
 				outputFlag,
 				debugFlag,
+			},
+		},
+		{
+			Name:    "validate",
+			Aliases: []string{"v"},
+			Usage:   "validate anzer file",
+			Action:  Validate,
+			Flags: []cli.Flag{
+				inputFlag,
 			},
 		},
 	}

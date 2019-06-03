@@ -26,10 +26,11 @@ typeId : typeConstructor | typeScalar | typeOther ;
 
 // Tokens
 
-typeConstructor : typeMinLength | typeMaxLength | typeRight | typeLeft | typeList | typeOptional ;
+typeConstructor : typeMinLength | typeMaxLength | typeRight | typeLeft | typeList | typeOptional | typeEither ;
 
 typeMinLength : 'MinLength' ConstructorArg ;
 typeMaxLength : 'MaxLength' ConstructorArg ;
+typeEither : 'Either';
 typeRight : 'Right' ;
 typeLeft : 'Left' ;
 typeList : 'List' | '[]' ;
@@ -60,9 +61,13 @@ funcResult : typeId + ;
 
 // Local func
 
-localFuncDeclaration : funcName '=' (funcRef | '.')+ ;
+localFuncDeclaration : funcName '=' (funcRef | funcBind | '.')+ ;
 
 funcRef : LowIdent ;
+
+funcBind : '>>=' funcApplied;
+
+funcApplied : LowIdent;
 
 // Invoke
 
