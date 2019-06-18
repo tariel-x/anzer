@@ -35,6 +35,8 @@ invoke(create,)
 
 Anzer utility currently supports only [Apache OpenWhisk](http://openwhisk.apache.org/) and [Golang](https://golang.org/).
 
+See the [documentation](./doc/README.md) for details.
+
 ## As quick as possible start
 
 ### Setup
