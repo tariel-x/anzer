@@ -59,12 +59,14 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
-	"log"
 	"os"
 	"strings"
 
+	"github.com/rs/zerolog/log"
 	"{{ .PackagePath }}"
 )
+
+const name = "{{ .PackagePath }}"
 
 type whiskInput struct {
 	Value json.RawMessage ` + "`" + `json:"value"` + "`" + `
@@ -82,10 +84,10 @@ func main() {
 		filename := os.Getenv("OW_DEBUG")
 		f, err := os.OpenFile(filename, os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
 		if err == nil {
-			log.SetOutput(f)
+			log.Output(f)
 			defer f.Close()
 		}
-		log.Printf("ACTION ENV: %v", os.Environ())
+		log.Info().Str("f", name).Msgf("ACTION ENV: %v", os.Environ())
 	}
 
 	// input
@@ -95,19 +97,19 @@ func main() {
 
 	// read-eval-print loop
 	if debug {
-		log.Println("started")
+		log.Info().Str("f", name).Msg("started")
 	}
 	for {
 		// read one line
 		inbuf, err := reader.ReadBytes('\n')
 		if err != nil {
 			if err != io.EOF {
-				log.Println(err)
+				log.Error().Str("f", name).Err(err)
 			}
 			break
 		}
 		if debug {
-			log.Printf(">>>'%s'>>>", inbuf)
+			log.Info().Str("f", name).Msgf(">>>'%s'>>>", inbuf)
 		}
 
 		// parse one line
@@ -122,7 +124,7 @@ func main() {
 			continue
 		}
 		
-		log.Printf("RAW %v\n", raw)
+		log.Info().Str("f", name).Msgf("RAW %v\n", raw)
 
 		setEnvironment(raw)
 
@@ -135,14 +137,14 @@ func main() {
 
 		output = bytes.Replace(output, []byte("\n"), []byte(""), -1)
 		if debug {
-			log.Printf("'<<<%s'<<<", output)
+			log.Info().Str("f", name).Msgf("'<<<%s'<<<", output)
 		}
 		fmt.Fprintf(out, "%s\n", output)
 	}
 }
 
 func printError(out io.Writer, err error) {
-	log.Println(err.Error())
+	log.Error().Str("f", name).Err(err)
 	fmt.Fprintf(out, "{ error: %q}\n", err.Error())
 }
 
@@ -162,11 +164,11 @@ func callHandler(input whiskInput) (whiskOutput, error) {
 	if err := json.Unmarshal(input.Value, &anzHandlerInput); err != nil {
 		return whiskOutput{}, err
 	}
-	log.Printf("ANZ HANDLER IN %#v\n", anzHandlerInput)
+	log.Info().Str("f", name).Msgf("ANZ HANDLER IN %#v\n", anzHandlerInput)
 	anzHandlerOutput := {{ .Package }}.Handle({{ .Package }}.TypeIn(anzHandlerInput))
 	handlerOutput := AnzerOut(anzHandlerOutput)
 	output, err := json.Marshal(handlerOutput)
-	log.Printf("ANZ HANDLER OUT %v\n", string(output))
+	log.Info().Str("f", name).Msgf("ANZ HANDLER OUT %v\n", string(output))
 	return output, err
 }
 
@@ -186,12 +188,14 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
-	"log"
 	"os"
 	"strings"
 
+	"github.com/rs/zerolog/log"
 	"{{ .PackagePath }}"
 )
+
+const name = "{{ .PackagePath }}"
 
 type whiskInput struct {
 	Value json.RawMessage ` + "`" + `json:"value"` + "`" + `
@@ -209,10 +213,10 @@ func main() {
 		filename := os.Getenv("OW_DEBUG")
 		f, err := os.OpenFile(filename, os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
 		if err == nil {
-			log.SetOutput(f)
+			log.Output(f)
 			defer f.Close()
 		}
-		log.Printf("ACTION ENV: %v", os.Environ())
+		log.Info().Str("f", name).Msgf("ACTION ENV: %v", os.Environ())
 	}
 
 	// input
@@ -222,19 +226,19 @@ func main() {
 
 	// read-eval-print loop
 	if debug {
-		log.Println("started")
+		log.Info().Str("f", name).Msg("started")
 	}
 	for {
 		// read one line
 		inbuf, err := reader.ReadBytes('\n')
 		if err != nil {
 			if err != io.EOF {
-				log.Println(err)
+				log.Error().Str("f", name).Err(err)
 			}
 			break
 		}
 		if debug {
-			log.Printf(">>>'%s'>>>", inbuf)
+			log.Info().Str("f", name).Msgf(">>>'%s'>>>", inbuf)
 		}
 
 		// parse one line
@@ -248,8 +252,8 @@ func main() {
 			printError(out, err)
 			continue
 		}
-
-		log.Printf("RAW %v\n", raw)
+		
+		log.Info().Str("f", name).Msgf("RAW %v\n", raw)
 
 		setEnvironment(raw)
 
@@ -262,14 +266,14 @@ func main() {
 
 		output = bytes.Replace(output, []byte("\n"), []byte(""), -1)
 		if debug {
-			log.Printf("'<<<%s'<<<", output)
+			log.Info().Str("f", name).Msgf("'<<<%s'<<<", output)
 		}
 		fmt.Fprintf(out, "%s\n", output)
 	}
 }
 
 func printError(out io.Writer, err error) {
-	log.Println(err.Error())
+	log.Error().Str("f", name).Err(err)
 	fmt.Fprintf(out, "{ error: %q}\n", err.Error())
 }
 
@@ -289,16 +293,16 @@ func process(input whiskInput) (whiskOutput, error) {
 	if err := json.Unmarshal(input.Value, &anzHandlerInput); err != nil {
 		return whiskOutput{}, err
 	}
-	log.Printf("ANZ HANDLER IN %#v\n", anzHandlerInput)
+	log.Info().Str("f", name).Msgf("ANZ HANDLER IN %#v\n", anzHandlerInput)
 	handlerOutput := callHandler(anzHandlerInput)
 	output, err := json.Marshal(handlerOutput)
-	log.Printf("ANZ HANDLER OUT %v\n", string(output))
+	log.Info().Str("f", name).Msgf("ANZ HANDLER OUT %v\n", string(output))
 	return output, err
 }
 
 func callHandler(anzHandlerInput AnzerIn) AnzerOut {
 	if anzHandlerInput.Right != nil {
-		log.Printf("ANZ HANDLER GOT ERROR, PASS FURTHER %v\n", *anzHandlerInput.Right)
+		log.Info().Str("f", name).Msgf("ANZ HANDLER GOT ERROR, PASS FURTHER %v\n", *anzHandlerInput.Right)
 		return AnzerOut{
 			Left:  nil,
 			Right: anzHandlerInput.Right,
