@@ -88,7 +88,7 @@ curl -X POST \
   -H 'Content-Type: application/json' \
   -d '{
     "name": "Opel",
-    "model": "Astra J",
+    "model": "Astra;J",
     "phone": "79095544445",
     "price": 500.50,
     "photos": [
@@ -102,17 +102,12 @@ The expected result is:
 
 ```json
 {
-    "body": null,
-    "brand": "Opel",
-    "generation": "J",
-    "id": 38081,
-    "model": "Astra",
-    "phone": "+790911222233",
-    "photos": [
-        "http://storage.org/photo.jpeg"
-    ],
-    "price": 55000,
-    "year": 2014
+    "car": {
+        "brand": "Opel",
+        "model": "Astra"
+    },
+    "err": null,
+    "id": 38081
 }
 ```
 
