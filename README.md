@@ -45,6 +45,18 @@ See the [documentation](./doc/README.md) for details.
 2. Download and install wsk utility from [github page](https://github.com/apache/incubator-openwhisk-cli/releases).
 3. Find working Apache OpenWhisk instance.
 
+#### With IBM CloudFunctions
+
+1. Register at [cloud.ibm.com](https://cloud.ibm.com).
+2. Follow the instruction at [cloud.ibm.com/openwhisk/learn/cli](https://cloud.ibm.com/openwhisk/learn/cli).
+3. Check the settings with `wsk action list`. Also `~/.wskprops` must contain something like the following.
+```
+APIHOST=eu-gb.functions.cloud.ibm.com
+NAMESPACE=_
+AUTH=short_token
+APIGW_ACCESS_TOKEN=big_token
+```
+
 ### Download Anzer
 
 ```bash
