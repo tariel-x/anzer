@@ -28,7 +28,7 @@ type Error = {
     error :: String
 }
 github.com/project/prepare[go] :: Source -> Either Prepared Error
-github.com/project/save[go] :: Prepared -> Product
+github.com/project/save[go] :: Prepared -> Either Product Error
 create = prepare >>= save
 invoke(create,)
 ```
