@@ -4,6 +4,9 @@ go:
 env:
   - "PATH=/home/travis/gopath/bin:$PATH"
   - "GO111MODULE=on"
+branches:
+  only:
+    - master
 before_install:
   - go get github.com/mitchellh/gox
   - go get github.com/tcnksm/ghr
@@ -15,4 +18,4 @@ script:
   - goveralls -coverprofile=coverage.out -service travis-ci -repotoken $COVERALLS_TOKEN
 after_success:
   - gox -arch="amd64" -os="darwin windows linux" -output "dist/{{.OS}}_{{.Arch}}_{{.Dir}}"
-  - ghr --username tariel-x --token $GITHUB_TOKEN --replace --prerelease --debug pre-release dist/
+  - ghr --username tariel-x --token $GITHUB_TOKEN --replace --prerelease --debug latest dist/
