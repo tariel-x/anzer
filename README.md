@@ -67,7 +67,17 @@ For example for linux:
 ```bash
 sudo curl -L "https://github.com/tariel-x/anzer/releases/download/latest/linux_amd64_anzer" -o /usr/local/bin/anzer
 sudo chmod +x /usr/local/bin/anzer
+anzer help
 ```
+
+For OS X:
+
+```bash
+sudo curl -L "https://github.com/tariel-x/anzer/releases/download/latest/darwin_amd64_anzer" -o /usr/local/bin/anzer
+sudo chmod +x /usr/local/bin/anzer
+anzer help
+```
+
 
 #### With go installed
 
