@@ -65,7 +65,7 @@ Download suitable binary from [realizes page](https://github.com/tariel-x/anzer/
 For example for linux:
 
 ```bash
-sudo curl -L "https://github.com/tariel-x/anzer/releases/download/pre-release/linux_amd64_anzer" -o /usr/local/bin/anzer
+sudo curl -L "https://github.com/tariel-x/anzer/releases/download/latest/linux_amd64_anzer" -o /usr/local/bin/anzer
 sudo chmod +x /usr/local/bin/anzer
 ```
 
