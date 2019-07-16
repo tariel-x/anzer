@@ -105,6 +105,11 @@ func buildFunc(f l.Runnable, plat platform.Platform) (models.PublishedFunction, 
 	if err != nil {
 		return models.PublishedFunction{}, err
 	}
+	env, err := getEnv()
+	if err != nil {
+		return models.PublishedFunction{}, err
+	}
+	opts.Env = env
 
 	builder, err := platform.NewBuilder()
 	if err != nil {
