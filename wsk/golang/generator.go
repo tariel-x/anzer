@@ -75,8 +75,8 @@ func (g Generator) GenerateFunc(inT, outT l.T, link l.FunctionLink) (string, err
 		TypeOut:   genType(outT, "TypeOut"),
 		Package:   packageName,
 	}
-
-	return result.String(), funcTemplate.Execute(&result, templateArgs)
+	err := funcTemplate.Execute(&result, templateArgs)
+	return result.String(), err
 }
 
 func (g Generator) GenerateDocker(debug bool) (string, error) {
@@ -87,8 +87,8 @@ func (g Generator) GenerateDocker(debug bool) (string, error) {
 	}{
 		Debug: debug,
 	}
-
-	return result.String(), dockerfileTemplate.Execute(&result, templateArgs)
+	err := dockerfileTemplate.Execute(&result, templateArgs)
+	return result.String(), err
 }
 
 func (g Generator) GenerateMakefile() string {

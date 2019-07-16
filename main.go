@@ -21,7 +21,7 @@ var (
 func main() {
 	app := cli.NewApp()
 	app.Name = "Anzer"
-	app.Version = "2.0"
+	app.Version = "1.0"
 	app.Usage = "generate new functions and build typesafe serverless system"
 
 	inputFlag := cli.StringFlag{

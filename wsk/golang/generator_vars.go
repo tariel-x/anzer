@@ -4,11 +4,11 @@ import (
 	"text/template"
 )
 
-var dockerfileTemplate = template.Must(template.New("").Parse(`
-FROM tarielx/anzer:latest
+var dockerfileTemplate = template.Must(template.New("").Parse(`FROM tarielx/anzer:latest
 ARG GOPROXY
 WORKDIR /exec
 COPY main.go main.go
+RUN echo $GOPROXY
 RUN go mod init github.com/anzer/exec
 RUN go build
 {{if .Debug}}
