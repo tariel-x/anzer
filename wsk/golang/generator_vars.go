@@ -6,6 +6,7 @@ import (
 
 var dockerfile = `
 FROM tarielx/anzer:latest
+ARG GOPROXY
 WORKDIR /exec
 COPY main.go main.go
 RUN go mod init github.com/anzer/exec
@@ -15,6 +16,7 @@ RUN zip action.zip exec
 
 var dockerfileDebug = `
 FROM tarielx/anzer:latest
+ARG GOPROXY
 WORKDIR /exec
 COPY main.go main.go
 RUN go mod init github.com/anzer/exec
