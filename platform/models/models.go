@@ -7,6 +7,7 @@ type BuildWithImageOpts struct {
 	Source     io.Reader
 	ActionPath string
 	Debug      bool
+	Env        map[string]*string
 }
 
 type PublishedFunction struct {

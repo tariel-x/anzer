@@ -6,6 +6,7 @@ import (
 	"log"
 	"os"
 
+	"github.com/joho/godotenv"
 	"github.com/tariel-x/anzer/platform"
 	"github.com/urfave/cli"
 )
@@ -20,7 +21,7 @@ var (
 func main() {
 	app := cli.NewApp()
 	app.Name = "Anzer"
-	app.Version = "2.0"
+	app.Version = "1.0"
 	app.Usage = "generate new functions and build typesafe serverless system"
 
 	inputFlag := cli.StringFlag{
@@ -112,4 +113,16 @@ func getPlatform(c *cli.Context) (platform.Platform, error) {
 		return nil, err
 	}
 	return plat, nil
+}
+
+func getEnv() (map[string]*string, error) {
+	readedEnvs, err := godotenv.Read()
+	if err != nil {
+		return nil, err
+	}
+	env := map[string]*string{}
+	for k, v := range readedEnvs {
+		env[k] = &v
+	}
+	return env, nil
 }

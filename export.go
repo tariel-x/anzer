@@ -66,6 +66,11 @@ func exportFunc(f l.Runnable, debug bool, output string) error {
 	if err != nil {
 		return err
 	}
+	env, err := getEnv()
+	if err != nil {
+		return err
+	}
+	opts.Env = env
 
 	builder, err := platform.NewBuilder()
 	if err != nil {

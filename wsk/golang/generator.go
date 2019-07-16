@@ -63,7 +63,8 @@ func (g Generator) GenerateFunc(inT, outT l.T, link l.FunctionLink) (string, err
 	packageName := packageElements[len(packageElements)-1]
 
 	var result bytes.Buffer
-	err := funcTemplate.Execute(&result, struct {
+
+	templateArgs := struct {
 		Timestamp time.Time
 		TypeIn    string
 		TypeOut   string
@@ -73,15 +74,21 @@ func (g Generator) GenerateFunc(inT, outT l.T, link l.FunctionLink) (string, err
 		TypeIn:    genType(inT, "TypeIn"),
 		TypeOut:   genType(outT, "TypeOut"),
 		Package:   packageName,
-	})
+	}
+	err := funcTemplate.Execute(&result, templateArgs)
 	return result.String(), err
 }
 
-func (g Generator) GenerateDocker(debug bool) string {
-	if debug {
-		return dockerfileDebug
+func (g Generator) GenerateDocker(debug bool) (string, error) {
+	var result bytes.Buffer
+
+	templateArgs := struct {
+		Debug bool
+	}{
+		Debug: debug,
 	}
-	return dockerfile
+	err := dockerfileTemplate.Execute(&result, templateArgs)
+	return result.String(), err
 }
 
 func (g Generator) GenerateMakefile() string {

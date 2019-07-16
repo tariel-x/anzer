@@ -27,7 +27,10 @@ func (dg DockerGenerator) GetBuildOptions(f l.Runnable, debug bool) (*models.Bui
 	if err != nil {
 		return nil, err
 	}
-	dockerfile := dg.generator.GenerateDocker(debug)
+	dockerfile, err := dg.generator.GenerateDocker(debug)
+	if err != nil {
+		return nil, err
+	}
 
 	var buf bytes.Buffer
 	tw := tar.NewWriter(&buf)
