@@ -55,8 +55,7 @@ import (
 	"io"
 	"os"
 	"strings"
-
-	"github.com/rs/zerolog/log"
+	"log"
 	"{{ .PackagePath }}"
 )
 
@@ -78,10 +77,10 @@ func main() {
 		filename := os.Getenv("OW_DEBUG")
 		f, err := os.OpenFile(filename, os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
 		if err == nil {
-			log.Output(f)
+			log.SetOutput(f)
 			defer f.Close()
 		}
-		log.Info().Str("f", name).Msgf("ACTION ENV: %v", os.Environ())
+		log.Printf("Function %s, action env: %v", name, os.Environ())
 	}
 
 	// input
@@ -91,19 +90,19 @@ func main() {
 
 	// read-eval-print loop
 	if debug {
-		log.Info().Str("f", name).Msg("started")
+		log.Printf("Function %s, started", name)
 	}
 	for {
 		// read one line
 		inbuf, err := reader.ReadBytes('\n')
 		if err != nil {
 			if err != io.EOF {
-				log.Error().Str("f", name).Err(err)
+				log.Printf("Function %s, err %s", name, err)
 			}
 			break
 		}
 		if debug {
-			log.Info().Str("f", name).Msgf(">>>'%s'>>>", inbuf)
+			log.Printf("Function %s, >>>'%s'>>>", name, inbuf)
 		}
 
 		// parse one line
@@ -118,7 +117,7 @@ func main() {
 			continue
 		}
 		
-		log.Info().Str("f", name).Msgf("RAW %v\n", raw)
+		log.Printf("Function %s, RAW %v", name, raw)
 
 		setEnvironment(raw)
 
@@ -131,14 +130,14 @@ func main() {
 
 		output = bytes.Replace(output, []byte("\n"), []byte(""), -1)
 		if debug {
-			log.Info().Str("f", name).Msgf("'<<<%s'<<<", output)
+			log.Printf("Function %s, '<<<%s'<<<", name, output)
 		}
 		fmt.Fprintf(out, "%s\n", output)
 	}
 }
 
 func printError(out io.Writer, err error) {
-	log.Error().Str("f", name).Err(err)
+	log.Printf("Function %s, err %s", name, err)
 	fmt.Fprintf(out, "{ error: %q}\n", err.Error())
 }
 
@@ -158,17 +157,17 @@ func process(input whiskInput) (whiskOutput, error) {
 	if err := json.Unmarshal(input.Value, &anzHandlerInput); err != nil {
 		return whiskOutput{}, err
 	}
-	log.Info().Str("f", name).Msgf("ANZ HANDLER IN %#v\n", anzHandlerInput)
+	log.Printf("Function %s, anzer handler in %#v", name, anzHandlerInput)
 	handlerOutput := callHandler(anzHandlerInput)
 	output, err := json.Marshal(handlerOutput)
-	log.Info().Str("f", name).Msgf("ANZ HANDLER OUT %v\n", string(output))
+	log.Printf("Function %s, anzer handler out %v", name, string(output))
 	return output, err
 }
 
 func callHandler(anzHandlerInput AnzerIn) AnzerOut {
 	{{if .Either}}
 	if anzHandlerInput.Right != nil {
-		log.Info().Str("f", name).Msgf("ANZ HANDLER GOT ERROR, PASS FURTHER %v\n", *anzHandlerInput.Right)
+		log.Printf("Function %s, anzer error, pass further %v", name, *anzHandlerInput.Right)
 		return AnzerOut{
 			Left:  nil,
 			Right: anzHandlerInput.Right,
