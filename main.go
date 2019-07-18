@@ -116,6 +116,10 @@ func getPlatform(c *cli.Context) (platform.Platform, error) {
 }
 
 func getEnv() (map[string]*string, error) {
+	if _, err := os.Stat(".env"); os.IsNotExist(err) {
+		return nil, nil
+	}
+
 	readedEnvs, err := godotenv.Read()
 	if err != nil {
 		return nil, err

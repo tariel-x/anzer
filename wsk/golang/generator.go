@@ -36,21 +36,17 @@ func (g Generator) Generate(f l.Runnable) (string, error) {
 		AnzerOut    string
 		PackagePath string
 		Package     string
+		Either      bool
 	}{
 		Timestamp:   time.Now(),
 		AnzerIn:     genType(f.In(), "AnzerIn"),
 		AnzerOut:    genType(f.Out(), "AnzerOut"),
 		PackagePath: packagePath,
 		Package:     packageElements[len(packageElements)-1],
+		Either:      f.IsEither(),
 	}
 
-	var err error
-	if !f.IsEither() {
-		err = execTemplate.Execute(&result, templateArgs)
-	} else {
-		err = execTemplateEither.Execute(&result, templateArgs)
-	}
-
+	err := execTemplate.Execute(&result, templateArgs)
 	return result.String(), err
 }
 
