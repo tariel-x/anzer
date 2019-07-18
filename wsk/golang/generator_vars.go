@@ -13,8 +13,10 @@ RUN go mod init github.com/anzer/exec
 RUN go build
 {{if .Debug}}
 RUN go mod vendor
-{{end}}
+RUN zip -r action.zip *
+{{else}}
 RUN zip action.zip exec
+{{end}}
 `))
 
 var makefile = `
@@ -89,9 +91,8 @@ func main() {
 	reader := bufio.NewReader(os.Stdin)
 
 	// read-eval-print loop
-	if debug {
-		log.Printf("Function %s, started", name)
-	}
+	log.Printf("Function %s, started", name)
+	
 	for {
 		// read one line
 		inbuf, err := reader.ReadBytes('\n')
