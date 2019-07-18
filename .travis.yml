@@ -17,4 +17,4 @@ script:
   - goveralls -coverprofile=coverage.out -service travis-ci -repotoken $COVERALLS_TOKEN
 after_success:
   - gox -arch="amd64" -os="darwin windows linux" -output "dist/{{.OS}}_{{.Arch}}_{{.Dir}}"
-  - ghr --username tariel-x --token $GITHUB_TOKEN --replace --prerelease --debug latest dist/
+  - ghr -u tariel-x -t $GITHUB_TOKEN -replace -prerelease latest dist/
