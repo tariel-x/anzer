@@ -59,7 +59,7 @@ func (b Builder) BuildWithImage(opts *models.BuildWithImageOpts, link l.Function
 	name := strings.Replace(string(link), "/", "_", -1)
 	tag := name + ":latest"
 	tags := []string{tag}
-	if err := b.buildImage(opts.Source, tags); err != nil {
+	if err := b.buildImage(opts.Source, tags, opts.Env); err != nil {
 		return nil, err
 	}
 	containerID, err := b.runImage(tag, nil)
@@ -86,8 +86,7 @@ func (b Builder) BuildWithImage(opts *models.BuildWithImageOpts, link l.Function
 	return nil, nil
 }
 
-func (b Builder) buildImage(source io.Reader, tags []string) error {
-	args := map[string]*string{}
+func (b Builder) buildImage(source io.Reader, tags []string, args map[string]*string) error {
 	options := types.ImageBuildOptions{
 		SuppressOutput: false,
 		Remove:         true,

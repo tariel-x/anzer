@@ -4,24 +4,18 @@ import (
 	"text/template"
 )
 
-var dockerfile = `
-FROM tarielx/anzer:latest
+var dockerfileTemplate = template.Must(template.New("").Parse(`FROM tarielx/anzer:latest
+ARG GOPROXY
 WORKDIR /exec
 COPY main.go main.go
+RUN echo $GOPROXY
 RUN go mod init github.com/anzer/exec
 RUN go build
-RUN zip action.zip exec
-`
-
-var dockerfileDebug = `
-FROM tarielx/anzer:latest
-WORKDIR /exec
-COPY main.go main.go
-RUN go mod init github.com/anzer/exec
-RUN go build
+{{if .Debug}}
 RUN go mod vendor
-RUN zip -r action.zip *
-`
+{{end}}
+RUN zip action.zip exec
+`))
 
 var makefile = `
 all: init build zip

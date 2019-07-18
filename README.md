@@ -136,3 +136,9 @@ The expected result is:
 ## Full documentation
 
 Full documentation is in progress...
+
+## Roadmap
+
+1. Partial building of the scheme and deploying of the functions. Would be used *.anz.sum file for fixation of the versions.
+2. Full support of OR-types and pattern-matching in the scheme.
+3. Remake subsystem for building functions.
