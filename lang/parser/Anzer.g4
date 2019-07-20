@@ -6,7 +6,12 @@ form : typeDeclaration
     | funcDeclaration
     | localFuncDeclaration
     | invokeCmd
+    | packageDeclaration
     ;
+
+packageDeclaration: 'package' packageName;
+
+packageName: LowIdent | UpperIdent;
 
 typeDeclaration : 'type' typeName '=' typeDefinition;
 

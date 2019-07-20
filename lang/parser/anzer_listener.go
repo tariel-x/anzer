@@ -14,6 +14,12 @@ type AnzerListener interface {
 	// EnterForm is called when entering the form production.
 	EnterForm(c *FormContext)
 
+	// EnterPackageDeclaration is called when entering the packageDeclaration production.
+	EnterPackageDeclaration(c *PackageDeclarationContext)
+
+	// EnterPackageName is called when entering the packageName production.
+	EnterPackageName(c *PackageNameContext)
+
 	// EnterTypeDeclaration is called when entering the typeDeclaration production.
 	EnterTypeDeclaration(c *TypeDeclarationContext)
 
@@ -121,6 +127,12 @@ type AnzerListener interface {
 
 	// ExitForm is called when exiting the form production.
 	ExitForm(c *FormContext)
+
+	// ExitPackageDeclaration is called when exiting the packageDeclaration production.
+	ExitPackageDeclaration(c *PackageDeclarationContext)
+
+	// ExitPackageName is called when exiting the packageName production.
+	ExitPackageName(c *PackageNameContext)
 
 	// ExitTypeDeclaration is called when exiting the typeDeclaration production.
 	ExitTypeDeclaration(c *TypeDeclarationContext)

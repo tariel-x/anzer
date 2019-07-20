@@ -18,15 +18,17 @@ type stubLogger struct{}
 func (l stubLogger) Debug(args ...interface{}) {}
 
 var (
-	ErrTypeRefUnreachable = errors.New("Type reference can not be reached")
-	ErrFuncRefUnreachable = errors.New("Function reference can not be reached")
-	ErrFuncTypeIncorrect  = errors.New("Func type is incorrect")
+	ErrTypeRefUnreachable  = errors.New("Type reference can not be reached")
+	ErrFuncRefUnreachable  = errors.New("Function reference can not be reached")
+	ErrFuncTypeIncorrect   = errors.New("Func type is incorrect")
+	ErrNoPackageDefinition = errors.New("Source does not contain package definition")
 )
 
 // Parser contains source code and temporary internal representation which is used to build final internal representation.
 type Parser struct {
 	logger  Logger
 	source  string
+	pkg     string
 	types   map[string]lang.T
 	funcs   map[string]lang.Composable
 	invokes []lang.InternalReference
@@ -47,6 +49,9 @@ func New(source string) Parser {
 // ParseLazy returns internal representation only for types and functions that are mentioned in the `invoke` instruction.
 func (parser *Parser) ParseLazy() ([]lang.Composable, error) {
 	parser.buildTree()
+	if parser.pkg == "" {
+		return nil, ErrNoPackageDefinition
+	}
 
 	result := []lang.Composable{}
 	for _, invk := range parser.invokes {
@@ -62,6 +67,9 @@ func (parser *Parser) ParseLazy() ([]lang.Composable, error) {
 // ParseAll returns internal representation for all types and functions from the source code.
 func (parser *Parser) ParseAll() ([]lang.Composable, error) {
 	parser.buildTree()
+	if parser.pkg == "" {
+		return nil, ErrNoPackageDefinition
+	}
 
 	composesMap, err := parser.resolveFuncs(parser.funcs)
 	if err != nil {
@@ -259,6 +267,10 @@ func (l *listener) EnterEveryRule(ctx antlr.ParserRuleContext) {
 
 func (l *listener) ExitEveryRule(ctx antlr.ParserRuleContext) {
 	l.parser.logger.Debug("  <- " + ctx.GetText())
+}
+
+func (l *listener) EnterPackageName(ctx *PackageNameContext) {
+	l.parser.pkg = ctx.GetText()
 }
 
 func (l *listener) EnterTypeDeclaration(ctx *TypeDeclarationContext) {

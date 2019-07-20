@@ -7,6 +7,8 @@ For example the following scheme describes two services and
 their communication.
 
 ```haskell
+package test
+
 type Source = {
     name  :: String
     price :: Float

@@ -33,6 +33,18 @@ func (s *BaseAnzerListener) EnterForm(ctx *FormContext) {}
 // ExitForm is called when production form is exited.
 func (s *BaseAnzerListener) ExitForm(ctx *FormContext) {}
 
+// EnterPackageDeclaration is called when production packageDeclaration is entered.
+func (s *BaseAnzerListener) EnterPackageDeclaration(ctx *PackageDeclarationContext) {}
+
+// ExitPackageDeclaration is called when production packageDeclaration is exited.
+func (s *BaseAnzerListener) ExitPackageDeclaration(ctx *PackageDeclarationContext) {}
+
+// EnterPackageName is called when production packageName is entered.
+func (s *BaseAnzerListener) EnterPackageName(ctx *PackageNameContext) {}
+
+// ExitPackageName is called when production packageName is exited.
+func (s *BaseAnzerListener) ExitPackageName(ctx *PackageNameContext) {}
+
 // EnterTypeDeclaration is called when production typeDeclaration is entered.
 func (s *BaseAnzerListener) EnterTypeDeclaration(ctx *TypeDeclarationContext) {}
 
