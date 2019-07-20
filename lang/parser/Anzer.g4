@@ -46,7 +46,7 @@ typeScalar : typeString | typeInteger | typeFloat | typeBool ;
 typeString : 'String' ;
 typeInteger : 'Integer' ;
 typeFloat : 'Float' ;
-typeBool : 'Bool' ;
+typeBool : 'Bool' | 'Boolean' ;
 
 typeOther : UpperIdent ;
 

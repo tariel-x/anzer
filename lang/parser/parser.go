@@ -2,6 +2,7 @@
 package parser
 
 import (
+	"fmt"
 	"strconv"
 
 	"github.com/antlr/antlr4/runtime/Go/antlr"
@@ -188,17 +189,17 @@ func (parser *Parser) resolveFunc(f lang.Composable) (lang.Composable, error) {
 		var err error
 		ff.TypeIn, err = parser.resolveType(ff.TypeIn)
 		if err != nil {
-			return nil, errors.Wrap(ErrFuncTypeIncorrect, ff.Name)
+			return nil, errors.Wrap(err, fmt.Sprintf("%s %s", ErrFuncTypeIncorrect.Error(), ff.Name))
 		}
 		ff.TypeOut, err = parser.resolveType(ff.TypeOut)
 		if err != nil {
-			return nil, errors.Wrap(ErrFuncTypeIncorrect, ff.Name)
+			return nil, errors.Wrap(err, fmt.Sprintf("%s %s", ErrFuncTypeIncorrect.Error(), ff.Name))
 		}
 		return ff, nil
 	case lang.EitherBind:
 		argF, err := parser.resolveFunc(ff.Argument)
 		if err != nil {
-			return nil, errors.Wrap(ErrFuncTypeIncorrect, ">>= "+ff.Argument.GetName())
+			return nil, errors.Wrap(err, fmt.Sprintf("%s >>= %s", ErrFuncTypeIncorrect.Error(), ff.Argument.GetName()))
 		}
 		ff.Argument = argF
 		return ff, nil
