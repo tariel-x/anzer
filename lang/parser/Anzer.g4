@@ -86,7 +86,7 @@ fragment Letter : [A-Za-z_] ;
 fragment LowLetter : [a-z] ;
 fragment UpperLetter : [A-Z] ;
 fragment DecimalDigit: [0-9] ;
-fragment Urlpart : ('-' | Letter | DecimalDigit ) ;
+fragment Urlpart : ('-' | '_' | '.' | Letter | DecimalDigit ) ;
 
 LowIdent : LowLetter (Letter | DecimalDigit)* ;
 
