@@ -14,6 +14,10 @@ import (
 	"github.com/urfave/cli"
 )
 
+const (
+	defaultCacheLocation = "~/.anzer_cache"
+)
+
 func Build(c *cli.Context) error {
 	plat, err := getPlatform(c)
 	if err != nil {
@@ -32,6 +36,13 @@ func Build(c *cli.Context) error {
 		return err
 	}
 	defer f.Close()
+
+	cacheLocation := defaultCacheLocation
+	if c.String("cacheLocation") != "" {
+		cacheLocation = c.String("cacheLocation")
+	}
+	//TODO: remove print
+	log.Print(cacheLocation)
 
 	composes, err := platform.ParseLazy(f)
 	if err != nil {
@@ -97,6 +108,7 @@ func toChain(f l.Composable) ([]l.Runnable, error) {
 }
 
 func buildFunc(f l.Runnable, plat platform.Platform) (models.PublishedFunction, error) {
+	//TODO: somewhere here is needed to calculate scheme hash and commit id
 	dockerGenerator, err := platform.GetDockerGenerator(f.GetRuntime())
 	if err != nil {
 		return models.PublishedFunction{}, err

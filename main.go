@@ -40,6 +40,10 @@ func main() {
 		Name:  "output, o",
 		Usage: "Output for generated files",
 	}
+	cacheFlag := cli.StringFlag{
+		Name:  "cacheLocation, cl",
+		Usage: "Location of the build cache",
+	}
 
 	app.Commands = []cli.Command{
 		{
@@ -59,6 +63,7 @@ func main() {
 			Flags: []cli.Flag{
 				inputFlag,
 				platformFlag,
+				cacheFlag,
 			},
 		},
 		{
