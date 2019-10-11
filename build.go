@@ -18,6 +18,12 @@ const (
 	defaultCacheLocation = "~/.anzer_cache"
 )
 
+type BuildCmd struct {
+	input         string
+	cacheLocation string
+	platform      platform.Platform
+}
+
 func Build(c *cli.Context) error {
 	plat, err := getPlatform(c)
 	if err != nil {
@@ -31,18 +37,26 @@ func Build(c *cli.Context) error {
 	if input == "" {
 		return errNoInput
 	}
-	f, err := os.Open(input)
-	if err != nil {
-		return err
-	}
-	defer f.Close()
 
 	cacheLocation := defaultCacheLocation
 	if c.String("cacheLocation") != "" {
 		cacheLocation = c.String("cacheLocation")
 	}
-	//TODO: remove print
-	log.Print(cacheLocation)
+
+	cmd := &BuildCmd{
+		input:         input,
+		cacheLocation: cacheLocation,
+		platform:      plat,
+	}
+	return cmd.build(c)
+}
+
+func (b *BuildCmd) build(c *cli.Context) error {
+	f, err := os.Open(b.input)
+	if err != nil {
+		return err
+	}
+	defer f.Close()
 
 	composes, err := platform.ParseLazy(f)
 	if err != nil {
@@ -50,14 +64,14 @@ func Build(c *cli.Context) error {
 	}
 
 	for _, compose := range composes {
-		if err := buildCompose(compose, plat); err != nil {
+		if err := b.buildCompose(compose); err != nil {
 			return err
 		}
 	}
 	return nil
 }
 
-func buildCompose(compose l.Composable, plat platform.Platform) error {
+func (b *BuildCmd) buildCompose(compose l.Composable) error {
 	log.Printf("build composition %s = %s", compose.GetName(), compose.Definition())
 
 	if err := compose.Invalid(); err != nil {
@@ -72,7 +86,7 @@ func buildCompose(compose l.Composable, plat platform.Platform) error {
 	components := make([]models.PublishedFunction, 0, len(chain))
 	for _, el := range chain {
 		log.Printf("build function %s", el.Definition())
-		component, err := buildFunc(el, plat)
+		component, err := buildFunc(el, b.platform)
 		if err != nil {
 			return errors.Wrap(err, fmt.Sprintf("build function %s", el.Definition()))
 		}
@@ -80,7 +94,7 @@ func buildCompose(compose l.Composable, plat platform.Platform) error {
 	}
 
 	log.Printf("make link for %v", components)
-	lnk, err := plat.Link(compose.GetName(), components)
+	lnk, err := b.platform.Link(compose.GetName(), components)
 	if err != nil {
 		return err
 	}

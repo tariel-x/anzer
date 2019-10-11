@@ -7,7 +7,6 @@ import (
 	"errors"
 	"fmt"
 	"io"
-	"os"
 	"path"
 )
 
@@ -56,8 +55,19 @@ func NewManager(sumFile io.Reader, cacheLocation string) (*Manager, error) {
 	return m, nil
 }
 
-func (m *Manager) Close() error {
-
+func (m *Manager) Flush(fd io.Writer) error {
+	w := csv.NewWriter(fd)
+	for _, item := range m.items {
+		if err := w.Write([]string{
+			item.function,
+			item.commitID,
+			string(item.schemeHash),
+		}); err != nil {
+			return err
+		}
+	}
+	w.Flush()
+	return nil
 }
 
 // GetFunctionCache compares not empty commitID, hash of the composition scheme and returns path to the ZIP containing built function.
@@ -74,34 +84,24 @@ func (m *Manager) GetFunctionCache(function, commitID string, schemeHash []byte)
 		return "", ErrInvalidCommitID
 	}
 
-	return m.getFunction(function, commitID, schemeHash)
+	return m.getFilePath(function, commitID, schemeHash), nil
 }
 
-func (m *Manager) SetFunctionCache(function string, commitID string, schemeHash []byte, file io.Reader) error {
+func (m *Manager) SetFunctionCache(function string, commitID string, schemeHash []byte) error {
 	if _, err := m.GetFunctionCache(function, commitID, schemeHash); err == nil {
 		return nil
 	}
-	return m.saveFunction(function, commitID, schemeHash, file)
-}
-
-func (m *Manager) getFunction(function string, commitID string, schemeHash []byte) (string, error) {
-	path := m.getFilePath(function, commitID, schemeHash)
-	fd, err := os.Open(path)
-	if fd != nil {
-		defer fd.Close()
+	item := m.find(function)
+	if item != nil {
+		item.commitID = commitID
+		item.schemeHash = schemeHash
 	}
-	return path, err
-}
-
-func (m *Manager) saveFunction(function string, commitID string, schemeHash []byte, file io.Reader) error {
-	path := m.getFilePath(function, commitID, schemeHash)
-	fd, err := os.Create(path)
-	if err != nil {
-		return err
-	}
-	defer fd.Close()
-	_, err = io.Copy(fd, file)
-	return err
+	m.items = append(m.items, sumFileItem{
+		function:   function,
+		commitID:   commitID,
+		schemeHash: schemeHash,
+	})
+	return nil
 }
 
 func (m *Manager) getFilePath(function string, commitID string, schemeHash []byte) string {
