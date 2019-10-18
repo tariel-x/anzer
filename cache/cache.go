@@ -1,4 +1,4 @@
-// package cache implemets logic of functions build cache
+// package cache implements logic of functions build cache
 package cache
 
 import (

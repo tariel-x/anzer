@@ -2,12 +2,14 @@ package main
 
 import (
 	"fmt"
+	"io"
 	"log"
 	"os"
 	"strings"
 
 	"github.com/logrusorgru/aurora"
 	"github.com/pkg/errors"
+	"github.com/tariel-x/anzer/cache"
 	l "github.com/tariel-x/anzer/lang"
 	"github.com/tariel-x/anzer/platform"
 	"github.com/tariel-x/anzer/platform/models"
@@ -19,9 +21,9 @@ const (
 )
 
 type BuildCmd struct {
-	input         string
-	cacheLocation string
-	platform      platform.Platform
+	input    string
+	platform platform.Platform
+	cache    *cache.Manager
 }
 
 func Build(c *cli.Context) error {
@@ -43,10 +45,22 @@ func Build(c *cli.Context) error {
 		cacheLocation = c.String("cacheLocation")
 	}
 
+	f, err := os.Open("anzer.sum")
+	if err != nil && os.IsNotExist(err) {
+		f = &os.File{}
+	} else if err != nil {
+		return err
+	}
+	defer f.Close()
+	cm, err := cache.NewManager(f, cacheLocation)
+	if err != nil {
+		return err
+	}
+
 	cmd := &BuildCmd{
-		input:         input,
-		cacheLocation: cacheLocation,
-		platform:      plat,
+		input:    input,
+		platform: plat,
+		cache:    cm,
 	}
 	return cmd.build(c)
 }
@@ -78,17 +92,24 @@ func (b *BuildCmd) buildCompose(compose l.Composable) error {
 		return err
 	}
 
-	chain, err := toChain(compose)
+	chain, err := b.toChain(compose)
 	if err != nil {
 		return err
 	}
 
 	components := make([]models.PublishedFunction, 0, len(chain))
 	for _, el := range chain {
-		log.Printf("build function %s", el.Definition())
-		component, err := buildFunc(el, b.platform)
+		action, err := b.loadCached(el)
 		if err != nil {
-			return errors.Wrap(err, fmt.Sprintf("build function %s", el.Definition()))
+			log.Printf("build function %s", el.Definition())
+			action, err = b.buildFunc(el)
+			if err != nil {
+				return errors.Wrap(err, fmt.Sprintf("build function %s", el.Definition()))
+			}
+		}
+		component, err := b.publishFunc(el, action)
+		if err != nil {
+			return errors.Wrap(err, fmt.Sprintf("publish function %s", el.Definition()))
 		}
 		components = append(components, component)
 	}
@@ -102,12 +123,12 @@ func (b *BuildCmd) buildCompose(compose l.Composable) error {
 	return nil
 }
 
-func toChain(f l.Composable) ([]l.Runnable, error) {
+func (b *BuildCmd) toChain(f l.Composable) ([]l.Runnable, error) {
 	chain := []l.Runnable{}
 	switch ft := f.(type) {
 	case l.Alias:
 		for _, sf := range ft.Compose {
-			subchain, err := toChain(sf)
+			subchain, err := b.toChain(sf)
 			if err != nil {
 				return nil, err
 			}
@@ -121,34 +142,41 @@ func toChain(f l.Composable) ([]l.Runnable, error) {
 	return chain, nil
 }
 
-func buildFunc(f l.Runnable, plat platform.Platform) (models.PublishedFunction, error) {
+func (b *BuildCmd) loadCached(f l.Runnable) (io.Reader, error) {
+	location, err := b.cache.GetFunctionCache(f.GetName(), "", nil)
+	if err != nil {
+		return nil, err
+	}
+	return os.Open(location)
+}
+
+func (b *BuildCmd) buildFunc(f l.Runnable) (io.Reader, error) {
 	//TODO: somewhere here is needed to calculate scheme hash and commit id
 	dockerGenerator, err := platform.GetDockerGenerator(f.GetRuntime())
 	if err != nil {
-		return models.PublishedFunction{}, err
+		return nil, err
 	}
 	opts, err := dockerGenerator.GetBuildOptions(f, false)
 	if err != nil {
-		return models.PublishedFunction{}, err
+		return nil, err
 	}
 	env, err := getEnv()
 	if err != nil {
-		return models.PublishedFunction{}, err
+		return nil, err
 	}
 	opts.Env = env
 
 	builder, err := platform.NewBuilder()
 	if err != nil {
-		return models.PublishedFunction{}, err
+		return nil, err
 	}
 
-	action, err := builder.BuildWithImage(opts, f.GetLink())
-	if err != nil {
-		return models.PublishedFunction{}, err
-	}
+	return builder.BuildWithImage(opts, f.GetLink())
+}
 
+func (b *BuildCmd) publishFunc(f l.Runnable, action io.Reader) (models.PublishedFunction, error) {
 	name := strings.Replace(string(f.GetLink()), "/", "_", -1)
-	function, err := plat.Create(action, name, f.GetRuntime())
+	function, err := b.platform.Create(action, name, f.GetRuntime())
 	if err != nil {
 		return models.PublishedFunction{}, err
 	}
