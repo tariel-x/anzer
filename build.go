@@ -143,7 +143,7 @@ func (b *BuildCmd) toChain(f l.Composable) ([]l.Runnable, error) {
 }
 
 func (b *BuildCmd) loadCached(f l.Runnable) (io.Reader, error) {
-	location, err := b.cache.GetFunctionCache(f.GetName(), "", nil)
+	location, _, err := b.cache.FunctionWithCommit(f.GetName(), nil)
 	if err != nil {
 		return nil, err
 	}
@@ -151,7 +151,6 @@ func (b *BuildCmd) loadCached(f l.Runnable) (io.Reader, error) {
 }
 
 func (b *BuildCmd) buildFunc(f l.Runnable) (io.Reader, error) {
-	//TODO: somewhere here is needed to calculate scheme hash and commit id
 	dockerGenerator, err := platform.GetDockerGenerator(f.GetRuntime())
 	if err != nil {
 		return nil, err

@@ -71,24 +71,33 @@ func (m *Manager) Flush(fd io.Writer) error {
 }
 
 // GetFunctionCache compares not empty commitID, hash of the composition scheme and returns path to the ZIP containing built function.
-func (m *Manager) GetFunctionCache(function, commitID string, schemeHash []byte) (string, error) {
-	item := m.find(function)
-	if item == nil {
-		return "", ErrNoFunction
+func (m *Manager) Function(function, commitID string, schemeHash []byte) (string, error) {
+	location, fCommitID, err := m.FunctionWithCommit(function, schemeHash)
+	if err != nil {
+		return "", err
 	}
-
-	if !bytes.Equal(item.schemeHash, schemeHash) {
-		return "", ErrInvalidSchemeHash
-	}
-	if commitID != "" && item.commitID != commitID {
+	if commitID != "" && fCommitID != commitID {
 		return "", ErrInvalidCommitID
 	}
 
-	return m.getFilePath(function, commitID, schemeHash), nil
+	return location, nil
 }
 
-func (m *Manager) SetFunctionCache(function string, commitID string, schemeHash []byte) error {
-	if _, err := m.GetFunctionCache(function, commitID, schemeHash); err == nil {
+func (m *Manager) FunctionWithCommit(function string, schemeHash []byte) (string, string, error) {
+	item := m.find(function)
+	if item == nil {
+		return "", "", ErrNoFunction
+	}
+
+	if !bytes.Equal(item.schemeHash, schemeHash) {
+		return "", "", ErrInvalidSchemeHash
+	}
+
+	return m.getFilePath(function, item.commitID, schemeHash), item.commitID, nil
+}
+
+func (m *Manager) SetFunction(function string, commitID string, schemeHash []byte) error {
+	if _, err := m.Function(function, commitID, schemeHash); err == nil {
 		return nil
 	}
 	item := m.find(function)

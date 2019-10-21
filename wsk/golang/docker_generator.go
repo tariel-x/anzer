@@ -4,7 +4,6 @@ import (
 	"archive/tar"
 	"bytes"
 
-	l "github.com/tariel-x/anzer/lang"
 	"github.com/tariel-x/anzer/platform/models"
 )
 
@@ -22,12 +21,12 @@ func NewDockerGenerator() DockerGenerator {
 	}
 }
 
-func (dg DockerGenerator) GetBuildOptions(f l.Runnable, debug bool) (*models.BuildWithImageOpts, error) {
-	generated, err := dg.generator.Generate(f)
+func (dg DockerGenerator) GetBuildOptions(opts *models.BuildOpts) (*models.DockerBuildOpts, error) {
+	generated, err := dg.generator.Generate(opts.F)
 	if err != nil {
 		return nil, err
 	}
-	dockerfile, err := dg.generator.GenerateDocker(debug)
+	dockerfile, err := dg.generator.GenerateDocker(opts)
 	if err != nil {
 		return nil, err
 	}
@@ -43,10 +42,10 @@ func (dg DockerGenerator) GetBuildOptions(f l.Runnable, debug bool) (*models.Bui
 	if err := writeTar("Dockerfile", []byte(dockerfile), tw); err != nil {
 		return nil, err
 	}
-	return &models.BuildWithImageOpts{
+	return &models.DockerBuildOpts{
 		Source:     bytes.NewBuffer(buf.Bytes()),
 		ActionPath: "/exec/action.zip",
-		Debug:      debug,
+		Debug:      opts.Debug,
 	}, nil
 }
 

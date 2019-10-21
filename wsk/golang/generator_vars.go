@@ -10,6 +10,7 @@ WORKDIR /exec
 COPY main.go main.go
 RUN echo $GOPROXY
 RUN go mod init github.com/anzer/exec
+RUN go get {{ .PackagePath }}@{{ .CommitID }}
 RUN go build
 {{if .Debug}}
 RUN go mod vendor
@@ -18,19 +19,6 @@ RUN zip -r action.zip *
 RUN zip action.zip exec
 {{end}}
 `))
-
-var makefile = `
-all: init build zip
-
-init:
-	go mod init github.com/anzer/exec
-
-build:
-	go build
-
-zip:
-	zip action.zip exec
-`
 
 var funcTemplate = template.Must(template.New("").Parse(`// Thank robots for this file that was generated for you at {{ .Timestamp }}
 package {{ .Package }}
