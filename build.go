@@ -103,7 +103,15 @@ func (b *BuildCmd) buildCompose(compose l.Composable) error {
 		if err != nil {
 			// TODO: place git client somewhere
 			log.Printf("error loading cached function %s", err)
-			log.Printf("build function %s", el.Definition())
+
+			if commitID == "" {
+				commitID, err = b.findLatestCommitID(el)
+				if err != nil {
+					return errors.Wrap(err, fmt.Sprintf("can not find latest commit id for %s", el.Definition()))
+				}
+			}
+
+			log.Printf("build function %s@%s", el.Definition(), commitID)
 			action, err = b.buildFunc(el, commitID)
 			if err != nil {
 				return errors.Wrap(err, fmt.Sprintf("build function %s", el.Definition()))
@@ -187,4 +195,8 @@ func (b *BuildCmd) publishFunc(f l.Runnable, action io.Reader) (models.Published
 		return models.PublishedFunction{}, err
 	}
 	return function, nil
+}
+
+func (b *BuildCmd) findLatestCommitID(f l.Runnable) (string, error) {
+	return "", nil
 }
