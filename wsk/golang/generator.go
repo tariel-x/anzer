@@ -86,7 +86,7 @@ func (g Generator) GenerateDocker(opts *models.BuildOpts) (string, error) {
 	}{
 		Debug:       opts.Debug,
 		CommitID:    opts.CommitID,
-		PackagePath: opts.F.GetName(),
+		PackagePath: string(opts.F.GetLink()),
 	}
 	err := dockerfileTemplate.Execute(&result, templateArgs)
 	return result.String(), err

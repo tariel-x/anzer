@@ -99,10 +99,12 @@ func (b *BuildCmd) buildCompose(compose l.Composable) error {
 
 	components := make([]models.PublishedFunction, 0, len(chain))
 	for _, el := range chain {
-		action, err := b.loadCached(el)
+		action, commitID, err := b.loadCached(el)
 		if err != nil {
+			// TODO: place git client somewhere
+			log.Printf("error loading cached function %s", err)
 			log.Printf("build function %s", el.Definition())
-			action, err = b.buildFunc(el)
+			action, err = b.buildFunc(el, commitID)
 			if err != nil {
 				return errors.Wrap(err, fmt.Sprintf("build function %s", el.Definition()))
 			}
@@ -142,20 +144,25 @@ func (b *BuildCmd) toChain(f l.Composable) ([]l.Runnable, error) {
 	return chain, nil
 }
 
-func (b *BuildCmd) loadCached(f l.Runnable) (io.Reader, error) {
-	location, _, err := b.cache.FunctionWithCommit(f.GetName(), nil)
+func (b *BuildCmd) loadCached(f l.Runnable) (io.Reader, string, error) {
+	location, commitID, err := b.cache.FunctionWithCommit(f.GetName(), nil)
 	if err != nil {
-		return nil, err
+		return nil, commitID, err
 	}
-	return os.Open(location)
+	file, err := os.Open(location)
+	return file, commitID, err
 }
 
-func (b *BuildCmd) buildFunc(f l.Runnable) (io.Reader, error) {
+func (b *BuildCmd) buildFunc(f l.Runnable, commitID string) (io.Reader, error) {
 	dockerGenerator, err := platform.GetDockerGenerator(f.GetRuntime())
 	if err != nil {
 		return nil, err
 	}
-	opts, err := dockerGenerator.GetBuildOptions(f, false)
+	opts, err := dockerGenerator.GetBuildOptions(&models.BuildOpts{
+		Debug:    false,
+		F:        f,
+		CommitID: commitID,
+	})
 	if err != nil {
 		return nil, err
 	}

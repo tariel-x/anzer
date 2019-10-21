@@ -24,7 +24,7 @@ var (
 )
 
 type DockerGenerator interface {
-	GetBuildOptions(f l.Runnable, debug bool) (*models.DockerBuildOpts, error)
+	GetBuildOptions(opts *models.BuildOpts) (*models.DockerBuildOpts, error)
 }
 
 // GetDockerGenerator returns suitable FaaS and language specific generator for Dockerfile
