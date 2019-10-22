@@ -62,10 +62,10 @@ func Build(c *cli.Context) error {
 		platform: plat,
 		cache:    cm,
 	}
-	return cmd.build(c)
+	return cmd.build()
 }
 
-func (b *BuildCmd) build(c *cli.Context) error {
+func (b *BuildCmd) build() error {
 	f, err := os.Open(b.input)
 	if err != nil {
 		return err

@@ -10,12 +10,17 @@ import (
 	"github.com/pkg/errors"
 	l "github.com/tariel-x/anzer/lang"
 	"github.com/tariel-x/anzer/platform"
+	"github.com/tariel-x/anzer/platform/models"
 	"github.com/urfave/cli"
 )
 
-func Export(c *cli.Context) error {
-	debug := c.Bool("debug")
+type ExportCmd struct {
+	*BuildCmd
+	output string
+	debug  bool
+}
 
+func Export(c *cli.Context) error {
 	input := c.String("input")
 	if input == "" {
 		return errNoInput
@@ -26,7 +31,20 @@ func Export(c *cli.Context) error {
 		output = "."
 	}
 
-	f, err := os.Open(input)
+	cmd := &ExportCmd{
+		BuildCmd: &BuildCmd{
+			input:    input,
+			platform: nil,
+			cache:    nil,
+		},
+		output: output,
+		debug:  c.Bool("debug"),
+	}
+	return cmd.export()
+}
+
+func (e *ExportCmd) export() error {
+	f, err := os.Open(e.input)
 	if err != nil {
 		return err
 	}
@@ -42,14 +60,14 @@ func Export(c *cli.Context) error {
 			return err
 		}
 
-		chain, err := toChain(compose)
+		chain, err := e.toChain(compose)
 		if err != nil {
 			return err
 		}
 
 		for _, el := range chain {
 			log.Printf("build function %s", el.Definition())
-			if err := exportFunc(el, debug, output); err != nil {
+			if err := e.exportFunc(el); err != nil {
 				return errors.Wrap(err, fmt.Sprintf("build function %s", el.Definition()))
 			}
 		}
@@ -57,12 +75,16 @@ func Export(c *cli.Context) error {
 	return nil
 }
 
-func exportFunc(f l.Runnable, debug bool, output string) error {
+func (e *ExportCmd) exportFunc(f l.Runnable) error {
 	dockerGenerator, err := platform.GetDockerGenerator(f.GetRuntime())
 	if err != nil {
 		return err
 	}
-	opts, err := dockerGenerator.GetBuildOptions(f, debug)
+	opts, err := dockerGenerator.GetBuildOptions(&models.BuildOpts{
+		Debug:    e.debug,
+		F:        f,
+		CommitID: "",
+	})
 	if err != nil {
 		return err
 	}
@@ -88,5 +110,5 @@ func exportFunc(f l.Runnable, debug bool, output string) error {
 
 	name := strings.Replace(string(f.GetLink()), "/", "_", -1)
 
-	return ioutil.WriteFile(fmt.Sprintf("%s/%s.zip", output, name), zipFile, 0666)
+	return ioutil.WriteFile(fmt.Sprintf("%s/%s.zip", e.output, name), zipFile, 0666)
 }
