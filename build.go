@@ -56,7 +56,10 @@ func newBuildCmd(c *cli.Context) (*BuildCmd, error) {
 
 	f, err := os.Open("anzer.sum")
 	if err != nil && os.IsNotExist(err) {
-		f = &os.File{}
+		f, err = os.Create("anzer.sum")
+		if err != nil {
+			return nil, err
+		}
 	} else if err != nil {
 		return nil, err
 	}

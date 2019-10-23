@@ -89,6 +89,7 @@ func main() {
 				inputFlag,
 				outputFlag,
 				debugFlag,
+				platformFlag,
 			},
 		},
 		{
