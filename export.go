@@ -41,6 +41,8 @@ func Export(c *cli.Context) error {
 }
 
 func (e *ExportCmd) export() error {
+	defer e.sumFile.Close()
+
 	f, err := os.Open(e.input)
 	if err != nil {
 		return err
@@ -78,6 +80,9 @@ func (e *ExportCmd) export() error {
 				if err != nil {
 					return errors.Wrap(err, fmt.Sprintf("build function %s", el.Definition()))
 				}
+				if err := e.cache.SetFunction(el.GetLink().String(), commitID, nil); err != nil {
+					return err
+				}
 			}
 
 			log.Printf("build function %s", el.Definition())
@@ -86,7 +91,7 @@ func (e *ExportCmd) export() error {
 			}
 		}
 	}
-	return nil
+	return e.cache.Flush(e.sumFile)
 }
 
 func (e *ExportCmd) exportFunc(f l.Runnable, action io.Reader) error {

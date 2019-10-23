@@ -25,6 +25,7 @@ type BuildCmd struct {
 	input    string
 	platform platform.Platform
 	cache    *cache.Manager
+	sumFile  *os.File
 }
 
 func Build(c *cli.Context) error {
@@ -54,7 +55,7 @@ func newBuildCmd(c *cli.Context) (*BuildCmd, error) {
 		cacheLocation = c.String("cacheLocation")
 	}
 
-	f, err := os.Open("anzer.sum")
+	f, err := os.OpenFile("anzer.sum", os.O_RDWR, 0666)
 	if err != nil && os.IsNotExist(err) {
 		f, err = os.Create("anzer.sum")
 		if err != nil {
@@ -63,7 +64,6 @@ func newBuildCmd(c *cli.Context) (*BuildCmd, error) {
 	} else if err != nil {
 		return nil, err
 	}
-	defer f.Close()
 	cm, err := cache.NewManager(f, cacheLocation)
 	if err != nil {
 		return nil, err
@@ -73,11 +73,13 @@ func newBuildCmd(c *cli.Context) (*BuildCmd, error) {
 		input:    input,
 		platform: plat,
 		cache:    cm,
+		sumFile:  f,
 	}
 	return cmd, nil
 }
 
 func (b *BuildCmd) build() error {
+	defer b.sumFile.Close()
 	f, err := os.Open(b.input)
 	if err != nil {
 		return err
@@ -94,6 +96,7 @@ func (b *BuildCmd) build() error {
 			return err
 		}
 	}
+	b.cache.Flush(b.sumFile)
 	return nil
 }
 
@@ -128,6 +131,7 @@ func (b *BuildCmd) buildCompose(compose l.Composable) error {
 			if err != nil {
 				return errors.Wrap(err, fmt.Sprintf("build function %s", el.Definition()))
 			}
+			b.cache.SetFunction(el.GetLink().String(), commitID, nil)
 		}
 		component, err := b.publishFunc(el, action)
 		if err != nil {

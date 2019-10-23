@@ -67,7 +67,7 @@ func (m *Manager) Flush(fd io.Writer) error {
 		}
 	}
 	w.Flush()
-	return nil
+	return w.Error()
 }
 
 // GetFunctionCache compares not empty commitID, hash of the composition scheme and returns path to the ZIP containing built function.

@@ -1,6 +1,11 @@
 package git
 
 import (
+	"fmt"
+	"net/url"
+	"path"
+	"strings"
+
 	"gopkg.in/src-d/go-git.v4"
 	"gopkg.in/src-d/go-git.v4/storage/memory"
 )
@@ -10,8 +15,18 @@ type Repository struct {
 }
 
 func NewRepository(repo string) (*Repository, error) {
+	//TODO: not only https
+	rawUrl := fmt.Sprintf("https://%s", repo)
+	u, err := url.Parse(rawUrl)
+	if err != nil {
+		return nil, err
+	}
+	p := strings.Split(u.Path, "/")
+	if len(p) > 3 {
+		u.Path = path.Join(p[:3]...)
+	}
 	r, err := git.Clone(memory.NewStorage(), nil, &git.CloneOptions{
-		URL: "https://github.com/src-d/go-siva",
+		URL: u.String(),
 	})
 	if err != nil {
 		return nil, err
