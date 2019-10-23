@@ -27,17 +27,25 @@ type BuildCmd struct {
 }
 
 func Build(c *cli.Context) error {
-	plat, err := getPlatform(c)
+	cmd, err := newBuildCmd(c)
 	if err != nil {
 		return err
 	}
+	return cmd.build()
+}
+
+func newBuildCmd(c *cli.Context) (*BuildCmd, error) {
+	plat, err := getPlatform(c)
+	if err != nil {
+		return nil, err
+	}
 	if err := plat.Connect(); err != nil {
-		return err
+		return nil, err
 	}
 
 	input := c.String("input")
 	if input == "" {
-		return errNoInput
+		return nil, errNoInput
 	}
 
 	cacheLocation := defaultCacheLocation
@@ -49,12 +57,12 @@ func Build(c *cli.Context) error {
 	if err != nil && os.IsNotExist(err) {
 		f = &os.File{}
 	} else if err != nil {
-		return err
+		return nil, err
 	}
 	defer f.Close()
 	cm, err := cache.NewManager(f, cacheLocation)
 	if err != nil {
-		return err
+		return nil, err
 	}
 
 	cmd := &BuildCmd{
@@ -62,7 +70,7 @@ func Build(c *cli.Context) error {
 		platform: plat,
 		cache:    cm,
 	}
-	return cmd.build()
+	return cmd, nil
 }
 
 func (b *BuildCmd) build() error {

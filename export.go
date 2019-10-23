@@ -2,16 +2,17 @@ package main
 
 import (
 	"fmt"
+	"io"
 	"io/ioutil"
 	"log"
 	"os"
 	"strings"
 
 	"github.com/pkg/errors"
+	"github.com/urfave/cli"
+
 	l "github.com/tariel-x/anzer/lang"
 	"github.com/tariel-x/anzer/platform"
-	"github.com/tariel-x/anzer/platform/models"
-	"github.com/urfave/cli"
 )
 
 type ExportCmd struct {
@@ -21,9 +22,9 @@ type ExportCmd struct {
 }
 
 func Export(c *cli.Context) error {
-	input := c.String("input")
-	if input == "" {
-		return errNoInput
+	buildCmd, err := newBuildCmd(c)
+	if err != nil {
+		return err
 	}
 
 	output := strings.TrimRight(c.String("output"), "/")
@@ -32,13 +33,9 @@ func Export(c *cli.Context) error {
 	}
 
 	cmd := &ExportCmd{
-		BuildCmd: &BuildCmd{
-			input:    input,
-			platform: nil,
-			cache:    nil,
-		},
-		output: output,
-		debug:  c.Bool("debug"),
+		BuildCmd: buildCmd,
+		output:   output,
+		debug:    c.Bool("debug"),
 	}
 	return cmd.export()
 }
@@ -66,8 +63,25 @@ func (e *ExportCmd) export() error {
 		}
 
 		for _, el := range chain {
+			action, commitID, err := e.loadCached(el)
+			if err != nil {
+				log.Printf("error loading cached function %s", err)
+				if commitID == "" {
+					commitID, err = e.findLatestCommitID(el)
+					if err != nil {
+						return errors.Wrap(err, fmt.Sprintf("can not find latest commit id for %s", el.Definition()))
+					}
+				}
+
+				log.Printf("build function %s@%s", el.Definition(), commitID)
+				action, err = e.buildFunc(el, commitID)
+				if err != nil {
+					return errors.Wrap(err, fmt.Sprintf("build function %s", el.Definition()))
+				}
+			}
+
 			log.Printf("build function %s", el.Definition())
-			if err := e.exportFunc(el); err != nil {
+			if err := e.exportFunc(el, action); err != nil {
 				return errors.Wrap(err, fmt.Sprintf("build function %s", el.Definition()))
 			}
 		}
@@ -75,34 +89,7 @@ func (e *ExportCmd) export() error {
 	return nil
 }
 
-func (e *ExportCmd) exportFunc(f l.Runnable) error {
-	dockerGenerator, err := platform.GetDockerGenerator(f.GetRuntime())
-	if err != nil {
-		return err
-	}
-	opts, err := dockerGenerator.GetBuildOptions(&models.BuildOpts{
-		Debug:    e.debug,
-		F:        f,
-		CommitID: "",
-	})
-	if err != nil {
-		return err
-	}
-	env, err := getEnv()
-	if err != nil {
-		return err
-	}
-	opts.Env = env
-
-	builder, err := platform.NewBuilder()
-	if err != nil {
-		return err
-	}
-
-	action, err := builder.BuildWithImage(opts, f.GetLink())
-	if err != nil {
-		return err
-	}
+func (e *ExportCmd) exportFunc(f l.Runnable, action io.Reader) error {
 	zipFile, err := ioutil.ReadAll(action)
 	if err != nil {
 		return err
