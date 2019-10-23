@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"io"
 	"path"
+	"strings"
 )
 
 var (
@@ -96,24 +97,26 @@ func (m *Manager) FunctionWithCommit(function string, schemeHash []byte) (string
 	return m.getFilePath(function, item.commitID, schemeHash), item.commitID, nil
 }
 
-func (m *Manager) SetFunction(function string, commitID string, schemeHash []byte) error {
+func (m *Manager) SetFunction(function string, commitID string, schemeHash []byte) (string, error) {
 	if _, err := m.Function(function, commitID, schemeHash); err == nil {
-		return nil
+		return "", nil
 	}
 	item := m.find(function)
 	if item != nil {
 		item.commitID = commitID
 		item.schemeHash = schemeHash
+		return m.getFilePath(function, commitID, schemeHash), nil
 	}
 	m.items = append(m.items, sumFileItem{
 		function:   function,
 		commitID:   commitID,
 		schemeHash: schemeHash,
 	})
-	return nil
+	return m.getFilePath(function, commitID, schemeHash), nil
 }
 
 func (m *Manager) getFilePath(function string, commitID string, schemeHash []byte) string {
+	function = strings.Replace(function, "/", "_", -1)
 	fileName := fmt.Sprintf("%s_%s_%s.zip", function, commitID, string(schemeHash))
 	return path.Join(m.cacheLocation, fileName)
 }

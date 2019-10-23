@@ -3,22 +3,26 @@ package main
 import (
 	"fmt"
 	"io"
+	"io/ioutil"
 	"log"
 	"os"
+	"os/user"
+	"path/filepath"
 	"strings"
 
 	"github.com/logrusorgru/aurora"
 	"github.com/pkg/errors"
+	"github.com/urfave/cli"
+
 	"github.com/tariel-x/anzer/cache"
 	"github.com/tariel-x/anzer/git"
 	l "github.com/tariel-x/anzer/lang"
 	"github.com/tariel-x/anzer/platform"
 	"github.com/tariel-x/anzer/platform/models"
-	"github.com/urfave/cli"
 )
 
 const (
-	defaultCacheLocation = "~/.anzer_cache"
+	defaultCacheLocation = "/.anzer_cache"
 )
 
 type BuildCmd struct {
@@ -50,9 +54,13 @@ func newBuildCmd(c *cli.Context) (*BuildCmd, error) {
 		return nil, errNoInput
 	}
 
-	cacheLocation := defaultCacheLocation
-	if c.String("cacheLocation") != "" {
-		cacheLocation = c.String("cacheLocation")
+	cacheLocation := c.String("cacheLocation")
+	if cacheLocation == "" {
+		usr, err := user.Current()
+		if err != nil {
+			return nil, err
+		}
+		cacheLocation = filepath.Join(usr.HomeDir, defaultCacheLocation)
 	}
 
 	f, err := os.OpenFile("anzer.sum", os.O_RDWR, 0666)
@@ -96,8 +104,7 @@ func (b *BuildCmd) build() error {
 			return err
 		}
 	}
-	b.cache.Flush(b.sumFile)
-	return nil
+	return b.cache.Flush(b.sumFile)
 }
 
 func (b *BuildCmd) buildCompose(compose l.Composable) error {
@@ -113,29 +120,14 @@ func (b *BuildCmd) buildCompose(compose l.Composable) error {
 	}
 
 	components := make([]models.PublishedFunction, 0, len(chain))
-	for _, el := range chain {
-		action, commitID, err := b.loadCached(el)
+	for _, f := range chain {
+		action, err := b.resolveFunc(f)
 		if err != nil {
-			// TODO: place git client somewhere
-			log.Printf("error loading cached function %s", err)
-
-			if commitID == "" {
-				commitID, err = b.findLatestCommitID(el)
-				if err != nil {
-					return errors.Wrap(err, fmt.Sprintf("can not find latest commit id for %s", el.Definition()))
-				}
-			}
-
-			log.Printf("build function %s@%s", el.Definition(), commitID)
-			action, err = b.buildFunc(el, commitID)
-			if err != nil {
-				return errors.Wrap(err, fmt.Sprintf("build function %s", el.Definition()))
-			}
-			b.cache.SetFunction(el.GetLink().String(), commitID, nil)
+			return err
 		}
-		component, err := b.publishFunc(el, action)
+		component, err := b.publishFunc(f, action)
 		if err != nil {
-			return errors.Wrap(err, fmt.Sprintf("publish function %s", el.Definition()))
+			return errors.Wrap(err, fmt.Sprintf("publish function %s", f.Definition()))
 		}
 		components = append(components, component)
 	}
@@ -168,8 +160,41 @@ func (b *BuildCmd) toChain(f l.Composable) ([]l.Runnable, error) {
 	return chain, nil
 }
 
+func (b *BuildCmd) resolveFunc(f l.Runnable) (io.Reader, error) {
+	action, commitID, err := b.loadCached(f)
+	if err != nil {
+		log.Printf("error loading cached function %s", err)
+
+		if commitID == "" {
+			commitID, err = b.findLatestCommitID(f)
+			if err != nil {
+				return nil, errors.Wrap(err, fmt.Sprintf("can not find latest commit id for %s", f.Definition()))
+			}
+		}
+
+		log.Printf("build function %s@%s", f.Definition(), commitID)
+		action, err = b.buildFunc(f, commitID)
+		if err != nil {
+			return nil, errors.Wrap(err, fmt.Sprintf("build function %s", f.Definition()))
+		}
+		location, err := b.cache.SetFunction(f.GetLink().String(), commitID, nil)
+		if err != nil {
+			return nil, err
+		}
+
+		zipFile, err := ioutil.ReadAll(action)
+		if err != nil {
+			return nil, err
+		}
+		if err := ioutil.WriteFile(location, zipFile, 0666); err != nil {
+			return nil, err
+		}
+	}
+	return action, nil
+}
+
 func (b *BuildCmd) loadCached(f l.Runnable) (io.Reader, string, error) {
-	location, commitID, err := b.cache.FunctionWithCommit(f.GetName(), nil)
+	location, commitID, err := b.cache.FunctionWithCommit(f.GetLink().String(), nil)
 	if err != nil {
 		return nil, commitID, err
 	}

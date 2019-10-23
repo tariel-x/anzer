@@ -64,30 +64,15 @@ func (e *ExportCmd) export() error {
 			return err
 		}
 
-		for _, el := range chain {
-			action, commitID, err := e.loadCached(el)
+		for _, f := range chain {
+			action, err := e.resolveFunc(f)
 			if err != nil {
-				log.Printf("error loading cached function %s", err)
-				if commitID == "" {
-					commitID, err = e.findLatestCommitID(el)
-					if err != nil {
-						return errors.Wrap(err, fmt.Sprintf("can not find latest commit id for %s", el.Definition()))
-					}
-				}
-
-				log.Printf("build function %s@%s", el.Definition(), commitID)
-				action, err = e.buildFunc(el, commitID)
-				if err != nil {
-					return errors.Wrap(err, fmt.Sprintf("build function %s", el.Definition()))
-				}
-				if err := e.cache.SetFunction(el.GetLink().String(), commitID, nil); err != nil {
-					return err
-				}
+				return err
 			}
 
-			log.Printf("build function %s", el.Definition())
-			if err := e.exportFunc(el, action); err != nil {
-				return errors.Wrap(err, fmt.Sprintf("build function %s", el.Definition()))
+			log.Printf("export function %s", f.Definition())
+			if err := e.exportFunc(f, action); err != nil {
+				return errors.Wrap(err, fmt.Sprintf("build function %s", f.Definition()))
 			}
 		}
 	}
