@@ -10,6 +10,7 @@ import (
 	"github.com/logrusorgru/aurora"
 	"github.com/pkg/errors"
 	"github.com/tariel-x/anzer/cache"
+	"github.com/tariel-x/anzer/git"
 	l "github.com/tariel-x/anzer/lang"
 	"github.com/tariel-x/anzer/platform"
 	"github.com/tariel-x/anzer/platform/models"
@@ -206,5 +207,9 @@ func (b *BuildCmd) publishFunc(f l.Runnable, action io.Reader) (models.Published
 }
 
 func (b *BuildCmd) findLatestCommitID(f l.Runnable) (string, error) {
-	return "", nil
+	repo, err := git.NewRepository(f.GetLink().String())
+	if err != nil {
+		return "", err
+	}
+	return repo.LatestCommit()
 }
