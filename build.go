@@ -11,7 +11,6 @@ import (
 	"strings"
 
 	"github.com/logrusorgru/aurora"
-	"github.com/pkg/errors"
 	"github.com/urfave/cli"
 
 	"github.com/tariel-x/anzer/cache"
@@ -23,13 +22,13 @@ import (
 
 const (
 	defaultCacheLocation = "/.anzer_cache"
+	defaultSumFileName   = "anzer.sum"
 )
 
 type BuildCmd struct {
 	input    string
 	platform platform.Platform
 	cache    *cache.Manager
-	sumFile  *os.File
 }
 
 func Build(c *cli.Context) error {
@@ -63,15 +62,16 @@ func newBuildCmd(c *cli.Context) (*BuildCmd, error) {
 		cacheLocation = filepath.Join(usr.HomeDir, defaultCacheLocation)
 	}
 
-	f, err := os.OpenFile("anzer.sum", os.O_RDWR, 0666)
+	f, err := os.OpenFile(defaultSumFileName, os.O_RDWR, 0666)
 	if err != nil && os.IsNotExist(err) {
-		f, err = os.Create("anzer.sum")
+		f, err = os.Create(defaultSumFileName)
 		if err != nil {
 			return nil, err
 		}
 	} else if err != nil {
 		return nil, err
 	}
+	defer f.Close()
 	cm, err := cache.NewManager(f, cacheLocation)
 	if err != nil {
 		return nil, err
@@ -81,13 +81,11 @@ func newBuildCmd(c *cli.Context) (*BuildCmd, error) {
 		input:    input,
 		platform: plat,
 		cache:    cm,
-		sumFile:  f,
 	}
 	return cmd, nil
 }
 
 func (b *BuildCmd) build() error {
-	defer b.sumFile.Close()
 	f, err := os.Open(b.input)
 	if err != nil {
 		return err
@@ -104,7 +102,12 @@ func (b *BuildCmd) build() error {
 			return err
 		}
 	}
-	return b.cache.Flush(b.sumFile)
+	sumFile, err := os.Create(defaultSumFileName)
+	if err != nil {
+		return fmt.Errorf("can not write to %s: %w", defaultSumFileName, err)
+	}
+	defer sumFile.Close()
+	return b.cache.Flush(sumFile)
 }
 
 func (b *BuildCmd) buildCompose(compose l.Composable) error {
@@ -127,7 +130,7 @@ func (b *BuildCmd) buildCompose(compose l.Composable) error {
 		}
 		component, err := b.publishFunc(f, action)
 		if err != nil {
-			return errors.Wrap(err, fmt.Sprintf("publish function %s", f.Definition()))
+			return fmt.Errorf("publish function %s: %w", f.Definition(), err)
 		}
 		components = append(components, component)
 	}
@@ -172,14 +175,14 @@ func (b *BuildCmd) resolveFunc(f l.Runnable) (io.Reader, error) {
 	if commitID == "" {
 		commitID, err = b.findLatestCommitID(f)
 		if err != nil {
-			return nil, errors.Wrap(err, fmt.Sprintf("can not find latest commit id for %s", f.Definition()))
+			return nil, fmt.Errorf("can not find latest commit id for %s: %w", f.Definition(), err)
 		}
 	}
 
 	log.Printf("build function %s@%s", f.Definition(), commitID)
 	action, err = b.buildFunc(f, commitID)
 	if err != nil {
-		return nil, errors.Wrap(err, fmt.Sprintf("build function %s", f.Definition()))
+		return nil, fmt.Errorf("build function %s: %w", f.Definition(), err)
 	}
 	location, err := b.cache.SetFunction(f.GetLink().String(), commitID, nil)
 	if err != nil {

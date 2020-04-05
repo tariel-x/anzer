@@ -37,7 +37,7 @@ func TestAliasValid(t *testing.T) {
 	}
 	err := c.Invalid()
 	if err != nil {
-		t.Errorf("c must be valid, but: %s", err)
+		t.Errorf("c must be valid, but: %w", err)
 	}
 }
 
@@ -106,7 +106,7 @@ func TestBindValid(t *testing.T) {
 	}
 	err := c.Invalid()
 	if err != nil {
-		t.Errorf("c must be valid, but err is %q", err)
+		t.Errorf("c must be valid, but err is %w", err)
 	}
 }
 

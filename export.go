@@ -8,7 +8,6 @@ import (
 	"os"
 	"strings"
 
-	"github.com/pkg/errors"
 	"github.com/urfave/cli"
 
 	l "github.com/tariel-x/anzer/lang"
@@ -41,8 +40,6 @@ func Export(c *cli.Context) error {
 }
 
 func (e *ExportCmd) export() error {
-	defer e.sumFile.Close()
-
 	f, err := os.Open(e.input)
 	if err != nil {
 		return err
@@ -72,11 +69,16 @@ func (e *ExportCmd) export() error {
 
 			log.Printf("export function %s", f.Definition())
 			if err := e.exportFunc(f, action); err != nil {
-				return errors.Wrap(err, fmt.Sprintf("build function %s", f.Definition()))
+				return fmt.Errorf("build function %s: %w", f.Definition(), err)
 			}
 		}
 	}
-	return e.cache.Flush(e.sumFile)
+	sumFile, err := os.Create(defaultSumFileName)
+	if err != nil {
+		return fmt.Errorf("can not write to %s: %w", defaultSumFileName, err)
+	}
+	defer sumFile.Close()
+	return e.cache.Flush(sumFile)
 }
 
 func (e *ExportCmd) exportFunc(f l.Runnable, action io.Reader) error {

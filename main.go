@@ -2,13 +2,13 @@ package main
 
 import (
 	"errors"
-	"fmt"
 	"log"
 	"os"
 
 	"github.com/joho/godotenv"
-	"github.com/tariel-x/anzer/platform"
 	"github.com/urfave/cli"
+
+	"github.com/tariel-x/anzer/platform"
 )
 
 var (
@@ -112,7 +112,7 @@ func main() {
 func getPlatform(c *cli.Context) (platform.Platform, error) {
 	platName := c.String("platform")
 	if platName == "" {
-		return nil, fmt.Errorf("no platform")
+		return nil, errors.New("no platform")
 	}
 	plat, err := platform.GetPlatform(platName)
 	if err != nil {
