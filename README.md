@@ -1,5 +1,7 @@
 # Anzer platform and language
 
+[![Build Status](https://travis-ci.org/tariel-x/anzer.svg?branch=master)](https://travis-ci.org/tariel-x/anzer)
+
 Both the provided platform and described language implement 
 convenient way for explicit and type-safe composition of cloud functions.
 
