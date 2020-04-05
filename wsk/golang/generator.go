@@ -3,6 +3,7 @@ package golang
 import (
 	"bytes"
 	"errors"
+	"github.com/tariel-x/anzer/platform/models"
 	"sort"
 	"strings"
 	"time"
@@ -75,20 +76,20 @@ func (g Generator) GenerateFunc(inT, outT l.T, link l.FunctionLink) (string, err
 	return result.String(), err
 }
 
-func (g Generator) GenerateDocker(debug bool) (string, error) {
+func (g Generator) GenerateDocker(opts *models.BuildOpts) (string, error) {
 	var result bytes.Buffer
 
 	templateArgs := struct {
-		Debug bool
+		Debug       bool
+		CommitID    string
+		PackagePath string
 	}{
-		Debug: debug,
+		Debug:       opts.Debug,
+		CommitID:    opts.CommitID,
+		PackagePath: string(opts.F.GetLink()),
 	}
 	err := dockerfileTemplate.Execute(&result, templateArgs)
 	return result.String(), err
-}
-
-func (g Generator) GenerateMakefile() string {
-	return makefile
 }
 
 func genType(t l.T, name string) string {

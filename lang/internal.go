@@ -85,6 +85,10 @@ func (a Alias) Invalid() error {
 
 type FunctionLink string
 
+func (fl FunctionLink) String() string {
+	return string(fl)
+}
+
 type F struct {
 	Name    string
 	Link    FunctionLink

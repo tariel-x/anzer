@@ -2,23 +2,28 @@ package main
 
 import (
 	"fmt"
+	"io"
 	"io/ioutil"
 	"log"
 	"os"
 	"strings"
 
-	"github.com/pkg/errors"
+	"github.com/urfave/cli"
+
 	l "github.com/tariel-x/anzer/lang"
 	"github.com/tariel-x/anzer/platform"
-	"github.com/urfave/cli"
 )
 
-func Export(c *cli.Context) error {
-	debug := c.Bool("debug")
+type ExportCmd struct {
+	*BuildCmd
+	output string
+	debug  bool
+}
 
-	input := c.String("input")
-	if input == "" {
-		return errNoInput
+func Export(c *cli.Context) error {
+	buildCmd, err := newBuildCmd(c)
+	if err != nil {
+		return err
 	}
 
 	output := strings.TrimRight(c.String("output"), "/")
@@ -26,7 +31,16 @@ func Export(c *cli.Context) error {
 		output = "."
 	}
 
-	f, err := os.Open(input)
+	cmd := &ExportCmd{
+		BuildCmd: buildCmd,
+		output:   output,
+		debug:    c.Bool("debug"),
+	}
+	return cmd.export()
+}
+
+func (e *ExportCmd) export() error {
+	f, err := os.Open(e.input)
 	if err != nil {
 		return err
 	}
@@ -42,45 +56,32 @@ func Export(c *cli.Context) error {
 			return err
 		}
 
-		chain, err := toChain(compose)
+		chain, err := e.toChain(compose)
 		if err != nil {
 			return err
 		}
 
-		for _, el := range chain {
-			log.Printf("build function %s", el.Definition())
-			if err := exportFunc(el, debug, output); err != nil {
-				return errors.Wrap(err, fmt.Sprintf("build function %s", el.Definition()))
+		for _, f := range chain {
+			action, err := e.resolveFunc(f)
+			if err != nil {
+				return err
+			}
+
+			log.Printf("export function %s", f.Definition())
+			if err := e.exportFunc(f, action); err != nil {
+				return fmt.Errorf("build function %s: %w", f.Definition(), err)
 			}
 		}
 	}
-	return nil
+	sumFile, err := os.Create(defaultSumFileName)
+	if err != nil {
+		return fmt.Errorf("can not write to %s: %w", defaultSumFileName, err)
+	}
+	defer sumFile.Close()
+	return e.cache.Flush(sumFile)
 }
 
-func exportFunc(f l.Runnable, debug bool, output string) error {
-	dockerGenerator, err := platform.GetDockerGenerator(f.GetRuntime())
-	if err != nil {
-		return err
-	}
-	opts, err := dockerGenerator.GetBuildOptions(f, debug)
-	if err != nil {
-		return err
-	}
-	env, err := getEnv()
-	if err != nil {
-		return err
-	}
-	opts.Env = env
-
-	builder, err := platform.NewBuilder()
-	if err != nil {
-		return err
-	}
-
-	action, err := builder.BuildWithImage(opts, f.GetLink())
-	if err != nil {
-		return err
-	}
+func (e *ExportCmd) exportFunc(f l.Runnable, action io.Reader) error {
 	zipFile, err := ioutil.ReadAll(action)
 	if err != nil {
 		return err
@@ -88,5 +89,5 @@ func exportFunc(f l.Runnable, debug bool, output string) error {
 
 	name := strings.Replace(string(f.GetLink()), "/", "_", -1)
 
-	return ioutil.WriteFile(fmt.Sprintf("%s/%s.zip", output, name), zipFile, 0666)
+	return ioutil.WriteFile(fmt.Sprintf("%s/%s.zip", e.output, name), zipFile, 0666)
 }

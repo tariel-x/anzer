@@ -2,13 +2,13 @@ package main
 
 import (
 	"errors"
-	"fmt"
 	"log"
 	"os"
 
 	"github.com/joho/godotenv"
-	"github.com/tariel-x/anzer/platform"
 	"github.com/urfave/cli"
+
+	"github.com/tariel-x/anzer/platform"
 )
 
 var (
@@ -40,6 +40,10 @@ func main() {
 		Name:  "output, o",
 		Usage: "Output for generated files",
 	}
+	cacheFlag := cli.StringFlag{
+		Name:  "cacheLocation, cl",
+		Usage: "Location of the build cache",
+	}
 
 	app.Commands = []cli.Command{
 		{
@@ -59,6 +63,7 @@ func main() {
 			Flags: []cli.Flag{
 				inputFlag,
 				platformFlag,
+				cacheFlag,
 			},
 		},
 		{
@@ -84,6 +89,7 @@ func main() {
 				inputFlag,
 				outputFlag,
 				debugFlag,
+				platformFlag,
 			},
 		},
 		{
@@ -106,7 +112,7 @@ func main() {
 func getPlatform(c *cli.Context) (platform.Platform, error) {
 	platName := c.String("platform")
 	if platName == "" {
-		return nil, fmt.Errorf("no platform")
+		return nil, errors.New("no platform")
 	}
 	plat, err := platform.GetPlatform(platName)
 	if err != nil {

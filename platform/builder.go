@@ -24,7 +24,7 @@ var (
 )
 
 type DockerGenerator interface {
-	GetBuildOptions(f l.Runnable, debug bool) (*models.BuildWithImageOpts, error)
+	GetBuildOptions(opts *models.BuildOpts) (*models.DockerBuildOpts, error)
 }
 
 // GetDockerGenerator returns suitable FaaS and language specific generator for Dockerfile
@@ -52,7 +52,7 @@ func NewBuilder() (Builder, error) {
 	}, nil
 }
 
-func (b Builder) BuildWithImage(opts *models.BuildWithImageOpts, link l.FunctionLink) (io.Reader, error) {
+func (b Builder) BuildWithImage(opts *models.DockerBuildOpts, link l.FunctionLink) (io.Reader, error) {
 	if opts == nil {
 		return nil, errEmptyOptions
 	}

@@ -1,17 +1,31 @@
 package main
 
 import (
+	"os"
+
 	"github.com/tariel-x/anzer/platform"
 	"github.com/urfave/cli"
-	"os"
 )
+
+type ValidateCmd struct {
+	*BuildCmd
+}
 
 func Validate(c *cli.Context) error {
 	input := c.String("input")
 	if input == "" {
 		return errNoInput
 	}
-	f, err := os.Open(input)
+	cmd := &ValidateCmd{
+		BuildCmd: &BuildCmd{
+			input: input,
+		},
+	}
+	return cmd.validate()
+}
+
+func (v *ValidateCmd) validate() error {
+	f, err := os.Open(v.input)
 	if err != nil {
 		return err
 	}
@@ -27,7 +41,7 @@ func Validate(c *cli.Context) error {
 			return err
 		}
 
-		_, err := toChain(compose)
+		_, err := v.toChain(compose)
 		if err != nil {
 			return err
 		}
