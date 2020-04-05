@@ -10,7 +10,6 @@ require (
 	github.com/antlr/antlr4 v0.0.0-20190223165740-dade65a895c2
 	github.com/apache/incubator-openwhisk-client-go v0.0.0-20190304144455-4286a8212a74
 	github.com/cloudfoundry/jibber_jabber v0.0.0-20151120183258-bcc4c8345a21 // indirect
-	github.com/creack/pty v1.1.9 // indirect
 	github.com/dave/jennifer v1.3.0
 	github.com/docker/distribution v2.7.1+incompatible // indirect
 	github.com/docker/docker v1.13.1
@@ -39,8 +38,6 @@ require (
 	golang.org/x/net v0.0.0-20191021144547-ec77196f6094 // indirect
 	golang.org/x/sync v0.0.0-20190911185100-cd5d95a43a6e // indirect
 	golang.org/x/sys v0.0.0-20191023151326-f89234f9a2c2 // indirect
-	golang.org/x/tools v0.0.0-20191023163450-98e333b8b3a3 // indirect
-	golang.org/x/xerrors v0.0.0-20191011141410-1b5146add898 // indirect
 	gopkg.in/check.v1 v1.0.0-20190902080502-41f04d3bba15 // indirect
 	gopkg.in/src-d/go-git.v4 v4.13.1
 	gopkg.in/yaml.v2 v2.2.4 // indirect
