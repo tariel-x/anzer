@@ -162,34 +162,38 @@ func (b *BuildCmd) toChain(f l.Composable) ([]l.Runnable, error) {
 
 func (b *BuildCmd) resolveFunc(f l.Runnable) (io.Reader, error) {
 	action, commitID, err := b.loadCached(f)
-	if err != nil {
-		log.Printf("error loading cached function %s", err)
+	if err == nil {
+		log.Printf("loaded cached function %s %s", f.GetName(), commitID)
+		return action, nil
+	}
 
-		if commitID == "" {
-			commitID, err = b.findLatestCommitID(f)
-			if err != nil {
-				return nil, errors.Wrap(err, fmt.Sprintf("can not find latest commit id for %s", f.Definition()))
-			}
-		}
+	log.Printf("error loading cached function %s", err)
 
-		log.Printf("build function %s@%s", f.Definition(), commitID)
-		action, err = b.buildFunc(f, commitID)
+	if commitID == "" {
+		commitID, err = b.findLatestCommitID(f)
 		if err != nil {
-			return nil, errors.Wrap(err, fmt.Sprintf("build function %s", f.Definition()))
-		}
-		location, err := b.cache.SetFunction(f.GetLink().String(), commitID, nil)
-		if err != nil {
-			return nil, err
-		}
-
-		zipFile, err := ioutil.ReadAll(action)
-		if err != nil {
-			return nil, err
-		}
-		if err := ioutil.WriteFile(location, zipFile, 0666); err != nil {
-			return nil, err
+			return nil, errors.Wrap(err, fmt.Sprintf("can not find latest commit id for %s", f.Definition()))
 		}
 	}
+
+	log.Printf("build function %s@%s", f.Definition(), commitID)
+	action, err = b.buildFunc(f, commitID)
+	if err != nil {
+		return nil, errors.Wrap(err, fmt.Sprintf("build function %s", f.Definition()))
+	}
+	location, err := b.cache.SetFunction(f.GetLink().String(), commitID, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	zipFile, err := ioutil.ReadAll(action)
+	if err != nil {
+		return nil, err
+	}
+	if err := ioutil.WriteFile(location, zipFile, 0666); err != nil {
+		return nil, err
+	}
+
 	return action, nil
 }
 
