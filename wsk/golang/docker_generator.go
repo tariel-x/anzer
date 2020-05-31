@@ -4,7 +4,7 @@ import (
 	"archive/tar"
 	"bytes"
 
-	"github.com/tariel-x/anzer/platform/models"
+	"github.com/tariel-x/anzer/pkg/platform/models"
 )
 
 const (

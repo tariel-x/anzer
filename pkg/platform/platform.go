@@ -2,7 +2,7 @@ package platform
 
 import (
 	"errors"
-	"github.com/tariel-x/anzer/platform/models"
+	"github.com/tariel-x/anzer/pkg/platform/models"
 	"io"
 
 	l "github.com/tariel-x/anzer/lang"

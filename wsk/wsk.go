@@ -12,7 +12,7 @@ import (
 
 	"github.com/apache/incubator-openwhisk-client-go/whisk"
 	"github.com/pkg/errors"
-	"github.com/tariel-x/anzer/platform/models"
+	"github.com/tariel-x/anzer/pkg/platform/models"
 )
 
 const (

@@ -3,7 +3,7 @@ package golang
 import (
 	"bytes"
 	"errors"
-	"github.com/tariel-x/anzer/platform/models"
+	"github.com/tariel-x/anzer/pkg/platform/models"
 	"sort"
 	"strings"
 	"time"

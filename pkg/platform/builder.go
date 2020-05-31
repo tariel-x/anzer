@@ -15,7 +15,7 @@ import (
 	"github.com/docker/docker/pkg/term"
 	"github.com/pkg/errors"
 	l "github.com/tariel-x/anzer/lang"
-	"github.com/tariel-x/anzer/platform/models"
+	"github.com/tariel-x/anzer/pkg/platform/models"
 	"github.com/tariel-x/anzer/wsk/golang"
 )
 
