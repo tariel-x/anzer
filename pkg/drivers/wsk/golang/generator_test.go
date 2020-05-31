@@ -3,7 +3,7 @@ package golang
 import (
 	"testing"
 
-	l "github.com/tariel-x/anzer/lang"
+	l "github.com/tariel-x/anzer/pkg/lang"
 )
 
 func TestGenTypeBasic1(t *testing.T) {

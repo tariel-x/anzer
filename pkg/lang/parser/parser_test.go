@@ -4,7 +4,7 @@ import (
 	"testing"
 
 	"github.com/go-test/deep"
-	"github.com/tariel-x/anzer/lang"
+	"github.com/tariel-x/anzer/pkg/lang"
 )
 
 var (

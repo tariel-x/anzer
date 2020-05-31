@@ -5,7 +5,7 @@ import (
 	"io/ioutil"
 	"os"
 
-	l "github.com/tariel-x/anzer/lang"
+	l "github.com/tariel-x/anzer/pkg/lang"
 	"github.com/tariel-x/anzer/pkg/platform"
 	"github.com/urfave/cli"
 )

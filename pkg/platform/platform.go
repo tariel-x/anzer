@@ -5,9 +5,9 @@ import (
 	"github.com/tariel-x/anzer/pkg/platform/models"
 	"io"
 
-	l "github.com/tariel-x/anzer/lang"
-	"github.com/tariel-x/anzer/wsk"
-	"github.com/tariel-x/anzer/wsk/golang"
+	"github.com/tariel-x/anzer/pkg/drivers/wsk"
+	"github.com/tariel-x/anzer/pkg/drivers/wsk/golang"
+	l "github.com/tariel-x/anzer/pkg/lang"
 )
 
 var (

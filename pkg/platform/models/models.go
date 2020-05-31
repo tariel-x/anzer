@@ -4,7 +4,7 @@ package models
 import (
 	"io"
 
-	l "github.com/tariel-x/anzer/lang"
+	l "github.com/tariel-x/anzer/pkg/lang"
 )
 
 type DockerBuildOpts struct {

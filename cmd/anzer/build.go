@@ -15,7 +15,7 @@ import (
 
 	"github.com/tariel-x/anzer/pkg/cache"
 	"github.com/tariel-x/anzer/pkg/git"
-	l "github.com/tariel-x/anzer/lang"
+	l "github.com/tariel-x/anzer/pkg/lang"
 	"github.com/tariel-x/anzer/pkg/platform"
 	"github.com/tariel-x/anzer/pkg/platform/models"
 )

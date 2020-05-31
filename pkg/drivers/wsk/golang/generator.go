@@ -9,7 +9,7 @@ import (
 	"time"
 
 	j "github.com/dave/jennifer/jen"
-	l "github.com/tariel-x/anzer/lang"
+	l "github.com/tariel-x/anzer/pkg/lang"
 )
 
 var (
