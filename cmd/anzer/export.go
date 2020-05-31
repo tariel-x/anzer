@@ -10,8 +10,8 @@ import (
 
 	"github.com/urfave/cli"
 
-	l "github.com/tariel-x/anzer/lang"
-	"github.com/tariel-x/anzer/platform"
+	l "github.com/tariel-x/anzer/pkg/lang"
+	"github.com/tariel-x/anzer/pkg/platform"
 )
 
 type ExportCmd struct {

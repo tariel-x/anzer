@@ -8,7 +8,7 @@ import (
 	"github.com/joho/godotenv"
 	"github.com/urfave/cli"
 
-	"github.com/tariel-x/anzer/platform"
+	"github.com/tariel-x/anzer/pkg/platform"
 )
 
 var (

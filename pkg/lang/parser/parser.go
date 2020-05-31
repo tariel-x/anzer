@@ -7,7 +7,7 @@ import (
 
 	"github.com/antlr/antlr4/runtime/Go/antlr"
 	"github.com/pkg/errors"
-	"github.com/tariel-x/anzer/lang"
+	"github.com/tariel-x/anzer/pkg/lang"
 )
 
 type Logger interface {

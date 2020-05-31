@@ -3,7 +3,7 @@ package main
 import (
 	"os"
 
-	"github.com/tariel-x/anzer/platform"
+	"github.com/tariel-x/anzer/pkg/platform"
 	"github.com/urfave/cli"
 )
 

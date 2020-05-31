@@ -13,11 +13,11 @@ import (
 	"github.com/logrusorgru/aurora"
 	"github.com/urfave/cli"
 
-	"github.com/tariel-x/anzer/cache"
-	"github.com/tariel-x/anzer/git"
-	l "github.com/tariel-x/anzer/lang"
-	"github.com/tariel-x/anzer/platform"
-	"github.com/tariel-x/anzer/platform/models"
+	"github.com/tariel-x/anzer/pkg/cache"
+	"github.com/tariel-x/anzer/pkg/git"
+	l "github.com/tariel-x/anzer/pkg/lang"
+	"github.com/tariel-x/anzer/pkg/platform"
+	"github.com/tariel-x/anzer/pkg/platform/models"
 )
 
 const (

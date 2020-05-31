@@ -3,13 +3,13 @@ package golang
 import (
 	"bytes"
 	"errors"
-	"github.com/tariel-x/anzer/platform/models"
+	"github.com/tariel-x/anzer/pkg/platform/models"
 	"sort"
 	"strings"
 	"time"
 
 	j "github.com/dave/jennifer/jen"
-	l "github.com/tariel-x/anzer/lang"
+	l "github.com/tariel-x/anzer/pkg/lang"
 )
 
 var (

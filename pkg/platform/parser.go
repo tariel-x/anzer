@@ -4,8 +4,8 @@ import (
 	"io"
 	"io/ioutil"
 
-	"github.com/tariel-x/anzer/lang"
-	"github.com/tariel-x/anzer/lang/parser"
+	"github.com/tariel-x/anzer/pkg/lang"
+	"github.com/tariel-x/anzer/pkg/lang/parser"
 )
 
 func ParseLazy(sourceStream io.Reader) ([]lang.Composable, error) {
