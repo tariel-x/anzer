@@ -18,11 +18,11 @@ var (
 
 type Generator struct{}
 
-func NewGenerator() Generator {
-	return Generator{}
+func NewGenerator() *Generator {
+	return &Generator{}
 }
 
-func (g Generator) Generate(f l.Runnable) (string, error) {
+func (g *Generator) Generate(f l.Runnable) (string, error) {
 	packagePath := string(f.GetLink())
 	packageElements := strings.Split(packagePath, "/")
 	if len(packageElements) == 0 {
@@ -51,7 +51,7 @@ func (g Generator) Generate(f l.Runnable) (string, error) {
 	return result.String(), err
 }
 
-func (g Generator) GenerateFunc(inT, outT l.T, link l.FunctionLink) (string, error) {
+func (g *Generator) GenerateFunc(inT, outT l.T, link l.FunctionLink) (string, error) {
 	packagePath := string(link)
 	packageElements := strings.Split(packagePath, "/")
 	if len(packageElements) == 0 {
@@ -76,7 +76,7 @@ func (g Generator) GenerateFunc(inT, outT l.T, link l.FunctionLink) (string, err
 	return result.String(), err
 }
 
-func (g Generator) GenerateDocker(opts *models.BuildOpts) (string, error) {
+func (g *Generator) GenerateDocker(opts *models.BuildOpts) (string, error) {
 	var result bytes.Buffer
 
 	templateArgs := struct {

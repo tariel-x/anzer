@@ -12,6 +12,7 @@ import (
 
 	"github.com/apache/openwhisk-client-go/whisk"
 	"github.com/pkg/errors"
+	l "github.com/tariel-x/anzer/pkg/lang"
 	"github.com/tariel-x/anzer/pkg/platform/models"
 )
 
@@ -57,11 +58,12 @@ func (w *Wsk) List() ([]models.PublishedFunction, error) {
 	return published, nil
 }
 
-func (w *Wsk) Update(action io.Reader, name, runtime string) (models.PublishedFunction, error) {
-	return w.Create(action, name, runtime)
+func (w *Wsk) Update(action io.Reader, pkg string, f l.Runnable) (models.PublishedFunction, error) {
+	return w.Create(action, pkg, f)
 }
 
-func (w *Wsk) Create(action io.Reader, name, runtime string) (models.PublishedFunction, error) {
+func (w *Wsk) Create(action io.Reader, pkg string, f l.Runnable) (models.PublishedFunction, error) {
+	runtime := f.GetRuntime()
 	if len(strings.Split(runtime, ":")) == 1 {
 		runtime = runtime + ":default"
 	}
@@ -73,8 +75,8 @@ func (w *Wsk) Create(action io.Reader, name, runtime string) (models.PublishedFu
 	publish := true
 	wskaction := whisk.Action{
 		Exec:      exec,
-		Name:      name,
-		Namespace: w.namespace,
+		Name:      f.GetName(),
+		Namespace: pkg,
 		Publish:   &publish,
 		Annotations: whisk.KeyValueArr{
 			whisk.KeyValue{
@@ -89,8 +91,8 @@ func (w *Wsk) Create(action io.Reader, name, runtime string) (models.PublishedFu
 	}, err
 }
 
-func (w *Wsk) Upsert(action io.Reader, name, runtime string) (models.PublishedFunction, error) {
-	return w.Create(action, name, runtime)
+func (w *Wsk) Upsert(action io.Reader, pkg string, f l.Runnable) (models.PublishedFunction, error) {
+	return w.Create(action, pkg, f)
 }
 
 func (w *Wsk) makeExec(action io.Reader, runtime string) (*whisk.Exec, error) {

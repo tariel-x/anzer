@@ -26,6 +26,7 @@ type Composable interface {
 type Runnable interface {
 	Definition() string
 	GetName() string
+	GetID() string
 	GetLink() FunctionLink
 	GetRuntime() string
 	In() T
@@ -135,6 +136,10 @@ func (f F) IsEither() bool {
 	return false
 }
 
+func (f F) GetID() string {
+	return strings.Replace(string(f.GetLink()), "/", "_", -1)
+}
+
 // InternalReference stores reference to another function in a source code.
 // Lets consider `f = a . b`. `a` and `b` would be stored in InternalReference type during parsing source code.
 type InternalReference string
@@ -225,6 +230,10 @@ func (b EitherBind) GetLink() FunctionLink {
 		return f.Link
 	}
 	return ""
+}
+
+func (b EitherBind) GetID() string {
+	return strings.Replace(string(b.GetLink()), "/", "_", -1)
 }
 
 func (b EitherBind) GetRuntime() string {

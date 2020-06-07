@@ -46,7 +46,7 @@ func (e *ExportCmd) export() error {
 	}
 	defer f.Close()
 
-	composes, err := platform.ParseLazy(f)
+	_, composes, err := platform.ParseLazy(f)
 	if err != nil {
 		return err
 	}

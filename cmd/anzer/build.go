@@ -8,7 +8,6 @@ import (
 	"os"
 	"os/user"
 	"path/filepath"
-	"strings"
 
 	"github.com/logrusorgru/aurora"
 	"github.com/urfave/cli"
@@ -92,13 +91,13 @@ func (b *BuildCmd) build() error {
 	}
 	defer f.Close()
 
-	composes, err := platform.ParseLazy(f)
+	pkg, composes, err := platform.ParseLazy(f)
 	if err != nil {
 		return err
 	}
 
 	for _, compose := range composes {
-		if err := b.buildCompose(compose); err != nil {
+		if err := b.buildCompose(pkg, compose); err != nil {
 			return err
 		}
 	}
@@ -110,7 +109,7 @@ func (b *BuildCmd) build() error {
 	return b.cache.Flush(sumFile)
 }
 
-func (b *BuildCmd) buildCompose(compose l.Composable) error {
+func (b *BuildCmd) buildCompose(pkg string, compose l.Composable) error {
 	log.Printf("build composition %s = %s", compose.GetName(), compose.Definition())
 
 	if err := compose.Invalid(); err != nil {
@@ -128,7 +127,7 @@ func (b *BuildCmd) buildCompose(compose l.Composable) error {
 		if err != nil {
 			return err
 		}
-		component, err := b.publishFunc(f, action)
+		component, err := b.publishFunc(action, pkg, f)
 		if err != nil {
 			return fmt.Errorf("publish function %s: %w", f.Definition(), err)
 		}
@@ -236,9 +235,8 @@ func (b *BuildCmd) buildFunc(f l.Runnable, commitID string) (io.Reader, error) {
 	return builder.BuildWithImage(opts, f.GetLink())
 }
 
-func (b *BuildCmd) publishFunc(f l.Runnable, action io.Reader) (models.PublishedFunction, error) {
-	name := strings.Replace(string(f.GetLink()), "/", "_", -1)
-	function, err := b.platform.Create(action, name, f.GetRuntime())
+func (b *BuildCmd) publishFunc(action io.Reader, pkg string, f l.Runnable) (models.PublishedFunction, error) {
+	function, err := b.platform.Create(action, pkg, f)
 	if err != nil {
 		return models.PublishedFunction{}, err
 	}
