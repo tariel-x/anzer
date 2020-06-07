@@ -21,7 +21,7 @@ var (
 func main() {
 	app := cli.NewApp()
 	app.Name = "Anzer"
-	app.Version = "1.0"
+	app.Version = "1.1"
 	app.Usage = "generate new functions and build typesafe serverless system"
 
 	inputFlag := cli.StringFlag{
@@ -44,6 +44,10 @@ func main() {
 		Name:  "cacheLocation, cl",
 		Usage: "Location of the build cache",
 	}
+	functionEnvs := cli.StringFlag{
+		Name:  "envs",
+		Usage: "Set functions environment variables using YAML file",
+	}
 
 	app.Commands = []cli.Command{
 		{
@@ -64,6 +68,7 @@ func main() {
 				inputFlag,
 				platformFlag,
 				cacheFlag,
+				functionEnvs,
 			},
 		},
 		{

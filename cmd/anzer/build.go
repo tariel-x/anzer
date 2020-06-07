@@ -8,12 +8,12 @@ import (
 	"os"
 	"os/user"
 	"path/filepath"
-	"strings"
 
 	"github.com/logrusorgru/aurora"
 	"github.com/urfave/cli"
 
 	"github.com/tariel-x/anzer/pkg/cache"
+	"github.com/tariel-x/anzer/pkg/env"
 	"github.com/tariel-x/anzer/pkg/git"
 	l "github.com/tariel-x/anzer/pkg/lang"
 	"github.com/tariel-x/anzer/pkg/platform"
@@ -26,9 +26,10 @@ const (
 )
 
 type BuildCmd struct {
-	input    string
-	platform platform.Platform
-	cache    *cache.Manager
+	input           string
+	platform        platform.Platform
+	cache           *cache.Manager
+	functionsParams env.FunctionsParams
 }
 
 func Build(c *cli.Context) error {
@@ -77,12 +78,31 @@ func newBuildCmd(c *cli.Context) (*BuildCmd, error) {
 		return nil, err
 	}
 
+	functionEnvs, err := getFunctionParams(c)
+	if err != nil {
+		return nil, fmt.Errorf("can not get function envs: %w", err)
+	}
+
 	cmd := &BuildCmd{
-		input:    input,
-		platform: plat,
-		cache:    cm,
+		input:           input,
+		platform:        plat,
+		cache:           cm,
+		functionsParams: functionEnvs,
 	}
 	return cmd, nil
+}
+
+func getFunctionParams(c *cli.Context) (env.FunctionsParams, error) {
+	envsInput := c.String("envs")
+	if envsInput == "" {
+		return nil, nil
+	}
+	f, err := os.Open(envsInput)
+	if err != nil {
+		return nil, err
+	}
+	defer f.Close()
+	return env.LoadParams(f)
 }
 
 func (b *BuildCmd) build() error {
@@ -92,13 +112,13 @@ func (b *BuildCmd) build() error {
 	}
 	defer f.Close()
 
-	composes, err := platform.ParseLazy(f)
+	pkg, composes, err := platform.ParseLazy(f)
 	if err != nil {
 		return err
 	}
 
 	for _, compose := range composes {
-		if err := b.buildCompose(compose); err != nil {
+		if err := b.buildCompose(pkg, compose); err != nil {
 			return err
 		}
 	}
@@ -110,7 +130,7 @@ func (b *BuildCmd) build() error {
 	return b.cache.Flush(sumFile)
 }
 
-func (b *BuildCmd) buildCompose(compose l.Composable) error {
+func (b *BuildCmd) buildCompose(pkg string, compose l.Composable) error {
 	log.Printf("build composition %s = %s", compose.GetName(), compose.Definition())
 
 	if err := compose.Invalid(); err != nil {
@@ -128,7 +148,16 @@ func (b *BuildCmd) buildCompose(compose l.Composable) error {
 		if err != nil {
 			return err
 		}
-		component, err := b.publishFunc(f, action)
+
+		params := b.functionsParams[string(f.GetLink())]
+		details := models.PublicationDetails{
+			Action:     action,
+			Package:    pkg,
+			Function:   f,
+			Parameters: params,
+		}
+
+		component, err := b.publishFunc(details)
 		if err != nil {
 			return fmt.Errorf("publish function %s: %w", f.Definition(), err)
 		}
@@ -136,7 +165,7 @@ func (b *BuildCmd) buildCompose(compose l.Composable) error {
 	}
 
 	log.Printf("make link for %v", components)
-	lnk, err := b.platform.Link(compose.GetName(), components)
+	lnk, err := b.platform.Link(pkg, compose.GetName(), components)
 	if err != nil {
 		return err
 	}
@@ -236,9 +265,8 @@ func (b *BuildCmd) buildFunc(f l.Runnable, commitID string) (io.Reader, error) {
 	return builder.BuildWithImage(opts, f.GetLink())
 }
 
-func (b *BuildCmd) publishFunc(f l.Runnable, action io.Reader) (models.PublishedFunction, error) {
-	name := strings.Replace(string(f.GetLink()), "/", "_", -1)
-	function, err := b.platform.Create(action, name, f.GetRuntime())
+func (b *BuildCmd) publishFunc(details models.PublicationDetails) (models.PublishedFunction, error) {
+	function, err := b.platform.Create(details)
 	if err != nil {
 		return models.PublishedFunction{}, err
 	}

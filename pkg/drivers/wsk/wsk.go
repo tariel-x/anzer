@@ -10,8 +10,9 @@ import (
 	"os/user"
 	"strings"
 
-	"github.com/apache/incubator-openwhisk-client-go/whisk"
+	"github.com/apache/openwhisk-client-go/whisk"
 	"github.com/pkg/errors"
+
 	"github.com/tariel-x/anzer/pkg/platform/models"
 )
 
@@ -57,23 +58,43 @@ func (w *Wsk) List() ([]models.PublishedFunction, error) {
 	return published, nil
 }
 
-func (w *Wsk) Update(action io.Reader, name, runtime string) (models.PublishedFunction, error) {
-	return w.Create(action, name, runtime)
+func (w *Wsk) Update(details models.PublicationDetails) (models.PublishedFunction, error) {
+	return w.Create(details)
 }
 
-func (w *Wsk) Create(action io.Reader, name, runtime string) (models.PublishedFunction, error) {
+func (w *Wsk) Create(details models.PublicationDetails) (models.PublishedFunction, error) {
+	runtime := details.Function.GetRuntime()
 	if len(strings.Split(runtime, ":")) == 1 {
 		runtime = runtime + ":default"
 	}
 
-	exec, err := w.makeExec(action, runtime)
+	pkgDef, _, err := w.client.Packages.Insert(&whisk.Package{
+		Namespace: w.namespace,
+		Name:      details.Package,
+	}, true)
 	if err != nil {
 		return models.PublishedFunction{}, err
 	}
+
+	fName := fmt.Sprintf("%s/%s", pkgDef.Name, details.Function.GetID())
+
+	exec, err := w.makeExec(details.Action, runtime)
+	if err != nil {
+		return models.PublishedFunction{}, err
+	}
+
+	params := whisk.KeyValueArr{}
+	for key, value := range details.Parameters {
+		params = append(params, whisk.KeyValue{
+			Key:   key,
+			Value: value,
+		})
+	}
+
 	publish := true
 	wskaction := whisk.Action{
 		Exec:      exec,
-		Name:      name,
+		Name:      fName,
 		Namespace: w.namespace,
 		Publish:   &publish,
 		Annotations: whisk.KeyValueArr{
@@ -82,15 +103,19 @@ func (w *Wsk) Create(action io.Reader, name, runtime string) (models.PublishedFu
 				Value: true,
 			},
 		},
+		Parameters: params,
 	}
 	readyAction, _, err := w.client.Actions.Insert(&wskaction, true)
+	if err != nil {
+		return models.PublishedFunction{}, err
+	}
 	return models.PublishedFunction{
 		Name: fmt.Sprintf("/%s/%s", readyAction.Namespace, readyAction.Name),
 	}, err
 }
 
-func (w *Wsk) Upsert(action io.Reader, name, runtime string) (models.PublishedFunction, error) {
-	return w.Create(action, name, runtime)
+func (w *Wsk) Upsert(details models.PublicationDetails) (models.PublishedFunction, error) {
+	return w.Create(details)
 }
 
 func (w *Wsk) makeExec(action io.Reader, runtime string) (*whisk.Exec, error) {
@@ -108,11 +133,13 @@ func (w *Wsk) makeExec(action io.Reader, runtime string) (*whisk.Exec, error) {
 	return exec, err
 }
 
-func (w *Wsk) Link(invoke string, funcs []models.PublishedFunction) (models.PublishedFunction, error) {
+func (w *Wsk) Link(pkg, invoke string, funcs []models.PublishedFunction) (models.PublishedFunction, error) {
 	components := []string{}
 	for _, f := range funcs {
 		components = append(components, f.Name)
 	}
+
+	fName := fmt.Sprintf("%s/%s_%s", pkg, invoke, "sequence")
 
 	publish := true
 	wskaction := whisk.Action{
@@ -130,7 +157,7 @@ func (w *Wsk) Link(invoke string, funcs []models.PublishedFunction) (models.Publ
 				Value: true,
 			},
 		},
-		Name:      invoke + "_sequence",
+		Name:      fName,
 		Namespace: w.namespace,
 		Publish:   &publish,
 	}

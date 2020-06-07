@@ -2,8 +2,8 @@ package platform
 
 import (
 	"errors"
+
 	"github.com/tariel-x/anzer/pkg/platform/models"
-	"io"
 
 	"github.com/tariel-x/anzer/pkg/drivers/wsk"
 	"github.com/tariel-x/anzer/pkg/drivers/wsk/golang"
@@ -33,10 +33,10 @@ var (
 )
 
 type Platform interface {
-	Update(action io.Reader, name, runtime string) (models.PublishedFunction, error)
-	Create(action io.Reader, name, runtime string) (models.PublishedFunction, error)
-	Upsert(action io.Reader, name, runtime string) (models.PublishedFunction, error)
-	Link(invoke string, funcs []models.PublishedFunction) (models.PublishedFunction, error)
+	Update(details models.PublicationDetails) (models.PublishedFunction, error)
+	Create(details models.PublicationDetails) (models.PublishedFunction, error)
+	Upsert(details models.PublicationDetails) (models.PublishedFunction, error)
+	Link(pkg, invoke string, funcs []models.PublishedFunction) (models.PublishedFunction, error)
 	Init(args map[string]string) error
 	Connect() error
 }

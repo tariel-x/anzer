@@ -31,7 +31,7 @@ func Generate(c *cli.Context) error {
 	}
 	defer f.Close()
 
-	composes, err := platform.ParseAll(f)
+	_, composes, err := platform.ParseAll(f)
 	if err != nil {
 		return err
 	}

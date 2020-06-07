@@ -38,18 +38,40 @@ type Parser struct {
 }
 
 func New(source string) Parser {
-	return Parser{
-		logger:  stubLogger{},
-		source:  source,
-		types:   map[string]lang.T{},
-		funcs:   map[string]lang.Composable{},
-		invokes: []lang.InternalReference{},
+	parser := Parser{
+		logger: stubLogger{},
+		source: source,
 	}
+	parser.initEmpty()
+	return parser
+}
+
+func (parser *Parser) initEmpty() {
+	parser.types = map[string]lang.T{}
+	parser.funcs = map[string]lang.Composable{}
+	parser.invokes = []lang.InternalReference{}
+	parser.tc = nil
+	parser.fc = nil
+}
+
+// GetPackage returns package name defined by `package` key in .anz file.
+func (parser *Parser) GetPackage() (string, error) {
+	if len(parser.types) == 0 && len(parser.funcs) == 0 && len(parser.invokes) == 0 {
+		parser.initEmpty()
+		parser.buildTree()
+	}
+	if parser.pkg == "" {
+		return "", ErrNoPackageDefinition
+	}
+	return parser.pkg, nil
 }
 
 // ParseLazy returns internal representation only for types and functions that are mentioned in the `invoke` instruction.
 func (parser *Parser) ParseLazy() ([]lang.Composable, error) {
-	parser.buildTree()
+	if len(parser.types) == 0 && len(parser.funcs) == 0 && len(parser.invokes) == 0 {
+		parser.initEmpty()
+		parser.buildTree()
+	}
 	if parser.pkg == "" {
 		return nil, ErrNoPackageDefinition
 	}
@@ -67,7 +89,10 @@ func (parser *Parser) ParseLazy() ([]lang.Composable, error) {
 
 // ParseAll returns internal representation for all types and functions from the source code.
 func (parser *Parser) ParseAll() ([]lang.Composable, error) {
-	parser.buildTree()
+	if len(parser.types) == 0 && len(parser.funcs) == 0 && len(parser.invokes) == 0 {
+		parser.initEmpty()
+		parser.buildTree()
+	}
 	if parser.pkg == "" {
 		return nil, ErrNoPackageDefinition
 	}

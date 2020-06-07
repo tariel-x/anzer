@@ -12,11 +12,11 @@ const (
 )
 
 type DockerGenerator struct {
-	generator Generator
+	generator *Generator
 }
 
-func NewDockerGenerator() DockerGenerator {
-	return DockerGenerator{
+func NewDockerGenerator() *DockerGenerator {
+	return &DockerGenerator{
 		generator: NewGenerator(),
 	}
 }
