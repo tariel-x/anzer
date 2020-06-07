@@ -44,6 +44,10 @@ func main() {
 		Name:  "cacheLocation, cl",
 		Usage: "Location of the build cache",
 	}
+	functionEnvs := cli.StringFlag{
+		Name:  "envs",
+		Usage: "Set functions environment variables using YAML file",
+	}
 
 	app.Commands = []cli.Command{
 		{
@@ -64,6 +68,7 @@ func main() {
 				inputFlag,
 				platformFlag,
 				cacheFlag,
+				functionEnvs,
 			},
 		},
 		{

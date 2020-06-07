@@ -13,6 +13,7 @@ import (
 	"github.com/urfave/cli"
 
 	"github.com/tariel-x/anzer/pkg/cache"
+	"github.com/tariel-x/anzer/pkg/env"
 	"github.com/tariel-x/anzer/pkg/git"
 	l "github.com/tariel-x/anzer/pkg/lang"
 	"github.com/tariel-x/anzer/pkg/platform"
@@ -25,9 +26,10 @@ const (
 )
 
 type BuildCmd struct {
-	input    string
-	platform platform.Platform
-	cache    *cache.Manager
+	input        string
+	platform     platform.Platform
+	cache        *cache.Manager
+	functionEnvs map[string]env.FunctionEnvs
 }
 
 func Build(c *cli.Context) error {
@@ -76,12 +78,31 @@ func newBuildCmd(c *cli.Context) (*BuildCmd, error) {
 		return nil, err
 	}
 
+	functionEnvs, err := getFunctionEnvs(c)
+	if err != nil {
+		return nil, fmt.Errorf("can not get function envs: %w", err)
+	}
+
 	cmd := &BuildCmd{
-		input:    input,
-		platform: plat,
-		cache:    cm,
+		input:        input,
+		platform:     plat,
+		cache:        cm,
+		functionEnvs: functionEnvs,
 	}
 	return cmd, nil
+}
+
+func getFunctionEnvs(c *cli.Context) (map[string]env.FunctionEnvs, error) {
+	envsInput := c.String("envs")
+	if envsInput == "" {
+		return nil, nil
+	}
+	f, err := os.Open(envsInput)
+	if err != nil {
+		return nil, err
+	}
+	defer f.Close()
+	return env.LoadEnvs(f)
 }
 
 func (b *BuildCmd) build() error {
