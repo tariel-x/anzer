@@ -12,6 +12,7 @@ import (
 
 	"github.com/apache/openwhisk-client-go/whisk"
 	"github.com/pkg/errors"
+
 	l "github.com/tariel-x/anzer/pkg/lang"
 	"github.com/tariel-x/anzer/pkg/platform/models"
 )
@@ -68,6 +69,16 @@ func (w *Wsk) Create(action io.Reader, pkg string, f l.Runnable) (models.Publish
 		runtime = runtime + ":default"
 	}
 
+	pkgDef, _, err := w.client.Packages.Insert(&whisk.Package{
+		Namespace: w.namespace,
+		Name:      pkg,
+	}, true)
+	if err != nil {
+		return models.PublishedFunction{}, err
+	}
+
+	fName := fmt.Sprintf("%s/%s", pkgDef.Name, f.GetID())
+
 	exec, err := w.makeExec(action, runtime)
 	if err != nil {
 		return models.PublishedFunction{}, err
@@ -75,8 +86,8 @@ func (w *Wsk) Create(action io.Reader, pkg string, f l.Runnable) (models.Publish
 	publish := true
 	wskaction := whisk.Action{
 		Exec:      exec,
-		Name:      f.GetName(),
-		Namespace: pkg,
+		Name:      fName,
+		Namespace: w.namespace,
 		Publish:   &publish,
 		Annotations: whisk.KeyValueArr{
 			whisk.KeyValue{
@@ -86,6 +97,9 @@ func (w *Wsk) Create(action io.Reader, pkg string, f l.Runnable) (models.Publish
 		},
 	}
 	readyAction, _, err := w.client.Actions.Insert(&wskaction, true)
+	if err != nil {
+		return models.PublishedFunction{}, err
+	}
 	return models.PublishedFunction{
 		Name: fmt.Sprintf("/%s/%s", readyAction.Namespace, readyAction.Name),
 	}, err
@@ -110,11 +124,13 @@ func (w *Wsk) makeExec(action io.Reader, runtime string) (*whisk.Exec, error) {
 	return exec, err
 }
 
-func (w *Wsk) Link(invoke string, funcs []models.PublishedFunction) (models.PublishedFunction, error) {
+func (w *Wsk) Link(pkg, invoke string, funcs []models.PublishedFunction) (models.PublishedFunction, error) {
 	components := []string{}
 	for _, f := range funcs {
 		components = append(components, f.Name)
 	}
+
+	fName := fmt.Sprintf("%s/%s_%s", pkg, invoke, "sequence")
 
 	publish := true
 	wskaction := whisk.Action{
@@ -132,7 +148,7 @@ func (w *Wsk) Link(invoke string, funcs []models.PublishedFunction) (models.Publ
 				Value: true,
 			},
 		},
-		Name:      invoke + "_sequence",
+		Name:      fName,
 		Namespace: w.namespace,
 		Publish:   &publish,
 	}

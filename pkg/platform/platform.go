@@ -36,7 +36,7 @@ type Platform interface {
 	Update(action io.Reader, pkg string, f l.Runnable) (models.PublishedFunction, error)
 	Create(action io.Reader, pkg string, f l.Runnable) (models.PublishedFunction, error)
 	Upsert(action io.Reader, pkg string, f l.Runnable) (models.PublishedFunction, error)
-	Link(invoke string, funcs []models.PublishedFunction) (models.PublishedFunction, error)
+	Link(pkg, invoke string, funcs []models.PublishedFunction) (models.PublishedFunction, error)
 	Init(args map[string]string) error
 	Connect() error
 }

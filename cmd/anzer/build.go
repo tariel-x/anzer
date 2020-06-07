@@ -135,7 +135,7 @@ func (b *BuildCmd) buildCompose(pkg string, compose l.Composable) error {
 	}
 
 	log.Printf("make link for %v", components)
-	lnk, err := b.platform.Link(compose.GetName(), components)
+	lnk, err := b.platform.Link(pkg, compose.GetName(), components)
 	if err != nil {
 		return err
 	}
