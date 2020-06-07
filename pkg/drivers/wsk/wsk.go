@@ -10,7 +10,7 @@ import (
 	"os/user"
 	"strings"
 
-	"github.com/apache/incubator-openwhisk-client-go/whisk"
+	"github.com/apache/openwhisk-client-go/whisk"
 	"github.com/pkg/errors"
 	"github.com/tariel-x/anzer/pkg/platform/models"
 )

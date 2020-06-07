@@ -10,8 +10,8 @@ github.com/anmitsu/go-shlex v0.0.0-20161002113705-648efa622239 h1:kFOfPq6dUM1hTo
 github.com/anmitsu/go-shlex v0.0.0-20161002113705-648efa622239/go.mod h1:2FmKhYUyUczH0OGQWaF5ceTx0UBShxjsH6f8oGKYe2c=
 github.com/antlr/antlr4 v0.0.0-20190223165740-dade65a895c2 h1:Q1TGw0wvj6lqZQ4/CMfZykGQDnkslNcvuDID+AfNiQE=
 github.com/antlr/antlr4 v0.0.0-20190223165740-dade65a895c2/go.mod h1:T7PbCXFs94rrTttyxjbyT5+/1V8T2TYDejxUfHJjw1Y=
-github.com/apache/incubator-openwhisk-client-go v0.0.0-20190304144455-4286a8212a74 h1:mEJybx++0zohq16whYKC9WN1YBcOSwm+7SbVXWGB0/w=
-github.com/apache/incubator-openwhisk-client-go v0.0.0-20190304144455-4286a8212a74/go.mod h1:tkMtcI5DHxdNk03R1YVLF66VhkF8uJkZs7pgHE9Mgqk=
+github.com/apache/openwhisk-client-go v0.0.0-20200201143223-a804fb82d105 h1:k1wP1gZMrNJeXTz6a+3010NKC/ZvSffk07BzrLmYrmc=
+github.com/apache/openwhisk-client-go v0.0.0-20200201143223-a804fb82d105/go.mod h1:jLLKYP7+1+LFlIJW1n9U1gqeveLM1HIwa4ZHNOFxjPw=
 github.com/armon/go-socks5 v0.0.0-20160902184237-e75332964ef5 h1:0CwZNZbxp69SHPdPJAN/hZIm0C4OItdklCFmMRWYpio=
 github.com/armon/go-socks5 v0.0.0-20160902184237-e75332964ef5/go.mod h1:wHh0iHkYZB8zMSxRWpUBQtwG5a7fFgvEO+odwuTv2gs=
 github.com/cloudfoundry/jibber_jabber v0.0.0-20151120183258-bcc4c8345a21 h1:tuijfIjZyjZaHq9xDUh0tNitwXshJpbLkqMOJv4H3do=

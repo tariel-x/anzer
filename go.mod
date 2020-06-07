@@ -8,7 +8,7 @@ require (
 	github.com/Microsoft/go-winio v0.4.12 // indirect
 	github.com/Sirupsen/logrus v1.4.0 // indirect
 	github.com/antlr/antlr4 v0.0.0-20190223165740-dade65a895c2
-	github.com/apache/incubator-openwhisk-client-go v0.0.0-20190304144455-4286a8212a74
+	github.com/apache/openwhisk-client-go v0.0.0-20200201143223-a804fb82d105
 	github.com/cloudfoundry/jibber_jabber v0.0.0-20151120183258-bcc4c8345a21 // indirect
 	github.com/dave/jennifer v1.3.0
 	github.com/docker/distribution v2.7.1+incompatible // indirect
