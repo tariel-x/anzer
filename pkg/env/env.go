@@ -7,15 +7,15 @@ import (
 	"gopkg.in/yaml.v2"
 )
 
-type FunctionEnvs map[string]string
+type FunctionParams map[string]string
 
-type input map[string]FunctionEnvs
+type FunctionsParams map[string]FunctionParams
 
-func LoadEnvs(reader io.Reader) (input, error) {
+func LoadParams(reader io.Reader) (FunctionsParams, error) {
 	data, err := ioutil.ReadAll(reader)
 	if err != nil {
 		return nil, err
 	}
-	i := input{}
+	i := FunctionsParams{}
 	return i, yaml.Unmarshal(data, &i)
 }

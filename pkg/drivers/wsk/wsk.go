@@ -13,7 +13,6 @@ import (
 	"github.com/apache/openwhisk-client-go/whisk"
 	"github.com/pkg/errors"
 
-	l "github.com/tariel-x/anzer/pkg/lang"
 	"github.com/tariel-x/anzer/pkg/platform/models"
 )
 
@@ -59,30 +58,39 @@ func (w *Wsk) List() ([]models.PublishedFunction, error) {
 	return published, nil
 }
 
-func (w *Wsk) Update(action io.Reader, pkg string, f l.Runnable) (models.PublishedFunction, error) {
-	return w.Create(action, pkg, f)
+func (w *Wsk) Update(details models.PublicationDetails) (models.PublishedFunction, error) {
+	return w.Create(details)
 }
 
-func (w *Wsk) Create(action io.Reader, pkg string, f l.Runnable) (models.PublishedFunction, error) {
-	runtime := f.GetRuntime()
+func (w *Wsk) Create(details models.PublicationDetails) (models.PublishedFunction, error) {
+	runtime := details.Function.GetRuntime()
 	if len(strings.Split(runtime, ":")) == 1 {
 		runtime = runtime + ":default"
 	}
 
 	pkgDef, _, err := w.client.Packages.Insert(&whisk.Package{
 		Namespace: w.namespace,
-		Name:      pkg,
+		Name:      details.Package,
 	}, true)
 	if err != nil {
 		return models.PublishedFunction{}, err
 	}
 
-	fName := fmt.Sprintf("%s/%s", pkgDef.Name, f.GetID())
+	fName := fmt.Sprintf("%s/%s", pkgDef.Name, details.Function.GetID())
 
-	exec, err := w.makeExec(action, runtime)
+	exec, err := w.makeExec(details.Action, runtime)
 	if err != nil {
 		return models.PublishedFunction{}, err
 	}
+
+	params := whisk.KeyValueArr{}
+	for key, value := range details.Parameters {
+		params = append(params, whisk.KeyValue{
+			Key:   key,
+			Value: value,
+		})
+	}
+
 	publish := true
 	wskaction := whisk.Action{
 		Exec:      exec,
@@ -95,6 +103,7 @@ func (w *Wsk) Create(action io.Reader, pkg string, f l.Runnable) (models.Publish
 				Value: true,
 			},
 		},
+		Parameters: params,
 	}
 	readyAction, _, err := w.client.Actions.Insert(&wskaction, true)
 	if err != nil {
@@ -105,8 +114,8 @@ func (w *Wsk) Create(action io.Reader, pkg string, f l.Runnable) (models.Publish
 	}, err
 }
 
-func (w *Wsk) Upsert(action io.Reader, pkg string, f l.Runnable) (models.PublishedFunction, error) {
-	return w.Create(action, pkg, f)
+func (w *Wsk) Upsert(details models.PublicationDetails) (models.PublishedFunction, error) {
+	return w.Create(details)
 }
 
 func (w *Wsk) makeExec(action io.Reader, runtime string) (*whisk.Exec, error) {

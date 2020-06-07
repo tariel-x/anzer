@@ -40,7 +40,7 @@ require (
 	golang.org/x/sys v0.0.0-20191023151326-f89234f9a2c2 // indirect
 	gopkg.in/check.v1 v1.0.0-20190902080502-41f04d3bba15 // indirect
 	gopkg.in/src-d/go-git.v4 v4.13.1
-	gopkg.in/yaml.v2 v2.2.4 // indirect
+	gopkg.in/yaml.v2 v2.2.4
 )
 
 replace github.com/Sirupsen/logrus v1.4.0 => github.com/sirupsen/logrus v1.4.0

@@ -26,10 +26,10 @@ const (
 )
 
 type BuildCmd struct {
-	input        string
-	platform     platform.Platform
-	cache        *cache.Manager
-	functionEnvs map[string]env.FunctionEnvs
+	input           string
+	platform        platform.Platform
+	cache           *cache.Manager
+	functionsParams env.FunctionsParams
 }
 
 func Build(c *cli.Context) error {
@@ -78,21 +78,21 @@ func newBuildCmd(c *cli.Context) (*BuildCmd, error) {
 		return nil, err
 	}
 
-	functionEnvs, err := getFunctionEnvs(c)
+	functionEnvs, err := getFunctionParams(c)
 	if err != nil {
 		return nil, fmt.Errorf("can not get function envs: %w", err)
 	}
 
 	cmd := &BuildCmd{
-		input:        input,
-		platform:     plat,
-		cache:        cm,
-		functionEnvs: functionEnvs,
+		input:           input,
+		platform:        plat,
+		cache:           cm,
+		functionsParams: functionEnvs,
 	}
 	return cmd, nil
 }
 
-func getFunctionEnvs(c *cli.Context) (map[string]env.FunctionEnvs, error) {
+func getFunctionParams(c *cli.Context) (env.FunctionsParams, error) {
 	envsInput := c.String("envs")
 	if envsInput == "" {
 		return nil, nil
@@ -102,7 +102,7 @@ func getFunctionEnvs(c *cli.Context) (map[string]env.FunctionEnvs, error) {
 		return nil, err
 	}
 	defer f.Close()
-	return env.LoadEnvs(f)
+	return env.LoadParams(f)
 }
 
 func (b *BuildCmd) build() error {
@@ -148,7 +148,16 @@ func (b *BuildCmd) buildCompose(pkg string, compose l.Composable) error {
 		if err != nil {
 			return err
 		}
-		component, err := b.publishFunc(action, pkg, f)
+
+		params := b.functionsParams[string(f.GetLink())]
+		details := models.PublicationDetails{
+			Action:     action,
+			Package:    pkg,
+			Function:   f,
+			Parameters: params,
+		}
+
+		component, err := b.publishFunc(details)
 		if err != nil {
 			return fmt.Errorf("publish function %s: %w", f.Definition(), err)
 		}
@@ -256,8 +265,8 @@ func (b *BuildCmd) buildFunc(f l.Runnable, commitID string) (io.Reader, error) {
 	return builder.BuildWithImage(opts, f.GetLink())
 }
 
-func (b *BuildCmd) publishFunc(action io.Reader, pkg string, f l.Runnable) (models.PublishedFunction, error) {
-	function, err := b.platform.Create(action, pkg, f)
+func (b *BuildCmd) publishFunc(details models.PublicationDetails) (models.PublishedFunction, error) {
+	function, err := b.platform.Create(details)
 	if err != nil {
 		return models.PublishedFunction{}, err
 	}

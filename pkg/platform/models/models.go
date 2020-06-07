@@ -4,6 +4,7 @@ package models
 import (
 	"io"
 
+	"github.com/tariel-x/anzer/pkg/env"
 	l "github.com/tariel-x/anzer/pkg/lang"
 )
 
@@ -23,4 +24,11 @@ type BuildOpts struct {
 type PublishedFunction struct {
 	Name string
 	URL  string
+}
+
+type PublicationDetails struct {
+	Action     io.Reader
+	Package    string
+	Function   l.Runnable
+	Parameters env.FunctionParams
 }
