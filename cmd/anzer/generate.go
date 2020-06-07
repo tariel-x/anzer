@@ -5,9 +5,10 @@ import (
 	"io/ioutil"
 	"os"
 
+	"github.com/urfave/cli"
+
 	l "github.com/tariel-x/anzer/pkg/lang"
 	"github.com/tariel-x/anzer/pkg/platform"
-	"github.com/urfave/cli"
 )
 
 func Generate(c *cli.Context) error {
@@ -71,6 +72,10 @@ func findFunc(name string, f l.Composable) *l.F {
 	case l.F:
 		if string(ft.Link) == name {
 			return &ft
+		}
+	case l.EitherBind:
+		if found := findFunc(name, ft.Argument); found != nil {
+			return found
 		}
 	}
 	return nil
