@@ -215,15 +215,15 @@ func (b *BuildCmd) resolveFunc(f l.Runnable) (io.Reader, error) {
 	}
 	location, err := b.cache.SetFunction(f.GetLink().String(), commitID, nil)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("can not set function hash %w", err)
 	}
 
 	zipFile, err := ioutil.ReadAll(action)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("can not read build result %w", err)
 	}
 	if err := ioutil.WriteFile(location, zipFile, 0666); err != nil {
-		return nil, err
+		return nil, fmt.Errorf("can not save build result to zip file %w", err)
 	}
 
 	return action, nil

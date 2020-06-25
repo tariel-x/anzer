@@ -98,8 +98,8 @@ func (m *Manager) FunctionWithCommit(function string, schemeHash []byte) (string
 }
 
 func (m *Manager) SetFunction(function string, commitID string, schemeHash []byte) (string, error) {
-	if _, err := m.Function(function, commitID, schemeHash); err == nil {
-		return "", nil
+	if location, err := m.Function(function, commitID, schemeHash); err == nil {
+		return location, nil
 	}
 	item := m.find(function)
 	if item != nil {
