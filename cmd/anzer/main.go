@@ -48,6 +48,10 @@ func main() {
 		Name:  "envs",
 		Usage: "Set functions environment variables using YAML file",
 	}
+	functionFlag := cli.StringFlag{
+		Name:  "function, f",
+		Usage: "Selected function",
+	}
 
 	app.Commands = []cli.Command{
 		{
@@ -79,10 +83,7 @@ func main() {
 			Flags: []cli.Flag{
 				inputFlag,
 				outputFlag,
-				cli.StringFlag{
-					Name:  "function, f",
-					Usage: "Function to generate",
-				},
+				functionFlag,
 			},
 		},
 		{
@@ -104,6 +105,20 @@ func main() {
 			Action:  Validate,
 			Flags: []cli.Flag{
 				inputFlag,
+			},
+		},
+		{
+			Name:  "sum",
+			Usage: "manage sum file",
+			Subcommands: []cli.Command{
+				{
+					Name:   "update",
+					Usage:  "update function version",
+					Action: SumUpdate,
+					Flags: []cli.Flag{
+						functionFlag,
+					},
+				},
 			},
 		},
 	}
