@@ -6,7 +6,7 @@ import (
 	"os"
 
 	"github.com/joho/godotenv"
-	"github.com/urfave/cli"
+	"github.com/urfave/cli/v2"
 
 	"github.com/tariel-x/anzer/pkg/platform"
 )
@@ -24,36 +24,57 @@ func main() {
 	app.Version = "1.1"
 	app.Usage = "generate new functions and build typesafe serverless system"
 
-	inputFlag := cli.StringFlag{
-		Name:  "input, i",
-		Usage: "Anzer source file",
+	inputFlag := &cli.StringFlag{
+		Name: "input",
+		Aliases: []string{
+			"i",
+		},
+		Usage:    "Anzer source file",
+		Required: true,
 	}
-	platformFlag := cli.StringFlag{
-		Name:  "platform, p",
+	platformFlag := &cli.StringFlag{
+		Name: "platform",
+		Aliases: []string{
+			"p",
+		},
 		Usage: "Target FaaS platform",
 	}
-	debugFlag := cli.StringFlag{
-		Name:  "debug, d",
+	debugFlag := &cli.StringFlag{
+		Name: "debug",
+		Aliases: []string{
+			"d",
+		},
 		Usage: "Debug mode, specific for platform and language",
 	}
-	outputFlag := cli.StringFlag{
-		Name:  "output, o",
-		Usage: "Output for generated files",
+	outputFlag := &cli.StringFlag{
+		Name: "output",
+		Aliases: []string{
+			"o",
+		},
+		Usage:    "Output for generated files",
+		Required: true,
 	}
-	cacheFlag := cli.StringFlag{
-		Name:  "cacheLocation, cl",
+	cacheFlag := &cli.StringFlag{
+		Name: "cacheLocation",
+		Aliases: []string{
+			"cl",
+		},
 		Usage: "Location of the build cache",
 	}
-	functionEnvs := cli.StringFlag{
+	functionEnvs := &cli.StringFlag{
 		Name:  "envs",
 		Usage: "Set functions environment variables using YAML file",
 	}
-	functionFlag := cli.StringFlag{
-		Name:  "function, f",
-		Usage: "Selected function",
+	functionFlag := &cli.StringFlag{
+		Name: "function",
+		Aliases: []string{
+			"f",
+		},
+		Usage:    "Selected function",
+		Required: true,
 	}
 
-	app.Commands = []cli.Command{
+	app.Commands = []*cli.Command{
 		{
 			Name:    "init",
 			Aliases: []string{"i"},
@@ -110,7 +131,7 @@ func main() {
 		{
 			Name:  "sum",
 			Usage: "manage sum file",
-			Subcommands: []cli.Command{
+			Subcommands: []*cli.Command{
 				{
 					Name:   "update",
 					Usage:  "update function version",

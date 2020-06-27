@@ -6,7 +6,7 @@ import (
 	"os/user"
 	"path/filepath"
 
-	"github.com/urfave/cli"
+	"github.com/urfave/cli/v2"
 
 	"github.com/tariel-x/anzer/pkg/cache"
 	"github.com/tariel-x/anzer/pkg/git"

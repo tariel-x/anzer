@@ -4,7 +4,7 @@ import (
 	"os"
 
 	"github.com/tariel-x/anzer/pkg/platform"
-	"github.com/urfave/cli"
+	"github.com/urfave/cli/v2"
 )
 
 type ValidateCmd struct {
