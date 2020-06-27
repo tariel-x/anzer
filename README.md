@@ -137,9 +137,9 @@ The expected result is:
 }
 ```
 
-## Full documentation
+## Detailed quick start
 
-Full documentation is in progress...
+[Detailed quick start.](./doc/en/Quickstart.md)
 
 ## Roadmap
 
