@@ -1,5 +1,7 @@
 # Anzer platform and language
 
+[![Build Status](https://travis-ci.org/tariel-x/anzer.svg?branch=master)](https://travis-ci.org/tariel-x/anzer)
+
 Both the provided platform and described language implement 
 convenient way for explicit and type-safe composition of cloud functions.
 
@@ -7,6 +9,8 @@ For example the following scheme describes two services and
 their communication.
 
 ```haskell
+package test
+
 type Source = {
     name  :: String
     price :: Float
@@ -28,7 +32,7 @@ type Error = {
     error :: String
 }
 github.com/project/prepare[go] :: Source -> Either Prepared Error
-github.com/project/save[go] :: Prepared -> Product
+github.com/project/save[go] :: Prepared -> Either Product Error
 create = prepare >>= save
 invoke(create,)
 ```
@@ -45,7 +49,41 @@ See the [documentation](./doc/README.md) for details.
 2. Download and install wsk utility from [github page](https://github.com/apache/incubator-openwhisk-cli/releases).
 3. Find working Apache OpenWhisk instance.
 
+#### With IBM CloudFunctions
+
+1. Register at [cloud.ibm.com](https://cloud.ibm.com).
+2. Follow the instruction at [cloud.ibm.com/openwhisk/learn/cli](https://cloud.ibm.com/openwhisk/learn/cli).
+3. Check the settings with `wsk action list`. Also `~/.wskprops` must contain something like the following.
+```
+APIHOST=eu-gb.functions.cloud.ibm.com
+NAMESPACE=_
+AUTH=short_token
+APIGW_ACCESS_TOKEN=big_token
+```
+
 ### Download Anzer
+
+#### Binaries
+
+Download suitable binary from [realizes page](https://github.com/tariel-x/anzer/releases).
+For example for linux:
+
+```bash
+sudo curl -L "https://github.com/tariel-x/anzer/releases/download/latest/linux_amd64_anzer" -o /usr/local/bin/anzer
+sudo chmod +x /usr/local/bin/anzer
+anzer help
+```
+
+For OS X:
+
+```bash
+sudo curl -L "https://github.com/tariel-x/anzer/releases/download/latest/darwin_amd64_anzer" -o /usr/local/bin/anzer
+sudo chmod +x /usr/local/bin/anzer
+anzer help
+```
+
+
+#### With go installed
 
 ```bash
 go get github.com/tariel-x/anzer
@@ -76,7 +114,7 @@ curl -X POST \
   -H 'Content-Type: application/json' \
   -d '{
     "name": "Opel",
-    "model": "Astra J",
+    "model": "Astra;J",
     "phone": "79095544445",
     "price": 500.50,
     "photos": [
@@ -90,20 +128,20 @@ The expected result is:
 
 ```json
 {
-    "body": null,
-    "brand": "Opel",
-    "generation": "J",
-    "id": 38081,
-    "model": "Astra",
-    "phone": "+790911222233",
-    "photos": [
-        "http://storage.org/photo.jpeg"
-    ],
-    "price": 55000,
-    "year": 2014
+    "car": {
+        "brand": "Opel",
+        "model": "Astra"
+    },
+    "err": null,
+    "id": 38081
 }
 ```
 
 ## Full documentation
 
 Full documentation is in progress...
+
+## Roadmap
+
+1. Full support of OR-types and pattern-matching in the scheme.
+2. Remake subsystem for building functions.
