@@ -3,7 +3,7 @@ package main
 import (
 	"strings"
 
-	"github.com/urfave/cli"
+	"github.com/urfave/cli/v2"
 )
 
 func Init(c *cli.Context) error {
