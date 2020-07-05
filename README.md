@@ -82,11 +82,12 @@ sudo chmod +x /usr/local/bin/anzer
 anzer help
 ```
 
-
-#### With go installed
+#### Install from sources
 
 ```bash
-go get github.com/tariel-x/anzer
+git clone https://github.com/tariel-x/anzer.git
+cd anzer
+go install
 anzer help
 ```
 
