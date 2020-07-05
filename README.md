@@ -95,7 +95,14 @@ anzer help
 ```bash
 git clone https://github.com/tariel-x/anzer-example.git
 cd anzer-example
-anzer build -p wsk -i etl.anz
+```
+
+Make copy of the `envs.yaml.dist` and edit according to your CouchDB settings.
+
+```bash
+cp envs.yaml.dist envs.yaml
+nano envs.yaml
+anzer build -p wsk -i etl.anz --envs envs.yaml
 ```
 
 The output of utility would be name of functions sequence in OpenWhisk.

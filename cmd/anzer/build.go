@@ -195,7 +195,7 @@ func (b *BuildCmd) toChain(f l.Composable) ([]l.Runnable, error) {
 func (b *BuildCmd) resolveFunc(f l.Runnable) (io.Reader, error) {
 	action, commitID, err := b.loadCached(f)
 	if err == nil {
-		log.Printf("loaded cached function %s %s", f.GetName(), commitID)
+		log.Printf("loaded cached function %s %s", f.Definition(), commitID)
 		return action, nil
 	}
 

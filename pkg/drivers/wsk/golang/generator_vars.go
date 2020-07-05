@@ -97,12 +97,12 @@ func main() {
 		// parse one line
 		raw := rawInput{}
 		if err := json.Unmarshal(inbuf, &raw); err != nil {
-			printError(out, err)
+			printError(out, fmt.Errorf("error unmarshalling into raw: %q", err))
 			continue
 		}
 		input := whiskInput{}
 		if err := json.Unmarshal(inbuf, &input); err != nil {
-			printError(out, err)
+			printError(out, fmt.Errorf("error unmarshalling into whiskInput struct: %q", err))
 			continue
 		}
 		
@@ -113,7 +113,7 @@ func main() {
 		// process the request
 		output, err := process(input)
 		if err != nil {
-			printError(out, err)
+			printError(out, fmt.Errorf("error processing: %q", err))
 			continue
 		}
 
@@ -133,6 +133,13 @@ func printError(out io.Writer, err error) {
 func setEnvironment(raw map[string]interface{}) {
 	for k, v := range raw {
 		if k == "value" {
+			if values, ok := raw["value"].(map[string]interface{}); ok {
+				for vk, vv := range values {
+					if vvs, ok := vv.(string); ok {
+						os.Setenv("__ANZ_"+strings.ToUpper(vk), vvs)
+					}
+				}
+			}
 			continue
 		}
 		if s, ok := v.(string); ok {
@@ -144,7 +151,7 @@ func setEnvironment(raw map[string]interface{}) {
 func process(input whiskInput) (whiskOutput, error) {
 	var anzHandlerInput AnzerIn
 	if err := json.Unmarshal(input.Value, &anzHandlerInput); err != nil {
-		return whiskOutput{}, err
+		return whiskOutput{}, fmt.Errorf("error unmarshalling into anzHandlerInput: %q", err)
 	}
 	log.Printf("Function %s, anzer handler in %#v", name, anzHandlerInput)
 	handlerOutput := callHandler(anzHandlerInput)
