@@ -90,21 +90,9 @@ func Handle(input TypeIn) TypeOut {
 }
 ``` 
 
-Edit file in the following way:
+Edit the `Handle` function:
 
 ```go
-// Thank robots for this file that was generated for you at 2020-07-05 18:07:57.065434549 +0300 MSK m=+0.037309363
-package sum
-
-type TypeIn struct {
-	A int `json:"a"`
-	B int `json:"b"`
-}
-
-type TypeOut struct {
-	Sum int `json:"sum"`
-}
-
 func Handle(input TypeIn) TypeOut {
 	var out TypeOut
 	out.Sum = input.A + input.B
