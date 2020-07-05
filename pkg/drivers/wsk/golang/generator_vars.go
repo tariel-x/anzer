@@ -133,6 +133,13 @@ func printError(out io.Writer, err error) {
 func setEnvironment(raw map[string]interface{}) {
 	for k, v := range raw {
 		if k == "value" {
+			if values, ok := raw["value"].(map[string]interface{}); ok {
+				for vk, vv := range values {
+					if vvs, ok := vv.(string); ok {
+						os.Setenv("__ANZ_"+strings.ToUpper(vk), vvs)
+					}
+				}
+			}
 			continue
 		}
 		if s, ok := v.(string); ok {
