@@ -178,7 +178,7 @@ To create OpenWhisk API endpoint use the command `wsk -i api create /test /calc 
 Or use [IBM Cloud web interface](https://cloud.ibm.com/functions/apimanagement) to create it. The command or the web interface
 would return the sequence URL, e.g. `https://xxxxxxxx.xx-xx.apiconnect.appdomain.cloud/test/sum`.
 
-Make POST query to test the composition.
+Perform POST query to test the composition.
 
 ```bash
 curl --location --request POST 'https://xxxxxxxx.xx-xx.apiconnect.appdomain.cloud/test/sum' \
