@@ -43,6 +43,19 @@ invoke(calc,)
 
 Replace `github.com/project/example` with the actual name of the repository you are using.
 
+Keyword `package` defines the OpenWhisk package that would contain the actions developed for the current scheme.
+
+Keywords `type` define three complex types for input data, output data and data for the inter-function communication.
+
+The line `github.com/project/example/sum[go] :: Source -> Sum` defines function `github.com/project/example/sum` which 
+is coded with Golang, takes data of the `Source` type and returns result with the `Sum` type.
+
+The line `calc = sum . result` defines virtual `calc` function as composition of `sum` and `result`. The composition
+means that the `sum` function would take the user input and pass the intermediate result to the `result` function.
+The result function would return the execution result to the user.
+
+The line `invoke(calc,)` defines the functions needed to be deployed.
+
 ## Generate the source code
 
 ### Generate `github.com/project/example/sum`
@@ -163,7 +176,7 @@ anzer build -p wsk -i example.anz --envs envs.yaml
 
 The result of the command execution would be like `Your function name is: /ibm@cloud.account/test/calc_sequence`.
 
-Also the generated `anzer.sum` file would store git commit hashes of the currently using functions.
+The generated during the build `anzer.sum` file would store git commit hashes of the currently using functions.
 
 ```csv
 github.com/project/example/sum,06fd5d4fca1b022d6686ab4aed07e3f9c9b6d1fe,
